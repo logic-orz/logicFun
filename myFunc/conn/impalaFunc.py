@@ -1,16 +1,16 @@
 '''
 Author: Logic
 Date: 2022-04-20 14:25:56
-LastEditTime: 2022-04-25 09:40:46
-FilePath: \py_func_manage\myFunc\impalaFunc.py
+LastEditTime: 2022-04-29 10:50:20
+FilePath: \pyFuncs\myFunc\conn\impalaFunc.py
 Description: 
 '''
 import warnings
 
 from impala.dbapi import connect
 
-from .dbFunc import DbColumn, DbFunc
-from .configFunc import getDict
+from .dbFunc import DbColumn, DbConfig, DbFunc
+from ..basic.configFunc import getDict
 from typing import List
 
 '''
@@ -21,19 +21,18 @@ return {*}
 
 
 class Impala(DbFunc):
-    __conn__ = None
 
     '''
     默认连接加密配置为不加密
     '''
     __auth_mechanism__ = 'PLAIN'
 
-    def __init__(self,  config: dict):
-        self.__conn__ = connect(host=config['host'],
-                                port=int(config['port']),
-                                user=config['user'],
-                                password=config['pwd'],
-                                database=config['db'],
+    def __init__(self,  config: DbConfig):
+        self.__conn__ = connect(host=config.host,
+                                port=int(config.port),
+                                user=config.user,
+                                password=config.pwd,
+                                database=config.db,
                                 auth_mechanism=self.__auth_mechanism__,
                                 )
 
@@ -54,17 +53,16 @@ class Impala(DbFunc):
         return resList
 
     def tables(self) -> List[str]:
-        return list(map(lambda x: x['name'], self.execQuery(' show tables ')))
+        return self.execQuery(' show tables ').map(lambda x: x['name'])
 
     def tableMeta(self, tbName: str) -> List[DbColumn]:
         sql = 'DESCRIBE ' + tbName
-        dataList = self.execQuery(sql)
-        return list(map(lambda x: DbColumn(x), dataList))
+        return self.execQuery(sql).map(lambda x: DbColumn().build(x))
 
     def createSql(self, tbName: str) -> str:
         sql = " show create table  "+tbName
         return self.execQuery(sql)[0]['result']
 
-
-def fixedImpala(ns: str = 'impala') -> Impala:
-    return Impala(getDict(ns))
+    @staticmethod
+    def fixedImpala(ns: str = 'impala'):
+        return Impala(DbConfig().build(getDict(ns)))

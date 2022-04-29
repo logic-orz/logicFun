@@ -1,23 +1,40 @@
 '''
 Author: Logic
 Date: 2022-04-20 14:36:14
-LastEditTime: 2022-04-21 14:33:17
-FilePath: \py_func_manage\myFunc\dbFunc.py
+LastEditTime: 2022-04-29 11:21:08
+FilePath: \pyFuncs\myFunc\conn\dbFunc.py
 Description: 
 '''
 import json
-from typing import List
+from typing import List, overload
+from myFunc.basic.configFunc import getDict
+from myFunc.basic.myClass import BaseClass
+from typing import Dict
 
 
-class DbColumn:
+class DbConfig(BaseClass):
+    """
+    数据库连接配置对象
+    """
 
-    def __init__(self, data: dict):
-        self.name = data['name']
-        self.type = data['type']
-        self.comment = data['comment']
+    def __init__(self) -> None:
+        self.host: str = None
+        self.port: str = None
+        self.user: str = None
+        self.pwd: str = None
+        self.db: str = None
+        self.hosts: str = None
 
-    def __repr__(self) -> str:
-        return json.dumps(obj=self.__dict__, ensure_ascii=False)
+
+class DbColumn(BaseClass):
+    """
+    字段信息对象
+    """
+
+    def __init__(self):
+        self.name = None
+        self.type = None
+        self.comment = None
 
 
 class DbFunc:
@@ -43,7 +60,7 @@ class DbFunc:
         conn.commit()
         cur.close()
 
-    def tables(self)-> List[str]:
+    def tables(self) -> List[str]:
         # * 获取所有数据表名
         # todo 子类实现
         pass
