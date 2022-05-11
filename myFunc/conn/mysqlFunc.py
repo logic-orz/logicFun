@@ -1,18 +1,16 @@
 '''
 Author: Logic
 Date: 2022-04-20 14:27:40
-LastEditTime: 2022-04-29 10:50:05
+LastEditTime: 2022-05-09 15:07:18
 FilePath: \pyFuncs\myFunc\conn\mysqlFunc.py
 Description: 
 '''
-from typing import overload
-import warnings
 import pymysql
 from pymysql import connect
 from pymysql.cursors import DictCursor
 from dbutils.pooled_db import PooledDB
-from .dbFunc import DbFunc, DbColumn, DbConfig
-from sqlalchemy import create_engine
+from myFunc.conn.dbFunc import DbFunc, DbColumn, DbConfig
+
 
 from urllib.parse import quote_plus as urlquote
 from myFunc.basic.configFunc import getDict
@@ -69,17 +67,24 @@ class Mysql(DbFunc):
         return Mysql(DbConfig().build(getDict(ns)))
 
     @staticmethod
-    def fixedEngine(ns: str = 'mysql'):
+    def fixedEngine(ns: str = 'mysql', isFlask: bool = False):
+
         config = DbConfig().build(getDict(ns))
 
         DB_CONNECT = 'mysql+pymysql://%s:%s@%s:%s/%s?charset=utf8' % (
             config.user, urlquote(config.pwd), config.host, config.port, config.db)
 
+        if isFlask:
+            from flask_sqlalchemy import create_engine
+        else:
+            from sqlalchemy import create_engine
+
         engine = create_engine(
             DB_CONNECT,
-            max_overflow=0,  # 超过连接池大小外最多创建的连接
+            max_overflow=5,  # 超过连接池大小外最多创建的连接
             pool_size=5,  # 连接池大小
             pool_timeout=30,  # 池中没有线程最多等待的时间，否则报错
-            pool_recycle=-1  # 多久之后对线程池中的线程进行一次连接的回收（重置）
+            pool_recycle=3600,  # 多久之后对线程池中的线程进行一次连接的回收（重置）
+            pool_pre_ping=True,
         )
         return engine

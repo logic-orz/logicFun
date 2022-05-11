@@ -1,7 +1,7 @@
 '''
 Author: Logic
 Date: 2022-04-20 14:27:43
-LastEditTime: 2022-04-29 10:40:19
+LastEditTime: 2022-05-09 15:18:14
 FilePath: \pyFuncs\myFunc\conn\redisFunc.py
 Description: 
 '''
@@ -11,6 +11,7 @@ from rediscluster import RedisCluster
 
 from myFunc.conn.dbFunc import DbConfig
 from myFunc.basic.configFunc import getDict
+
 
 class Redis:
     def __init__(self, config: DbConfig):
@@ -47,7 +48,7 @@ class RedisClu:
 
         self.conn = RedisCluster(
             startup_nodes=redis_nodes,
-            password=config['pwd'])
+            password=config.pwd)
 
     def cli(self):
         return self.conn

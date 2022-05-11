@@ -1,15 +1,13 @@
 '''
 Author: Logic
 Date: 2022-04-20 14:36:14
-LastEditTime: 2022-04-29 11:21:08
+LastEditTime: 2022-05-09 15:25:33
 FilePath: \pyFuncs\myFunc\conn\dbFunc.py
 Description: 
 '''
 import json
-from typing import List, overload
-from myFunc.basic.configFunc import getDict
+from typing import List, Dict
 from myFunc.basic.myClass import BaseClass
-from typing import Dict
 
 
 class DbConfig(BaseClass):

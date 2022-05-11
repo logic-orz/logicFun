@@ -1,38 +1,13 @@
 '''
 Author: Logic
 Date: 2022-04-26 08:55:29
-LastEditTime: 2022-04-28 19:00:28
+LastEditTime: 2022-05-09 17:08:24
 FilePath: \pyFuncs\myFunc\basic\myClass.py
 Description:
 '''
 import json
-from textwrap import wrap
-from typing import TypeVar, Generic, Dict, List, Set, Tuple, overload
+from typing import TypeVar, Generic, Dict, List, Set, Tuple
 from .signFunc import *
-
-
-
-# def builder(fun):  # * 基础方法装饰器
-#     class wrapper():
-#         def __init__(self):
-#             self.wrapper = fun()  # * 保留一个original_class类对象
-
-#         def build(self, _obj: Dict):
-#             if _obj:
-#                 self.__dict__.update(_obj)
-#             return self
-
-#         def toDict(self):
-#             dict = {}
-#             dict.update(self.__dict__)
-#             if "_sa_instance_state" in dict:
-#                 del dict['_sa_instance_state']
-#             return dict
-
-#         def __repr__(self) -> str:
-#             return json.dumps(self.toDict(), ensure_ascii=False)
-
-#     return wrapper
 
 
 class BaseClass:
@@ -120,6 +95,74 @@ class StrBuild():  # * 面向长字符串多次需要拼接的场景
         self.__strList__.append(str(s))
         return self
 
-    @property
     def toStr(self):
         return ''.join(self.__strList__)
+
+
+
+
+class Tree(Generic[T]):
+
+    """
+    * data:Dict[str:Tuple[str,T]] 对象字典:[key,[parentKey,value]]
+    * path:Dict[str:set[str]] 路径层级关系
+    """
+
+    def __init__(self, name: str = '') -> None:
+        self.name = name
+        self.data: Dict[str, Tuple[str, T]] = dict()
+        self.child: Dict[str, Set[str]] = dict()
+
+    def add(self, key: str, v: T, parentKey: str = None):
+        self.data[key] = (parentKey, v)
+
+        children = set()
+        if parentKey in self.child:
+            children = self.child[parentKey]
+
+        children.add(key)
+        self.child[parentKey] = children
+
+    def get(self, key: str) -> T:
+        if key in self.data:
+            return self.data[key][1]
+        return None
+
+    def delete(self, key: str):
+        childKeys = {key}
+
+        tmpkeys: List[str] = [key]
+        
+
+        while len(tmpkeys) > 0:
+            ts = []
+            for tmp in tmpkeys :
+                ts.appendAll(self.getChildrenKeys(tmp))
+
+            tmpkeys.clear()
+            tmpkeys.appendAll(ts)
+
+        pk = self.data[key][0]
+        ps = self.child[pk]
+        ps.remove(key)
+        if len(ps) == 0:
+            del self.child[pk]
+        for k in childKeys:
+            del self.child[k]
+            del self.data[k]
+
+    def getChildren(self, key: str) -> List[T]:
+        if key in self.child:
+            return self.child[key].toList().map(lambda k: self.data[k][1])
+        return []
+
+    def getChildrenKeys(self, key: str) -> List[str]:
+        if key in self.child:
+            return self.child[key].toList()
+        return []
+
+    def getParent(self, key: str) -> T:
+        if key in self.data:
+            pk = self.data[key][0]
+            return self.data[pk][1]
+        return None

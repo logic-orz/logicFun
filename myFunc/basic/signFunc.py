@@ -1,7 +1,7 @@
 '''
 Author: Logic
 Date: 2022-04-28 11:03:17
-LastEditTime: 2022-04-29 11:01:12
+LastEditTime: 2022-05-09 15:32:39
 FilePath: \pyFuncs\myFunc\basic\signFunc.py
 Description: 
 '''
@@ -68,14 +68,29 @@ def kvs(self: dict) -> list:
         re.append((k, v))
     return re
 
+
 @sign(dict, 'toStr')
 def dictToStr(self) -> str:
     return json.dumps(self, ensure_ascii=False)
 
 # * list
+
+
 @sign(list, 'map')
 def mapWith(self, __func: Callable[[Any], Any]):
     return list(map(__func, self))
+
+# * list
+
+
+@sign(list, 'flatMap')
+def flatMapWith(self, __func: Callable[[Any], List[Any]]):
+    res = []
+    for ts in map(__func, self):
+        if ts:
+            for t in ts:
+                res.append(t)
+    return res
 
 
 @sign(list, 'appendAll')
@@ -93,6 +108,11 @@ def toSet(self):
 @sign(list, 'filter')
 def filterWith(self, __func: Callable[[Any], bool]):
     return list(filter(__func, self))
+
+
+@sign(list, 'distinct')
+def distinct(self):
+    return list(set(self))
 
 
 @sign(list, 'groupByKey')
@@ -150,8 +170,9 @@ def listToStr(self) -> str:
     return json.dumps(self, ensure_ascii=False)
 
 
-def listIsEmpty(self:List)-> bool :
-    return len()
+@sign(list, 'isEmpty')
+def listIsEmpty(self: List) -> bool:
+    return len(self) == 0
 
 # * set
 
@@ -182,5 +203,4 @@ def endsIn(self: str, *keys):
 
 @sign(str, 'append')
 def appendStr(self: str, s: str):
-    self = self + str(s)
-    return self
+    return self + str(s)
