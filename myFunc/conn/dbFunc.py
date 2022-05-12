@@ -1,7 +1,7 @@
 '''
 Author: Logic
 Date: 2022-04-20 14:36:14
-LastEditTime: 2022-05-09 15:25:33
+LastEditTime: 2022-05-12 11:27:57
 FilePath: \pyFuncs\myFunc\conn\dbFunc.py
 Description: 
 '''
@@ -33,6 +33,9 @@ class DbColumn(BaseClass):
         self.name = None
         self.type = None
         self.comment = None
+        self.primary_key = None
+        self.default_value = None
+        self.nullable = None
 
 
 class DbFunc:

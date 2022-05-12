@@ -1,13 +1,13 @@
 '''
 Author: Logic
 Date: 2022-04-26 08:55:29
-LastEditTime: 2022-05-09 17:08:24
+LastEditTime: 2022-05-12 14:09:21
 FilePath: \pyFuncs\myFunc\basic\myClass.py
 Description:
 '''
 import json
 from typing import TypeVar, Generic, Dict, List, Set, Tuple
-from .signFunc import *
+import myFunc.basic.signFunc
 
 
 class BaseClass:
@@ -24,6 +24,9 @@ class BaseClass:
             del dict['_sa_instance_state']
 
         return dict
+
+    def toStr(self):
+        return json.dumps(self.toDict(), ensure_ascii=False)
 
     def __repr__(self) -> str:
         return json.dumps(self.toDict(), ensure_ascii=False)
@@ -99,8 +102,6 @@ class StrBuild():  # * 面向长字符串多次需要拼接的场景
         return ''.join(self.__strList__)
 
 
-
-
 class Tree(Generic[T]):
 
     """
@@ -132,11 +133,10 @@ class Tree(Generic[T]):
         childKeys = {key}
 
         tmpkeys: List[str] = [key]
-        
 
         while len(tmpkeys) > 0:
             ts = []
-            for tmp in tmpkeys :
+            for tmp in tmpkeys:
                 ts.appendAll(self.getChildrenKeys(tmp))
 
             tmpkeys.clear()
@@ -166,3 +166,6 @@ class Tree(Generic[T]):
             pk = self.data[key][0]
             return self.data[pk][1]
         return None
+
+    def values(self):
+        return self.data.vs().map(lambda t: t[1])

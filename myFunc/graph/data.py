@@ -1,12 +1,4 @@
-'''
-Author: Logic
-Date: 2022-04-27 09:41:14
-LastEditTime: 2022-05-11 11:03:54
-FilePath: \pyFuncs\myFunc\graph\beans.py
-Description: 
-'''
-
-from myFunc.basic.myClass import BaseClass, Tree
+from myFunc.basic.myClass import BaseClass
 from myFunc.basic.signFunc import *
 from enum import Enum
 from typing import Dict, Any, List
@@ -14,39 +6,13 @@ import abc
 from abc import ABCMeta
 
 
-class TagKey(Enum):
-    """
-    * 数据标签 约束定义类
-    """
-
-    IsPrivate = 'isPrivate'  # ? 属性是否为私有
-    IsMore = 'isMore'  # ? 属性是否为多值
-
-    Name = 'name'  # ? 实体名称
-    NameTag = 'nameTag'  # ? 实体名称消歧
-    Concept = 'concept'  # ? 实体概念
-    ConceptTag = 'conceptTag'  # ? 实体概念消歧
-
-    FromName = 'fromName'
-    FromNameTag = 'fromNameTag'
-    FromConcept = 'fromConcept'
-    FromConceptTag = 'fromConceptTag'
-
-    ToName = 'toName'
-    ToNameTag = 'toNameTag'
-    ToConcept = 'toConcept'
-    ToConceptTag = 'toConceptTag'
-
-    RelaName = 'relaName'  # ? 关系名称
-    IsDirected = 'isDirected'  # ? 是否为有向关系（正向）
-
-   
-
-
-class TagBean:
+class Tag:
     """
      * 数据标签封装类
     """
+    IsPrivate = 'isPrivate'  # ? 属性是否为私有
+    IsMore = 'isMore'  # ? 属性是否为多值
+    IsDirected = 'isDirected'  # ? 是否为有向关系（正向）
 
     def __init__(self) -> None:
         self.tags: Dict[str, Any] = {}
@@ -60,12 +26,34 @@ class TagBean:
         return self
 
 
-class Info(TagBean, BaseClass):
+class Info(Tag, BaseClass):
     """
     * spo 属性定义类
     """
+    Name = 'name'  # ? 实体名称
+    NameTag = 'nameTag'  # ? 实体名称消歧
+
+    Concept = 'concept'  # ? 实体概念
+    ConceptTag = 'conceptTag'  # ? 实体概念消歧
+
+    FromName = 'fromName'
+    FromNameTag = 'fromNameTag'
+
+    FromConcept = 'fromConcept'
+    FromConceptTag = 'fromConceptTag'
+
+    ToName = 'toName'
+    ToNameTag = 'toNameTag'
+
+    ToConcept = 'toConcept'
+    ToConceptTag = 'toConceptTag'
+
+    RelaName = 'relaName'  # ? 关系名称
+
+    Label = "label"  # ? 标签
 
     def __init__(self, name: str = None, value: Any = None):
+        Tag.__init__(self)
         self.name = name
         self.value = value
 
@@ -86,6 +74,13 @@ class InfoBean:
     def getInfo(self, name: str) -> List[Info]:
         return self.infos.filter(lambda i: i.name == name)
 
+    def getFirstInfoValue(self, name: str) -> Any:
+        tmp: List[Info] = self.infos.filter(lambda i: i.name == name)
+        if tmp.isEmpty():
+            return None
+        else:
+            return tmp[0].value
+
     def addInfo(self, name: str, value: Any):
         self.infos.append(Info(name, value))
         return self
@@ -95,13 +90,13 @@ class InfoBean:
         return self
 
 
-class Node(TagBean, InfoBean, BaseClass):
+class Node(Tag, InfoBean, BaseClass):
     """
     * 图节点 定义类
     """
 
     def __init__(self, key: str = None, tags: dict = None, infos: List[Info] = None):
-        TagBean.__init__(self)
+        Tag.__init__(self)
         InfoBean.__init__(self)
         self.key: str = key
         if tags:
@@ -113,13 +108,13 @@ class Node(TagBean, InfoBean, BaseClass):
         return {"key": self.key, "tags": self.tags, "infos": self.infos.map(lambda i: i.toDict())}
 
 
-class Edge(TagBean, InfoBean, BaseClass):
+class Edge(Tag, InfoBean, BaseClass):
     """
     * 图关系 定义类
     """
 
     def __init__(self, fromKey=None, toKey=None, tags: dict = None, infos: List[Info] = None) -> None:
-        TagBean.__init__(self)
+        Tag.__init__(self)
         InfoBean.__init__(self)
         self.fromKey = fromKey
         self.toKey = toKey
@@ -156,24 +151,13 @@ class GraphFunc(metaclass=ABCMeta):
         pass
 
 
-class Concept(BaseClass):
-    pass
-
-
-class Schema(BaseClass):
-    """
-    # * 图谱模式对象
-    """
-    pass
-
-
-class Graph(TagBean, BaseClass):
+class Graph(Tag, BaseClass):
     """
     * 图结构 定义类
     """
 
     def __init__(self, name: str = None) -> None:
-        TagBean.__init__(self)
+        Tag.__init__(self)
         self.name: str = name
         self.nodes: Dict[str, Node] = dict()
         self.edges: List[Edge] = list()

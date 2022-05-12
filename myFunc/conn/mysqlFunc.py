@@ -11,7 +11,6 @@ from pymysql.cursors import DictCursor
 from dbutils.pooled_db import PooledDB
 from myFunc.conn.dbFunc import DbFunc, DbColumn, DbConfig
 
-
 from urllib.parse import quote_plus as urlquote
 from myFunc.basic.configFunc import getDict
 
