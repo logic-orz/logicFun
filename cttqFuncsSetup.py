@@ -1,7 +1,7 @@
 '''
 Author: Logic
 Date: 2022-04-27 08:56:43
-LastEditTime: 2022-05-19 14:49:03
+LastEditTime: 2022-05-19 15:30:07
 FilePath: \pyFuncs\cttqFuncsSetup.py
 Description: 
 '''
