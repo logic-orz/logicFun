@@ -1,18 +1,18 @@
 '''
 Author: Logic
 Date: 2022-04-20 14:27:40
-LastEditTime: 2022-05-09 15:07:18
-FilePath: \pyFuncs\myFunc\conn\mysqlFunc.py
+LastEditTime: 2022-05-19 14:46:19
+FilePath: \pyFuncs\cttqFuncs\conn\mysqlFunc.py
 Description: 
 '''
 import pymysql
 from pymysql import connect
 from pymysql.cursors import DictCursor
 from dbutils.pooled_db import PooledDB
-from myFunc.conn.dbFunc import DbFunc, DbColumn, DbConfig
+from cttqFuncs.conn.dbFunc import DbFunc, DbColumn, DbConfig
 
 from urllib.parse import quote_plus as urlquote
-from myFunc.basic.configFunc import getDict
+from cttqFuncs.basic.configFunc import getDict
 
 
 class MysqlPool(DbFunc):

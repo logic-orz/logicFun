@@ -1,14 +1,14 @@
 '''
 Author: Logic
 Date: 2022-04-20 14:25:56
-LastEditTime: 2022-05-09 15:27:01
-FilePath: \pyFuncs\myFunc\conn\impalaFunc.py
+LastEditTime: 2022-05-19 14:57:27
+FilePath: \pyFuncs\cttqFuncs\conn\impalaFunc.py
 Description: 
 '''
 
 from impala.dbapi import connect
 from .dbFunc import DbColumn, DbConfig, DbFunc
-from ..basic.configFunc import getDict
+from cttqFuncs.basic.configFunc import getDict
 from typing import List
 
 '''

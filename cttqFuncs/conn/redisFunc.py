@@ -1,16 +1,16 @@
 '''
 Author: Logic
 Date: 2022-04-20 14:27:43
-LastEditTime: 2022-05-09 15:18:14
-FilePath: \pyFuncs\myFunc\conn\redisFunc.py
+LastEditTime: 2022-05-19 14:47:59
+FilePath: \pyFuncs\cttqFuncs\conn\redisFunc.py
 Description: 
 '''
 import redis  # 导入redis 模块
 
 from rediscluster import RedisCluster
 
-from myFunc.conn.dbFunc import DbConfig
-from myFunc.basic.configFunc import getDict
+from .dbFunc import DbConfig
+from cttqFuncs.basic.configFunc import getDict
 
 
 class Redis:

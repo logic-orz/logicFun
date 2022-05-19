@@ -1,16 +1,20 @@
 '''
 Author: Logic
 Date: 2022-04-26 08:55:29
-LastEditTime: 2022-05-12 14:09:21
-FilePath: \pyFuncs\myFunc\basic\myClass.py
+LastEditTime: 2022-05-19 14:55:22
+FilePath: \pyFuncs\cttqFuncs\basic\exClass.py
 Description:
 '''
 import json
-from typing import TypeVar, Generic, Dict, List, Set, Tuple
-import myFunc.basic.signFunc
+from typing import Any, Callable, TypeVar, Generic, Dict, List, Set, Tuple
+T = TypeVar('T')
 
 
 class BaseClass:
+
+    """
+    * 基础父类,提供面向dict的转换方法
+    """
 
     def build(self, _obj: Dict):
         if _obj:
@@ -28,29 +32,19 @@ class BaseClass:
     def toStr(self):
         return json.dumps(self.toDict(), ensure_ascii=False)
 
-    def __repr__(self) -> str:
-        return json.dumps(self.toDict(), ensure_ascii=False)
 
+class IndexList(Generic[T]):
+    """
+     * 索引集合,主要面向检索，不建议修改数据
+    """
 
-T = TypeVar('T')
-
-
-class IndexList(Generic[T]):  # * 索引集合
     def __init__(self) -> None:
-
-        self.numKey = 0  # * 递增key
-        self.data: Dict[int, Tuple[T, List[str]]] = dict()
+        self.data: List[Tuple[T, List[str]]] = list()
         self.index: Dict[str, Set[int]] = dict()
 
-    def getNumKey(self):
-        self.numKey += 1
-        return self.numKey
-
     def add(self, t: T, keys: List[str]):
-
-        num = self.getNumKey()
-        self.data[num] = (t, keys)
-
+        self.data.append((t, keys))
+        num = self.data.__len__() - 1
         for key in keys:
             indexV = set()
             if key in self.index:
@@ -60,7 +54,7 @@ class IndexList(Generic[T]):  # * 索引集合
 
     def search(self, key: str) -> List[Tuple[int, T]]:
         if key in self.index:
-            numSet = self.index[key]
+            numSet: set[int] = self.index[key]
             return numSet.toList()\
                 .map(lambda n: (n, self.data[n][0]))
         return list()
@@ -68,12 +62,10 @@ class IndexList(Generic[T]):  # * 索引集合
     def remove(self, num: int):
         if not num in self.data:
             return
-
         tup = self.data[num]
         t = tup[0]
         keys = tup[1]
-
-        del self.data[num]
+        self.data[num] = None
 
         for key in keys:
             if not key in self.index:
@@ -85,8 +77,8 @@ class IndexList(Generic[T]):  # * 索引集合
             else:
                 self.index[key] = numSet
 
-    def vs(self):
-        return self.data.vs().map(lambda t: t[0])
+    def vs(self) -> List[T]:
+        return self.data.map(lambda t: t[0])
 
 
 class StrBuild():  # * 面向长字符串多次需要拼接的场景
@@ -132,15 +124,16 @@ class Tree(Generic[T]):
     def delete(self, key: str):
         childKeys = {key}
 
-        tmpkeys: List[str] = [key]
+        tmpKeys: List[str] = list()
+        tmpKeys.append(key)
 
-        while len(tmpkeys) > 0:
-            ts = []
-            for tmp in tmpkeys:
+        while len(tmpKeys) > 0:
+            ts = list()
+            for tmp in tmpKeys:
                 ts.appendAll(self.getChildrenKeys(tmp))
 
-            tmpkeys.clear()
-            tmpkeys.appendAll(ts)
+            tmpKeys.clear()
+            tmpKeys.appendAll(ts)
 
         pk = self.data[key][0]
         ps = self.child[pk]
@@ -153,7 +146,8 @@ class Tree(Generic[T]):
 
     def getChildren(self, key: str) -> List[T]:
         if key in self.child:
-            return self.child[key].toList().map(lambda k: self.data[k][1])
+            childKeys: set[int] = self.child[key]
+            return childKeys.toList().map(lambda k: self.data[k][1])
         return []
 
     def getChildrenKeys(self, key: str) -> List[str]:

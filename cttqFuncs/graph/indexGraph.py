@@ -1,20 +1,27 @@
+'''
+Author: Logic
+Date: 2022-05-12 13:27:54
+LastEditTime: 2022-05-19 10:35:40
+FilePath: \pyFuncs\cttqFuncs\graph\indexGraph.py
+Description: 
+'''
 
-import myFunc.basic.signFunc
-from myFunc.basic.myClass import IndexList, Tree
-from myFunc.basic.fileFunc import readLines
-from myFunc.graph.data import *
-from myFunc.graph.schema import Concept, Relation
+import basic.exFunc
+from basic.exClass import IndexList, Tree
+from graph.data import *
+from graph.schema import Concept, Relation
+from typing import Dict, Tuple, List, Set
 
 
 class IndexGraph(Graph, GraphFunc):
     """
     * 图结构 定义类 用于内存索引
     """
+    nodes: IndexList[Node] = IndexList()
+    edges: IndexList[Edge] = IndexList()
 
     def __init__(self, name) -> None:
         super().__init__(name)
-        self.nodes: IndexList[Node] = IndexList()
-        self.edges: IndexList[Edge] = IndexList()
 
     def toDict(self):
         return {
@@ -35,3 +42,11 @@ class IndexGraph(Graph, GraphFunc):
 
     def addEdge(self, edge: Edge):
         self.edges.add(edge, [edge.fromKey, edge.toKey])
+
+
+class LinkGraph(GraphFunc):
+    """
+    邻接多重表
+    [nodeKey,[Node,Set[Edge]]]
+    """
+    data: Dict[str, Tuple[Node, List[Edge]]] = dict()

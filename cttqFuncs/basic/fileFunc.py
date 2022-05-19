@@ -1,17 +1,14 @@
 '''
 Author: Logic
 Date: 2022-04-29 19:10:30
-LastEditTime: 2022-05-12 14:19:27
-FilePath: \pyFuncs\myFunc\basic\fileFunc.py
+LastEditTime: 2022-05-19 15:02:48
+FilePath: \pyFuncs\cttqFuncs\basic\fileFunc.py
 Description: 
 '''
 import os
-from typing import List
-from myFunc.basic.myClass import StrBuild
-import myFunc.basic.signFunc
+from .exClass import StrBuild
+from .exFunc import *
 import shutil
-
-# Get directory name
 
 
 def deleteFile(path: str):
@@ -28,17 +25,17 @@ def deleteFile(path: str):
 def listFile(path: str):
     if os.path.exists(path):
         return os.listdir(path).map(lambda s: path+"/"+s).filter(lambda p: os.path.isfile(p))
-    return []
+    return list()
 
 
 def listDir(path: str):
     if os.path.exists(path):
         return os.listdir(path).map(lambda s: path+"/"+s).filter(lambda p: os.path.isdir(p))
-    return []
+    return list()
 
 
-def readLines(path: str, encoding='UTF-8') -> List[str]:
-    re: List[str] = []
+def readLines(path: str, encoding='UTF-8') :
+    re: List[str] = list()
     for line in open(path, 'r', encoding=encoding):
         re.append(line)
     return re

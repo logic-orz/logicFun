@@ -1,5 +1,6 @@
-from myFunc.basic.myClass import BaseClass
-from myFunc.basic.signFunc import *
+import basic.exFunc
+from basic.exClass import StrBuild, BaseClass
+from basic.signClass import build, toDict, toStr, doAfter, doBefore
 from enum import Enum
 from typing import Dict, Any, List
 import abc
@@ -8,17 +9,24 @@ from abc import ABCMeta
 
 class Tag:
     """
-     * 数据标签封装类
+     * 数据标签封装类\n
+     @ IsPrivate  属性是否为私有\n
+     @ IsMore  属性是否为多值\n
+     @ IsDirected  是否为有向关系（正向）\n
     """
-    IsPrivate = 'isPrivate'  # ? 属性是否为私有
-    IsMore = 'isMore'  # ? 属性是否为多值
-    IsDirected = 'isDirected'  # ? 是否为有向关系（正向）
+    IsPrivate = 'isPrivate'
+    IsMore = 'isMore'
+    IsDirected = 'isDirected'
 
     def __init__(self) -> None:
         self.tags: Dict[str, Any] = {}
 
     def addTag(self, k, v):
         self.tags[k] = v
+        return self
+
+    def addTags(self, tag: Dict[str, Any]):
+        self.tags.update(tag)
         return self
 
     def removeTag(self, k):
@@ -28,29 +36,35 @@ class Tag:
 
 class Info(Tag, BaseClass):
     """
-    * spo 属性定义类
+     * spo 属性定义类\n
+     @ Name  实体名称\n
+     @ NameKey  实体唯一消歧\n
+     @ Concept  实体概念\n
+     @ ConceptKey 实体概念消歧\n
+     @ RelaName 关系名称\n
+     @ Label 标签\n
     """
-    Name = 'name'  # ? 实体名称
-    NameTag = 'nameTag'  # ? 实体名称消歧
+    Name = 'name'
+    NameKey = 'nameKey'
 
-    Concept = 'concept'  # ? 实体概念
-    ConceptTag = 'conceptTag'  # ? 实体概念消歧
+    Concept = 'concept'
+    ConceptKey = 'conceptKey'
 
     FromName = 'fromName'
-    FromNameTag = 'fromNameTag'
+    FromNameKey = 'fromNameKey'
 
     FromConcept = 'fromConcept'
-    FromConceptTag = 'fromConceptTag'
+    FromConceptKey = 'fromConceptKey'
 
     ToName = 'toName'
-    ToNameTag = 'toNameTag'
+    ToNameKey = 'toNameKey'
 
     ToConcept = 'toConcept'
-    ToConceptTag = 'toConceptTag'
+    ToConceptKey = 'toConceptKey'
 
-    RelaName = 'relaName'  # ? 关系名称
+    RelaName = 'relaName'
 
-    Label = "label"  # ? 标签
+    Label = "label"
 
     def __init__(self, name: str = None, value: Any = None):
         Tag.__init__(self)
@@ -71,6 +85,10 @@ class InfoBean:
             self.infos.append(info)
         return self
 
+    def addInfo(self, name: str, value: Any):
+        self.infos.append(Info(name, value))
+        return self
+
     def getInfo(self, name: str) -> List[Info]:
         return self.infos.filter(lambda i: i.name == name)
 
@@ -81,13 +99,14 @@ class InfoBean:
         else:
             return tmp[0].value
 
-    def addInfo(self, name: str, value: Any):
-        self.infos.append(Info(name, value))
-        return self
-
     def removeInfo(self, name):
         self.infos = self.infos.filter(lambda info: info.name != name)
         return self
+
+
+def infoToDict(d):
+    d['info'] = d['info'].map(lambda i: i.toDict())
+    return d
 
 
 class Node(Tag, InfoBean, BaseClass):
@@ -95,17 +114,14 @@ class Node(Tag, InfoBean, BaseClass):
     * 图节点 定义类
     """
 
-    def __init__(self, key: str = None, tags: dict = None, infos: List[Info] = None):
+    def __init__(self, key: str = None):
         Tag.__init__(self)
         InfoBean.__init__(self)
         self.key: str = key
-        if tags:
-            self.tags = tags
-        if infos:
-            self.infos = infos
 
+    @doAfter(func=infoToDict)
     def toDict(self):
-        return {"key": self.key, "tags": self.tags, "infos": self.infos.map(lambda i: i.toDict())}
+        return BaseClass.toDict(self)
 
 
 class Edge(Tag, InfoBean, BaseClass):
@@ -113,24 +129,29 @@ class Edge(Tag, InfoBean, BaseClass):
     * 图关系 定义类
     """
 
-    def __init__(self, fromKey=None, toKey=None, tags: dict = None, infos: List[Info] = None) -> None:
+    def __init__(self, fromKey=None, toKey=None) -> None:
         Tag.__init__(self)
         InfoBean.__init__(self)
         self.fromKey = fromKey
         self.toKey = toKey
-        if tags:
-            self.tags = tags
-        if infos:
-            self.infos = infos
 
+    @doAfter(func=infoToDict)
     def toDict(self):
-        return {"fromKey": self.fromKey, "toKey": self.toKey, "tags": self.tags, "infos": self.infos.map(lambda i: i.toDict())}
+        return BaseClass.toDict(self)
 
 
 class GraphFunc(metaclass=ABCMeta):
     """
     图对象 方法
     """
+
+    @abc.abstractmethod
+    def allEdges(self) -> List[Edge]:
+        pass
+
+    @abc.abstractmethod
+    def allNodes(self) -> List[Node]:
+        pass
 
     @abc.abstractmethod
     def addNode(self, node: Node):
@@ -141,17 +162,20 @@ class GraphFunc(metaclass=ABCMeta):
         pass
 
     @abc.abstractmethod
-    def queryNode(self, key: str, isFuzzy: bool = False) -> List[Node]:  # 节点检索
+    # 节点检索
+    def queryNode(self, key: str, isFuzzy: bool = False) -> List[Node]:
         #   todo 子类实现
         pass
 
     @abc.abstractmethod
-    def queryEdge(self, nodeKey: str) -> List[Edge]:  # * 一度 关系检索
+    def queryEdge(self, nodeKey: str) -> list[Edge]:  # * 一度 关系检索
         #   todo 子类实现
         pass
 
 
-class Graph(Tag, BaseClass):
+@build
+@toStr
+class Graph(Tag):
     """
     * 图结构 定义类
     """

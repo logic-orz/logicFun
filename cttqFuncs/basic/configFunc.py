@@ -1,7 +1,7 @@
 '''
 Author: Logic
 Date: 2022-04-19 15:42:25
-LastEditTime: 2022-05-11 14:10:56
+LastEditTime: 2022-05-17 10:04:43
 Description: 配置读取工具类
 FilePath: \pyFuncs\myFunc\basic\configFunc.py
 '''
@@ -40,10 +40,6 @@ def getValue(nameSpace: str, key: str) -> str:
     return config.get(nameSpace, key)
 
 
-sqlConfig = None
-sqlPaths = ['./resources/config.sql']
-
-
 sqlConfig = dict()
 sqlPaths = ['./resources/config.sql']
 
@@ -62,7 +58,7 @@ def initSqlConfig(sqlPath: str):
                 v = ''
 
             k = line[2:-2].strip()
-        else:
+        elif not line.strip().startswith("--"):
             v = v+line+"\n"
 
     if k != '':

@@ -1,50 +1,15 @@
 '''
 Author: Logic
 Date: 2022-04-28 11:03:17
-LastEditTime: 2022-05-09 15:32:39
-FilePath: \pyFuncs\myFunc\basic\signFunc.py
+LastEditTime: 2022-05-19 11:58:36
+FilePath: \pyFuncs\cttqFuncs\basic\exFunc.py
 Description: 
 '''
-from functools import reduce
+from functools import reduce as reduceWith
 from typing import Dict, Callable, Any, List, Tuple, TypeVar
-import ctypes
+from .signClass import sign, T
 import json
 
-T = TypeVar('T')
-
-
-class PyObject(ctypes.Structure):
-    class PyType(ctypes.Structure):
-        pass
-
-    ssize = ctypes.c_int64 if ctypes.sizeof(
-        ctypes.c_void_p) == 8 else ctypes.c_int32
-    _fields_ = [
-        ('ob_refcnt', ssize),
-        ('ob_type', ctypes.POINTER(PyType)),
-    ]
-
-
-def sign(clazz, funcName):  # * 功能注册装饰器,加在函数上,可以将函数注册到特定类
-    """
-    ? clazz class类名
-    ? funcName 注册的函数名称
-    """
-    def _(function):
-        class SlotsProxy(PyObject):
-            _fields_ = [('dict', ctypes.POINTER(PyObject))]
-
-        name, target = clazz.__name__, clazz.__dict__
-        proxy_dict = SlotsProxy.from_address(id(target))
-        namespace = {}
-        ctypes.pythonapi.PyDict_SetItem(
-            ctypes.py_object(namespace),
-            ctypes.py_object(name),
-            proxy_dict.dict,
-        )
-        namespace[name][funcName] = function
-
-    return _
 
 # * 函数注册
 
@@ -140,8 +105,13 @@ def tupleToDict(self: List[Tuple[str, T]]) -> Dict[str, T]:
 
 
 @sign(list, 'reduce')
-def reduceWith(self, __func):
-    return reduce(__func, self)
+def reduce(self, __func):
+    return reduceWith(__func, self)
+
+
+@sign(list, 'doSelf')
+def doSelf(self, __func):
+    return __func(self)
 
 
 @sign(list, 'sum')
@@ -204,3 +174,8 @@ def endsIn(self: str, *keys):
 @sign(str, 'append')
 def appendStr(self: str, s: str):
     return self + str(s)
+
+
+@sign(str, 'toJson')
+def toJson(self: str):
+    return json.loads(self)
