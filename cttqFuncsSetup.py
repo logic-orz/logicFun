@@ -23,7 +23,8 @@ setup(name="cttqFuncs",
       author="Logic",
       author_email=' ',
       url='https://gitlab.cttq.com/8608858/pyfuncs',
-      packages=['cttqFuncs', 'cttqFuncs.conn', 'cttqFuncs.basic', 'cttqFuncs.graph'],
+      packages=['cttqFuncs', 'cttqFuncs.conn',
+                'cttqFuncs.basic', 'cttqFuncs.graph'],
       install_requires=installs
       )
 """

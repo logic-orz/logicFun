@@ -6,7 +6,7 @@ FilePath: \pyFuncs\myFunc\graph\graphx.py
 Description: 
 '''
 from typing import Dict
-from cttqFuncs.graph.data import GraphFunc
+from .data import GraphFunc
 import cttqFuncs.basic.exFunc
 
 

@@ -1,13 +1,13 @@
 '''
 Author: Logic
 Date: 2022-04-20 14:36:14
-LastEditTime: 2022-05-19 14:45:56
+LastEditTime: 2022-05-19 16:28:18
 FilePath: \pyFuncs\cttqFuncs\conn\dbFunc.py
 Description: 
 '''
 import json
 from typing import List, Dict
-from basic.exClass import BaseClass
+from cttqFuncs.basic.exClass import BaseClass
 import abc
 
 
@@ -27,9 +27,9 @@ class DbColumn(BaseClass):
     """
     字段信息对象
     """
-    name:str = None
-    type:str = None
-    comment:str = None
+    name: str = None
+    type: str = None
+    comment: str = None
     primary_key = None
     default_value = None
     nullable = None
@@ -52,10 +52,11 @@ class DbFunc(metaclass=abc.ABCMeta):
         cur.close()
         return res_list
 
-    def execQueryNoRes(self, sql: str) -> None:
+    def execQueryNoRes(self, *sqls) -> None:
         conn = self.conn()
         cur = conn.cursor()
-        cur.execute(sql)
+        for sql in sqls:
+            cur.execute(sql)
         conn.commit()
         cur.close()
 

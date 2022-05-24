@@ -1,7 +1,7 @@
 '''
 Author: Logic
 Date: 2022-04-20 14:25:56
-LastEditTime: 2022-05-19 14:57:27
+LastEditTime: 2022-05-19 16:32:18
 FilePath: \pyFuncs\cttqFuncs\conn\impalaFunc.py
 Description: 
 '''
@@ -42,10 +42,11 @@ class Impala(DbFunc):
             self.__conn__.close()
             self.__conn__ = None
 
-    def execQuery(self, sql: str):
+    def execQuery(self, *sqls):
         conn = self.conn()
         cur = conn.cursor(dictify=True)
-        cur.execute(sql)
+        for sql in sqls:
+            cur.execute(sql)
         resList = cur.fetchall()
         cur.close()
         return resList

@@ -1,12 +1,11 @@
 '''
 Author: Logic
 Date: 2022-04-19 15:42:25
-LastEditTime: 2022-05-17 10:04:43
+LastEditTime: 2022-05-19 15:41:09
 Description: 配置读取工具类
-FilePath: \pyFuncs\myFunc\basic\configFunc.py
+FilePath: \pyFuncs\cttqFuncs\basic\configFunc.py
 '''
 import configparser
-from re import I
 from typing import Dict
 import os
 

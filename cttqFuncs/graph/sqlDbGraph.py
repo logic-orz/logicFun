@@ -4,11 +4,11 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.dialects.sqlite import insert
 from sqlalchemy import JSON, Column, String, Text, create_engine, Integer, DateTime, and_, or_
 from cttqFuncs.basic.exClass import ListEx, Tree, IndexList
-from cttqFuncs.graph.data import *
+from .data import *
 from cttqFuncs.basic.exFunc import *
 from cttqFuncs.basic.signClass import doBefore, doAfter
 
-from cttqFuncs.graph.schema import Concept
+from .schema import Concept
 from sqlalchemy import event
 
 Base = declarative_base()

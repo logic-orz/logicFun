@@ -1,6 +1,6 @@
-import basic.exFunc
-from basic.exClass import StrBuild, BaseClass
-from basic.signClass import build, toDict, toStr, doAfter, doBefore
+import cttqFuncs.basic.exFunc
+from cttqFuncs.basic.exClass import StrBuild, BaseClass
+from cttqFuncs.basic.signClass import build, toDict, toStr, doAfter, doBefore
 from enum import Enum
 from typing import Dict, Any, List
 import abc
@@ -168,7 +168,7 @@ class GraphFunc(metaclass=ABCMeta):
         pass
 
     @abc.abstractmethod
-    def queryEdge(self, nodeKey: str) -> list[Edge]:  # * 一度 关系检索
+    def queryEdge(self, nodeKey: str) -> List[Edge]:  # * 一度 关系检索
         #   todo 子类实现
         pass
 
