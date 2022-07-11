@@ -1,6 +1,6 @@
 from prettytable import PrettyTable
 from prettytable import ALL as ALL
-import cttqFuncs.basic.exFunc 
+import cttqFuncs.basic.exFunc
 from typing import List, Dict
 from textwrap import fill
 from IPython.display import display
@@ -16,12 +16,19 @@ def showKTable(datas: List[Dict], title: str = ''):
     display(x)
 
 
-def showZTable(data: Dict, title: str = '', fillWidth=100):
-    x = PrettyTable(hrules=ALL)
+def showKTableWithMatrix(headers: List[str], datas: List[list], title: str = ''):
+    x = PrettyTable()
     x.title = title
-    x.field_names = ['column', 'value']
-    data.kvs().foreach(lambda kv: x.add_row(
-        [kv[0], fill(str(kv[1]), fillWidth)]))
+    x.field_names = headers
+    for data in datas:
+        x.add_row(data)
     display(x)
 
 
+def showZTable(data: Dict, title: str = '', fillWidth=100):
+    x = PrettyTable(hrules=ALL)
+    x.title = title
+    x.field_names = ['name', 'value']
+    data.kvs().foreach(lambda kv: x.add_row(
+        [kv[0], fill(str(kv[1]), fillWidth)]))
+    display(x)
