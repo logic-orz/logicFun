@@ -105,7 +105,7 @@ class InfoBean:
 
 
 def infoToDict(d):
-    d['info'] = d['info'].map(lambda i: i.toDict())
+    d['infos'] = d['infos'].map(lambda i: i.toDict())
     return d
 
 
@@ -168,7 +168,8 @@ class GraphFunc(metaclass=ABCMeta):
         pass
 
     @abc.abstractmethod
-    def queryEdge(self, nodeKey: str) -> List[Edge]:  # * 一度 关系检索
+    # * 一度 关系检索
+    def queryEdge(self, nodeKey: str, direct: int = 0) -> List[Edge]:
         #   todo 子类实现
         pass
 

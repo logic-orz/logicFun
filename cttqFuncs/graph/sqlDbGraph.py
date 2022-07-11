@@ -3,7 +3,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.dialects.sqlite import insert
 from sqlalchemy import JSON, Column, String, Text, create_engine, Integer, DateTime, and_, or_
-from cttqFuncs.basic.exClass import ListEx, Tree, IndexList
+from cttqFuncs.basic.exClass import Tree, IndexList
 from .data import *
 from cttqFuncs.basic.exFunc import *
 from cttqFuncs.basic.signClass import doBefore, doAfter
@@ -28,11 +28,11 @@ class DbRelation(Base):
     __tablename__ = 't_relations'
     id = Column(Integer, name='id', primary_key=True, autoincrement=True)
     key = Column(String(300), name='c_key')
-    fromKey: ListEx[str] = Column(Text, name='c_from_key')
-    toKey: ListEx[str] = Column(Text, name='c_to_key')
+    fromKey: List[str] = Column(Text, name='c_from_key')
+    toKey: List[str] = Column(Text, name='c_to_key')
     name = Column(String(300), name='c_name')
     desc = Column(String(300), name='c_desc')
-    labels: ListEx[str] = Column(JSON, name='c_labels')
+    labels: List[str] = Column(JSON, name='c_labels')
 
 
 class SqlDbSchema:
@@ -46,14 +46,10 @@ class SqlDbSchema:
     def getByKey(key: str) -> Concept:
         pass
 
-    def getByName(name: str) -> ListEx[Concept]:
+    def getByName(name: str) -> List[Concept]:
         pass
 
-    """
-    * 图结构 定义类 用于sqlite索引
-    """
-
-
+# * 图结构 定义类 用于sqlite索引
 class DbNode(Base):
     __tablename__ = 't_nodes'
     key = Column(String(300), name='c_key', primary_key=True)
@@ -64,8 +60,8 @@ class DbNode(Base):
 class DbEdge(Base):
     __tablename__ = 't_edges'
     id = Column(Integer, primary_key=True, autoincrement=True)
-    fromKey = Column(String(300), name='c_from_key')
-    toKey = Column(String(300), name='c_to_key')
+    fromKey = Column(String(300), name='c_from_key', index=True)
+    toKey = Column(String(300), name='c_to_key', index=True)
     infos = Column(Text, name='c_infos')
     tags = Column(Text, name='c_tags')
 
@@ -121,7 +117,7 @@ class SqlDbGraph(Graph, GraphFunc):
                                  ], checkfirst=True)
 
     @doAfter(func=deParse)
-    def queryNode(self, key: str, isFuzzy: bool = False) -> ListEx[Node]:
+    def queryNode(self, key: str, isFuzzy: bool = False) -> List[Node]:
         with self.Session() as session:
             res = session.query(DbNode)
 
@@ -133,11 +129,16 @@ class SqlDbGraph(Graph, GraphFunc):
             return res.limit(10).all()
 
     @doAfter(func=deParse)
-    def queryEdge(self, nodeKey: str) -> List[Edge]:
+    def queryEdge(self, nodeKey: str, direct: int = 0) -> List[Edge]:
         with self.Session() as session:
-            return session.query(DbEdge)\
-                .filter(or_(DbEdge.fromKey == nodeKey, DbEdge.toKey == nodeKey))\
-                .all()
+            res = session.query(DbEdge)
+
+            if direct == 1:
+                return res.filter(DbEdge.fromKey == nodeKey).all()
+            elif direct == -1:
+                return res.filter(DbEdge.toKey == nodeKey).all()
+            else:
+                return res.filter(or_(DbEdge.fromKey == nodeKey, DbEdge.toKey == nodeKey)).all()
 
     @doBefore(func=parseNode)
     def addNode(self, node: Node):
@@ -163,3 +164,13 @@ class SqlDbGraph(Graph, GraphFunc):
                     session.commit()
 
             session.commit()
+
+    @doAfter(func=deParse)
+    def allEdges(self) -> List[Edge]:
+        with self.Session() as session:
+            return session.query(DbEdge).all()
+
+    @doAfter(func=deParse)
+    def allNodes(self) -> List[Node]:
+        with self.Session() as session:
+            return session.query(DbNode).all()

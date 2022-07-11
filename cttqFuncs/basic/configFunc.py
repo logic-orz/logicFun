@@ -3,20 +3,20 @@ Author: Logic
 Date: 2022-04-19 15:42:25
 LastEditTime: 2022-05-19 15:41:09
 Description: 配置读取工具类
-FilePath: \pyFuncs\cttqFuncs\basic\configFunc.py
 '''
 import configparser
 from typing import Dict
 import os
 
 config = None
-configPath = './resources/config.ini'
+configPaths = ['./resources/config.ini']
 
 
 def initConfig():
     global config
     config = configparser.RawConfigParser()
-    config.read(configPath, encoding="utf-8-sig")
+    for configPath in configPaths:
+        config.read(configPath, encoding="utf-8-sig")
 
 
 def getDict(nameSpace: str) -> Dict:

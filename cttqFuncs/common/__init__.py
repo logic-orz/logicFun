@@ -6,5 +6,5 @@ FilePath: \pyFuncs\cttqFuncs\conn\__init__.py
 Description: 
 '''
 
-__all__ = ['dbFunc', 'impalaFunc', 'mysqlFunc', 'redisFunc', 'postgresFunc']
+__all__ = ['md2Html','dataShow']
 

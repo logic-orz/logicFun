@@ -1,19 +1,18 @@
 '''
 Author: Logic
 Date: 2022-04-27 09:41:14
-LastEditTime: 2022-05-19 10:34:07
+LastEditTime: 2022-05-24 16:20:49
 FilePath: \pyFuncs\cttqFuncs\graph\schema.py
 Description: 
 '''
 
-from basic.exClass import BaseClass, ListEx, Tree
-from basic.signClass import build, toDict, toStr
-import basic.exFunc
-from typing import Any
+from cttqFuncs.basic.exClass import BaseClass,  Tree
+from cttqFuncs.basic.signClass import build, toDict, toStr
+import cttqFuncs.basic.exFunc
+from typing import Any, List
 import abc
 from abc import ABCMeta
 
-from cttqFuncs.basic.exClass import listEx
 
 
 class Label:
@@ -22,7 +21,7 @@ class Label:
     """
 
     def __init__(self) -> None:
-        self.labels: ListEx[str] = listEx()
+        self.labels: List[str] = list()
 
 
 @build
@@ -61,7 +60,7 @@ class Concept(Label):
         self.key = key
         self.name = name
         self.desc = None
-        self.attributes: ListEx[Attribute] = listEx()
+        self.attributes: List[Attribute] = list()
 
 
 @build
@@ -71,8 +70,8 @@ class Relation(Label):
 
     def __init__(self) -> None:
         Label.__init__(self)
-        self.fromKey: ListEx[str] = None  # * 关系起点
-        self.toKey: ListEx[str] = None  # * 关系终点
+        self.fromKey: List[str] = None  # * 关系起点
+        self.toKey: List[str] = None  # * 关系终点
         self.key = None
         self.name = None  # * 关系名称
         self.desc = None  # * 关系描述
@@ -89,5 +88,5 @@ class Schema(BaseClass):
 
     def __init__(self, name) -> None:
         self.name = name
-        self.relations: ListEx[Relation] = []
+        self.relations: List[Relation] = []
         self.concepts: Tree[Concept] = Tree()

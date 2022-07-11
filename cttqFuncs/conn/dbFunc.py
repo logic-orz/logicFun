@@ -47,7 +47,12 @@ class DbFunc(metaclass=abc.ABCMeta):
         conn = self.conn()
         cur = conn.cursor()
         cur.execute(sql)
-        res_list = cur.fetchall()
+        
+        if cur.rowcount > 0:
+            res_list = cur.fetchall()
+        else:
+            res_list = []
+
 
         cur.close()
         return res_list

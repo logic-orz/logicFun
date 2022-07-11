@@ -5,8 +5,5 @@ LastEditTime: 2022-05-19 11:45:36
 FilePath: \pyFuncs\cttqFuncs\__init__.py
 Description: 
 '''
-from .basic import configFunc, exClass
-from .conn import dbFunc
-
-__all__ = ['basic', 'conn','graph']
+__all__ = ['basic', 'conn','graph','common']
 __version__ = "1.0"

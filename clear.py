@@ -1,7 +1,7 @@
 '''
 Author: Logic
 Date: 2022-05-12 14:00:34
-LastEditTime: 2022-05-19 14:56:26
+LastEditTime: 2022-05-24 17:28:59
 FilePath: \pyFuncs\clear.py
 Description: 
 '''
