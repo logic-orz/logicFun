@@ -1,12 +1,11 @@
 '''
 Author: Logic
 Date: 2022-04-26 08:55:29
-LastEditTime: 2022-05-19 14:55:22
-FilePath: \pyFuncs\cttqFuncs\basic\exClass.py
 Description:
 '''
 import json
-from typing import Any, Callable, TypeVar, Generic, Dict, List, Set, Tuple
+from typing import Any, Callable, Dict, Generic, List, Set, Tuple, TypeVar
+
 T = TypeVar('T')
 
 
@@ -30,6 +29,9 @@ class BaseClass:
         return dict
 
     def toStr(self):
+        return json.dumps(self.toDict(), ensure_ascii=False)
+
+    def __str__(self):
         return json.dumps(self.toDict(), ensure_ascii=False)
 
 

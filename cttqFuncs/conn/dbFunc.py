@@ -47,12 +47,11 @@ class DbFunc(metaclass=abc.ABCMeta):
         conn = self.conn()
         cur = conn.cursor()
         cur.execute(sql)
-        
+
         if cur.rowcount > 0:
             res_list = cur.fetchall()
         else:
             res_list = []
-
 
         cur.close()
         return res_list
@@ -76,3 +75,18 @@ class DbFunc(metaclass=abc.ABCMeta):
         todo 子类实现
         """
         raise Exception("方法未实现")
+
+
+def createInsertSql(tbName: str, data: Dict):
+
+    keys = list(data.keys())
+    values = []
+    for s in keys:
+        if isinstance(data[s], str):
+            values.append("'%s'" % (data[s]))
+        else:
+            values.append("%s" % (data[s]))
+
+    sql = 'INSERT INTO {table}({keys}) VALUES ({values})'.format(
+        table=tbName, keys=', '.join(keys), values=', '.join(values))
+    return sql

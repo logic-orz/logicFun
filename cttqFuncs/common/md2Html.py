@@ -1,8 +1,7 @@
 '''
 Author: Logic
 Date: 2022-06-06 09:51:04
-LastEditTime: 2022-06-06 10:04:59
-Description: 
+Description: 将markdown数据转换成html展示
 '''
 import sys
 import markdown
@@ -12,7 +11,7 @@ import importlib
 importlib.reload(sys)
 
 
-def md2htmlFunc(mdStr: str):
+def _md2htmlFunc__(mdStr: str):
     exts = ['markdown.extensions.extra', 'markdown.extensions.codehilite',
             'markdown.extensions.tables', 'markdown.extensions.toc']
 
@@ -55,5 +54,5 @@ def transfer(mdPath, htmlPath):
         os.remove(htmlPath)
 
     outfile = open(htmlPath, 'a', encoding="utf8")
-    outfile.write(md2htmlFunc(md))
+    outfile.write(_md2htmlFunc__(md))
     outfile.close()

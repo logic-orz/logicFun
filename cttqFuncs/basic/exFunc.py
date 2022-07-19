@@ -1,8 +1,6 @@
 '''
 Author: Logic
 Date: 2022-04-28 11:03:17
-LastEditTime: 2022-05-19 11:58:36
-FilePath: \pyFuncs\cttqFuncs\basic\exFunc.py
 Description: 
 '''
 from functools import reduce as reduceWith

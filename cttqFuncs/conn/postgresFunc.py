@@ -5,7 +5,6 @@ LastEditTime: 2022-06-14 16:23:19
 FilePath: \pyFuncs\cttqFuncs\conn\mysqlFunc.py
 Description: 
 '''
-from urllib.parse import quote_plus as urlquote
 
 import psycopg2
 from cttqFuncs.basic.configFunc import getDict

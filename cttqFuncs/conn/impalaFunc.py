@@ -11,12 +11,6 @@ from .dbFunc import DbColumn, DbConfig, DbFunc
 from cttqFuncs.basic.configFunc import getDict
 from typing import List
 
-'''
-description:  impala连接接对象
-param {*}
-return {*}
-'''
-
 
 class Impala(DbFunc):
 

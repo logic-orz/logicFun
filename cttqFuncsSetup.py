@@ -16,7 +16,7 @@ installs = [
     'SQLAlchemy',
     'DBUtils',
     'psycopg2',
-    'IPython','prettytable'
+    'IPython', 'prettytable'
 ]
 
 setup(name="cttqFuncs",
@@ -25,8 +25,12 @@ setup(name="cttqFuncs",
       author="Logic",
       author_email=' ',
       url='https://gitlab.cttq.com/8608858/pyfuncs',
-      packages=['cttqFuncs', 'cttqFuncs.conn',
-                'cttqFuncs.basic', 'cttqFuncs.graph', 'cttqFuncs.common'],
+      packages=['cttqFuncs',
+                'cttqFuncs.conn',
+                'cttqFuncs.basic',
+                'cttqFuncs.graph',
+                'cttqFuncs.common'
+                ],
       install_requires=installs
       )
 """

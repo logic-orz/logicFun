@@ -7,3 +7,4 @@ dist
 *.egg-info
 */*.db
 test.py
+.gitignore

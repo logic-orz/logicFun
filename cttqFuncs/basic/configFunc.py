@@ -8,24 +8,24 @@ import configparser
 from typing import Dict
 import os
 
-config = None
+_config = None
 configPaths = ['./resources/config.ini']
 
 
 def initConfig():
-    global config
-    config = configparser.RawConfigParser()
+    global _config
+    _config = configparser.RawConfigParser()
     for configPath in configPaths:
-        config.read(configPath, encoding="utf-8-sig")
+        _config.read(configPath, encoding="utf-8-sig")
 
 
 def getDict(nameSpace: str) -> Dict:
-    if config is None:
+    if _config is None:
         initConfig()
     '''
     Description: 以dict的方式返回配置
     '''
-    tmpList = config.items(nameSpace)
+    tmpList = _config.items(nameSpace)
     re = {}
     for t in tmpList:
         re[t[0]] = t[1]
@@ -34,12 +34,12 @@ def getDict(nameSpace: str) -> Dict:
 
 
 def getValue(nameSpace: str, key: str) -> str:
-    if config is None:
+    if _config is None:
         initConfig()
-    return config.get(nameSpace, key)
+    return _config.get(nameSpace, key)
 
 
-sqlConfig = dict()
+_sqlConfig = dict()
 sqlPaths = ['./resources/config.sql']
 
 
@@ -52,7 +52,7 @@ def initSqlConfig(sqlPath: str):
             line = line[:-1]
         if line.startswith("--") and line.endswith("--"):
             if k != '':
-                sqlConfig[k] = v
+                _sqlConfig[k] = v
                 k = ''
                 v = ''
 
@@ -61,14 +61,14 @@ def initSqlConfig(sqlPath: str):
             v = v+line+"\n"
 
     if k != '':
-        sqlConfig[k] = v
+        _sqlConfig[k] = v
 
 
 def getSql(key: str) -> str:
-    if len(sqlConfig) == 0:
+    if len(_sqlConfig) == 0:
         for s in sqlPaths:
             initSqlConfig(s)
-    if key in sqlConfig:
-        return sqlConfig[key]
+    if key in _sqlConfig:
+        return _sqlConfig[key]
     else:
         return ''
