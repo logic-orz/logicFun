@@ -45,6 +45,22 @@ class Impala(DbFunc):
         cur.close()
         return resList
 
+    def execQueryIte(self, sql: str, batchSize: int = 100, showStep: bool = False):
+        conn = self.conn()
+        cur = conn.cursor(dictify=True)
+        cur.execute(sql)
+        i = 0
+        while True:
+            i += 1
+            if showStep:
+                print("fetch batch ", i)
+            res_list = cur.fetchmany(batchSize)
+            if not res_list:
+                cur.close()
+                return
+            yield res_list
+            
+
     def tables(self) -> List[str]:
         return self.execQuery(' show tables ').map(lambda x: x['name'])
 
