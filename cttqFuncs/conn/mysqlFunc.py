@@ -52,6 +52,7 @@ class Mysql(DbFunc):
                                 cursorclass=DictCursor)
 
     def conn(self):
+        self.__conn__.ping(reconnect=True)
         return self.__conn__
 
     def close(self):
@@ -62,4 +63,3 @@ class Mysql(DbFunc):
     @staticmethod
     def fixedMysql(ns: str = 'mysql'):
         return Mysql(DbConfig().build(getDict(ns)))
-
