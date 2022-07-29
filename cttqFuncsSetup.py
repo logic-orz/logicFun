@@ -11,12 +11,10 @@ from setuptools import setup
 installs = [
     'impyla',
     'pymysql',
-    'redis',
-    'redis-py-cluster',
     'SQLAlchemy',
     'DBUtils',
-    'psycopg2',
-    'IPython', 'prettytable'
+    'IPython', 
+    'prettytable'
 ]
 
 setup(name="cttqFuncs",
