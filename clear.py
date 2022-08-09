@@ -25,6 +25,5 @@ if __name__ == "__main__":
     deleteFile("./build")
     deleteFile("./dist")
     deleteFile("./cttqFuncs.egg-info")
-
     clear("cttqFuncs")
     

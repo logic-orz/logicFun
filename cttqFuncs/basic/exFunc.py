@@ -142,6 +142,13 @@ def listToStr(self) -> str:
 def listIsEmpty(self: List) -> bool:
     return len(self) == 0
 
+
+@sign(list, 'sortBy')
+def sortBy(self: List, key, reverse=False) -> list:
+    self.sort(key=key, reverse=reverse)
+    return self
+
+
 # * set
 
 

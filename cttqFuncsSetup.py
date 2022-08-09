@@ -42,3 +42,4 @@ setup(name="cttqFuncs",
 *   pip  --no-cache-dir install -U cttqFuncs --trusted-host=10.81.87.43 -i http://10.81.87.43:8180/simple
 *           
 """
+ 
