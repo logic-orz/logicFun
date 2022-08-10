@@ -5,6 +5,7 @@ LastEditTime: 2022-05-19 14:46:19
 FilePath: \pyFuncs\cttqFuncs\conn\mysqlFunc.py
 Description: 
 '''
+from typing import List
 import pymysql
 from pymysql import connect
 from pymysql.cursors import DictCursor
@@ -59,6 +60,7 @@ class Mysql(DbFunc):
         if self.__conn__ is not None:
             self.__conn__.close()
             self.__conn__ = None
+
 
     @staticmethod
     def fixedMysql(ns: str = 'mysql'):

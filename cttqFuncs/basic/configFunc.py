@@ -16,7 +16,10 @@ def initConfig():
     global _config
     _config = configparser.RawConfigParser()
     for configPath in configPaths:
-        _config.read(configPath, encoding="utf-8-sig")
+        if os.path.exists(configPath):
+            _config.read(configPath, encoding="utf-8-sig")
+        else:
+            print("配置文件不存在：%s " % configPath)
 
 
 def getDict(nameSpace: str) -> Dict:
@@ -66,8 +69,11 @@ def initSqlConfig(sqlPath: str):
 
 def getSql(key: str, hotLoading: bool = False) -> str:
     if len(_sqlConfig) == 0 or hotLoading:
-        for s in sqlPaths:
-            initSqlConfig(s)
+        for sqlPath in sqlPaths:
+            if os.path.exists(sqlPath):
+                initSqlConfig(sqlPath)
+            else:
+                print("配置文件不存在：%s " % sqlPath)
     if key in _sqlConfig:
         return _sqlConfig[key]
     else:
