@@ -50,6 +50,8 @@ class SqlDbSchema:
         pass
 
 # * 图结构 定义类 用于sqlite索引
+
+
 class DbNode(Base):
     __tablename__ = 't_nodes'
     key = Column(String(300), name='c_key', primary_key=True)

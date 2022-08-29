@@ -9,6 +9,7 @@ import os
 from .exClass import StrBuild
 from .exFunc import *
 import shutil
+import requests
 
 
 def deleteFile(path: str):
@@ -34,7 +35,7 @@ def listDir(path: str):
     return list()
 
 
-def readLines(path: str, encoding='UTF-8') :
+def readLines(path: str, encoding='UTF-8'):
     re: List[str] = list()
     for line in open(path, 'r', encoding=encoding):
         re.append(line)
@@ -51,3 +52,10 @@ def readStr(path: str, encoding='UTF-8') -> str:
 def writeAppend(path: str, lines: List[str], encoding='UTF-8'):
     with open(path, 'a', encoding=encoding) as f:
         f.writelines(lines)
+
+
+def download(url, filePath):
+    r = requests.get(url)
+
+    with open(filePath, "wb") as f:
+        f.write(r.content)

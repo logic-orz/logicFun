@@ -3,10 +3,23 @@ Author: Logic
 Date: 2022-04-26 08:55:29
 Description:
 '''
+import datetime
 import json
 from typing import Any, Callable, Dict, Generic, List, Set, Tuple, TypeVar
 
 T = TypeVar('T')
+
+class MyEncoder(json.JSONEncoder):
+    def default(self, obj):
+        # 检查到是bytes类型的数据就转为str类型
+        if isinstance(obj, bytes):
+            return str(obj, encoding='utf-8')
+        # 检查到是datetime.datetime类型的数据就转为str类型
+        if isinstance(obj, datetime.datetime):
+            return obj.strftime("%Y-%m-%d %H:%M:%S")
+        if isinstance(obj, BaseClass):
+            return obj.toDict()
+        return json.JSONEncoder.default(self, obj)
 
 
 class BaseClass:
@@ -29,10 +42,10 @@ class BaseClass:
         return dict
 
     def toStr(self):
-        return json.dumps(self.toDict(), ensure_ascii=False)
+        return json.dumps(self.toDict(), cls=MyEncoder, ensure_ascii=False, indent=2)
 
     def __str__(self):
-        return json.dumps(self.toDict(), ensure_ascii=False)
+        return json.dumps(self.toDict(),  cls=MyEncoder, ensure_ascii=False, indent=2)
 
 
 class IndexList(Generic[T]):

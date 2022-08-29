@@ -10,7 +10,7 @@ from impala.dbapi import connect
 from .dbFunc import DbColumn, DbConfig, DbFunc
 from cttqFuncs.basic.configFunc import getDict
 from typing import List
-
+import cttqFuncs.basic.exFunc
 
 class Impala(DbFunc):
 
