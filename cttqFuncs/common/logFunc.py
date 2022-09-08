@@ -14,11 +14,7 @@ class Log:
     def get():
         # Construct the name of the logger based on the file path
         code_file = traceback.extract_stack()[-2].filename
-        # Get the file path of the caller
-        # if Log._root not in os.path.abspath(code_file):
-        #     raise Exception(
-        #         f'The file calling the method is outside the home directory: "{code_file}"'
-        #     )
+
         relpath = os.path.relpath(code_file,Log._root)\
                                     .replace('.py','')\
                                     .replace('/', '.')\
@@ -65,4 +61,4 @@ class Log:
         root_logger = logging.getLogger(root_logger_name)
         root_logger.addHandler(log_file_handler)
         root_logger.addHandler(stream_handler)
-        root_logger.setLevel(logging.DEBUG)  # default level
+        root_logger.setLevel(logging.INFO)  # default level

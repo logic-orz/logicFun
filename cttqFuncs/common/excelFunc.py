@@ -64,4 +64,3 @@ class XlsReader():
             d = dict(zip(sh.row_values(0), sh.row_values(i)))
             re.append(d)
         return re
-
