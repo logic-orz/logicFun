@@ -25,7 +25,7 @@ class Log:
         relpath = os.path.relpath(code_file, Log._root)\
             .replace('.py', '')\
             .replace('/', '.')\
-            .replace("\\", '')
+            .replace("\\", '.')
 
         root_name = os.path.basename(Log._root)
         return logging.getLogger(f"{root_name}.{relpath}")
