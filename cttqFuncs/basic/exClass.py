@@ -46,6 +46,9 @@ class BaseClass:
 
     def __str__(self):
         return json.dumps(self.toDict(),  cls=MyEncoder, ensure_ascii=False, indent=2)
+    
+    def __repr__(self) -> str:
+        return json.dumps(self.toDict(),  cls=MyEncoder, ensure_ascii=False, indent=2)
 
 
 class IndexList(Generic[T]):

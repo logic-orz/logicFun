@@ -145,10 +145,12 @@ class SqlDbGraph(Graph, GraphFunc):
     @doBefore(func=parseNode)
     def addNode(self, node: Node):
         self.nodes[node.key] = node
+        return self
 
     @doBefore(func=parseEdge)
     def addEdge(self, edge: Edge):
         self.edges.append(edge)
+        return self
 
     def commit(self):
         i = 0

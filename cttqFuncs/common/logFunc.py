@@ -9,30 +9,35 @@ class Log:
 
     _root = None
     _logger = None
+    home = './'
+    log_file_name = 'tmp'
+    notInited = True
 
     @staticmethod
     def get():
+        if Log.notInited:
+            Log.init()
+            Log.notInited = False
+
         # Construct the name of the logger based on the file path
         code_file = traceback.extract_stack()[-2].filename
 
-        relpath = os.path.relpath(code_file,Log._root)\
-                                    .replace('.py','')\
-                                    .replace('/', '.')\
-                                    .replace("\\",'')
+        relpath = os.path.relpath(code_file, Log._root)\
+            .replace('.py', '')\
+            .replace('/', '.')\
+            .replace("\\", '')
 
         root_name = os.path.basename(Log._root)
         return logging.getLogger(f"{root_name}.{relpath}")
 
     @staticmethod
-    def init(home: str = './', log_file_name: str = None):
-        if not log_file_name:
-            log_file_name = 'tmp'
-        assert os.path.isdir(home), f'invalid home directory: "{home}"'
-        Log._root = os.path.abspath(home)
+    def init():
+        assert os.path.isdir(Log.home), f'invalid home directory: "{Log.home}"'
+        Log._root = os.path.abspath(Log.home)
         log_dir = os.path.join(Log._root, 'logs')
         if not os.path.isdir(log_dir):
             os.mkdir(log_dir)
-        Log._configure_root_logger(log_dir, log_file_name)
+        Log._configure_root_logger(log_dir, Log.log_file_name)
 
     @staticmethod
     def filter(name, level):
@@ -50,7 +55,7 @@ class Log:
 
         log_filepath = os.path.join(
             log_dir,
-            file_name + "_" + datetime.now().strftime("%Y-%m-%d") + ".log")
+            file_name + "_" + datetime.now().strftime("%Y%m%d") + ".log")
         log_file_handler = RotatingFileHandler(filename=log_filepath,
                                                maxBytes=1e5,
                                                backupCount=3,

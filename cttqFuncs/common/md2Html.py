@@ -30,7 +30,7 @@ def _md2htmlFunc__(mdStr: str):
             padding: 45px;
         }
 
-</style>
+    </style>
 
     </head>
     <body>

@@ -1,6 +1,6 @@
 from typing import Any, List, Dict
 import xlwt
-import xlrd
+import xlrd2
 
 
 class XlsWriter():
@@ -44,7 +44,7 @@ class XlsWriter():
 class XlsReader():
 
     def __init__(self, path) -> None:
-        self.workbook = xlrd.open_workbook(path)
+        self.workbook = xlrd2.open_workbook(path)
 
     def sheetNames(self):
         return self.workbook.sheet_names()
