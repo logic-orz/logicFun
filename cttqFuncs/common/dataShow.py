@@ -1,3 +1,9 @@
+'''
+Author: Logic
+Date: 2022-09-08 11:03:51
+LastEditTime: 2022-09-26 19:34:49
+Description: 
+'''
 from prettytable import PrettyTable
 from prettytable import ALL as ALL
 import cttqFuncs.basic.exFunc
@@ -35,6 +41,18 @@ def showKTableWithMatrix(headers: List[str], datas: List[list], title: str = '',
     display(x)
     return x
 
+
+def createKTableWithMatrix(headers: List[str], datas: List[list], title: str = '', fillWidth=100) -> str:
+    '''
+    将数据展示成宽表
+    传入 表头和数据矩阵
+    '''
+    x = PrettyTable()
+    x.title = title
+    x.field_names = headers
+    for data in datas:
+        x.add_row(data.map(lambda t: fill(str(t), fillWidth) if t else ''))
+    return '\n'+str(x)
 
 def showZTable(data: Dict, title: str = '', fillWidth=100) -> PrettyTable:
     '''

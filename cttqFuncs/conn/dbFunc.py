@@ -1,7 +1,7 @@
 '''
 Author: Logic
 Date: 2022-04-20 14:36:14
-LastEditTime: 2022-05-19 16:28:18
+LastEditTime: 2022-09-26 19:31:34
 FilePath: \pyFuncs\cttqFuncs\conn\dbFunc.py
 Description: 
 '''
@@ -70,7 +70,6 @@ class DbFunc(metaclass=abc.ABCMeta):
                 cur.close()
                 return
             yield res_list
-            
 
     def execQueryNoRes(self, *sqls) -> None:
         conn = self.conn()
@@ -99,10 +98,29 @@ def createInsertSql(tbName: str, data: Dict):
     values = []
     for s in keys:
         if isinstance(data[s], str):
-            values.append("'%s'" % (data[s]))
+            values.append('"%s"' % (data[s].replace("\"", "\\\"")))
         else:
             values.append("%s" % (data[s]))
 
     sql = 'INSERT INTO {table}({keys}) VALUES ({values})'.format(
         table=tbName, keys=', '.join(keys), values=', '.join(values))
+    return sql
+
+
+def createInsertSqls(tbName: str, datas: List[Dict]):
+
+    keys = list(datas[0].keys())
+
+    tmpValue = ''
+    for data in datas:
+        values = []
+        for s in keys:
+            if isinstance(data[s], str):
+                values.append('"%s"' % (data[s].replace("\"", "\\\"")))
+            else:
+                values.append("%s" % (data[s]))
+        tmpValue = tmpValue+"({values}),".format(values=','.join(values))
+
+    sql = 'INSERT INTO {table}({keys}) VALUES {valueStr}'.format(
+        table=tbName, keys=', '.join(keys), valueStr=tmpValue[:-1])
     return sql

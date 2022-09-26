@@ -1,3 +1,9 @@
+'''
+Author: Logic
+Date: 2022-09-08 11:03:51
+LastEditTime: 2022-09-26 19:33:23
+Description: 
+'''
 from typing import Any, List, Dict
 import xlwt
 import xlrd2
@@ -63,4 +69,11 @@ class XlsReader():
         for i in range(1, sh.nrows):
             d = dict(zip(sh.row_values(0), sh.row_values(i)))
             re.append(d)
+        return re
+
+    def readSheetAsMatrixByName(self, sheetName: str) -> List[Dict[str, Any]]:
+        sh = self.workbook.sheet_by_name(sheetName)
+        re = []
+        for i in range(0, sh.nrows):
+            re.append(sh.row_values(i))
         return re
