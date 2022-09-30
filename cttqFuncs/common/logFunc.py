@@ -13,6 +13,9 @@ class Log:
     log_file_name = 'tmp'
     notInited = True
 
+    #  1 0(m) 000(k) 000(B)
+    maxBytes = 1e7
+
     @staticmethod
     def get():
         if Log.notInited:
@@ -57,8 +60,8 @@ class Log:
             log_dir,
             file_name + "_" + datetime.now().strftime("%Y%m%d") + ".log")
         log_file_handler = RotatingFileHandler(filename=log_filepath,
-                                               maxBytes=1e5,
-                                               backupCount=3,
+                                               maxBytes=Log.maxBytes,
+                                               backupCount=0,
                                                encoding="utf-8")
         log_file_handler.setFormatter(formatter)
 
