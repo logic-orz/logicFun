@@ -7,30 +7,61 @@ Description:
 from typing import Any, List, Dict
 import xlwt
 import xlrd2
+import openpyxl
+from cttqFuncs.basic.exClass import CommonException
 
 
 class XlsWriter():
 
-    def __init__(self) -> None:
-        self.workbook = xlwt.Workbook(encoding="utf-8")
+    def __init__(self, path: str) -> None:
+        self.path = path
 
-    def save(self, path):
-        self.workbook.save(path)
+        if path.endswith('xlsx'):
+            self.isXlsx = True
+            self.isFist = True
+        elif path.endswith('xls'):
+            self.isXlsx = False
+        else:
+            raise CommonException('文件类型不正确')
+
+        # 实例化book对象
+        if self.isXlsx:
+            self.workbook = openpyxl.Workbook(write_only=True)
+        else:
+            self.workbook = xlwt.Workbook(encoding="utf-8")
+
+    def save(self):
+        self.workbook.save(self.path)
 
     def createSheet(self, headers: List[str], datas: List[List[Any]],
                     sheetName: str):
+        # 生成sheet
+        if self.isXlsx:
+            if self.isFist:
+                sheet = self.workbook.active
+                sheet.title = sheetName
+                self.isFist = False
+            else:
+                sheet = self.workbook.create_sheet(sheetName)
+            # 写入标题
+            for col, column in enumerate(headers):
+                sheet.cell(1, col+1, column)
 
-        # 实例化book对象
-        sheet = self.workbook.add_sheet(sheetName)  # 生成sheet
+            # 写入每一行
+            for row, data in enumerate(datas):
+                for col, col_data in enumerate(data):
+                    sheet.cell(row + 2, col+1, col_data)
+        else:
 
-        # 写入标题
-        for col, column in enumerate(headers):
-            sheet.write(0, col, column)
+            sheet = self.workbook.add_sheet(sheetName)
+            # 写入标题
+            for col, column in enumerate(headers):
+                sheet.write(0, col, column)
 
-        # 写入每一行
-        for row, data in enumerate(datas):
-            for col, col_data in enumerate(data):
-                sheet.write(row + 1, col, col_data)
+            # 写入每一行
+            for row, data in enumerate(datas):
+                for col, col_data in enumerate(data):
+                    sheet.write(row + 1, col, col_data)
 
     def createSheetWithDict(self, dataList: List[Dict[str, Any]],
                             sheetName: str):
@@ -58,16 +89,18 @@ class XlsReader():
     def readSheetByName(self, sheetName: str) -> List[Dict[str, Any]]:
         sh = self.workbook.sheet_by_name(sheetName)
         re = []
+        headers = sh.row_values(0)
         for i in range(1, sh.nrows):
-            d = dict(zip(sh.row_values(0), sh.row_values(i)))
+            d = dict(zip(headers, sh.row_values(i)))
             re.append(d)
         return re
 
     def readSheetByIndex(self, sheetIndex: int) -> List[Dict[str, Any]]:
         sh = self.workbook.sheet_by_index(sheetIndex)
         re = []
+        headers = sh.row_values(0)
         for i in range(1, sh.nrows):
-            d = dict(zip(sh.row_values(0), sh.row_values(i)))
+            d = dict(zip(headers, sh.row_values(i)))
             re.append(d)
         return re
 

@@ -5,9 +5,10 @@ Description:
 '''
 import datetime
 import json
-from typing import Any, Callable, Dict, Generic, List, Set, Tuple, TypeVar
+from typing import Dict, Generic, List, Set, Tuple, TypeVar
 
 T = TypeVar('T')
+
 
 class MyEncoder(json.JSONEncoder):
     def default(self, obj):
@@ -20,6 +21,14 @@ class MyEncoder(json.JSONEncoder):
         if isinstance(obj, BaseClass):
             return obj.toDict()
         return json.JSONEncoder.default(self, obj)
+
+
+class CommonException(Exception):
+    def __init__(self, ErrorInfo):
+        self.ErrorInfo = ErrorInfo
+
+    def __str__(self):
+        return self.ErrorInfo
 
 
 class BaseClass:
@@ -46,7 +55,7 @@ class BaseClass:
 
     def __str__(self):
         return json.dumps(self.toDict(),  cls=MyEncoder, ensure_ascii=False, indent=2)
-    
+
     def __repr__(self) -> str:
         return json.dumps(self.toDict(),  cls=MyEncoder, ensure_ascii=False, indent=2)
 
