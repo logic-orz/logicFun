@@ -6,5 +6,5 @@ FilePath: \pyFuncs\cttqFuncs\conn\__init__.py
 Description: 
 '''
 
-__all__ = ['md2Html','dataShow','excelFunc','logFunc']
+__all__ = ['md2Html','dataShow','excelFunc','logFunc','activeFunc','']
 

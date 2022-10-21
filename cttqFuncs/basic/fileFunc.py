@@ -22,7 +22,6 @@ def deleteFile(path: str):
             except OSError as e:
                 print("Error: %s - %s." % (e.filename, e.strerror))
 
-
 def listFile(path: str):
     if os.path.exists(path):
         return os.listdir(path).map(lambda s: path+"/"+s).filter(lambda p: os.path.isfile(p))
@@ -38,7 +37,12 @@ def listDir(path: str):
 def readLines(path: str, encoding='UTF-8'):
     re: List[str] = list()
     for line in open(path, 'r', encoding=encoding):
+        if line.endswith("\n"):
+            line = line[:-2]
         re.append(line)
+
+    if re[-1]=='':
+        re=re[:-1]
     return re
 
 
@@ -59,4 +63,3 @@ def download(url, filePath):
 
     with open(filePath, "wb") as f:
         f.write(r.content)
-
