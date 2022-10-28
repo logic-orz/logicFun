@@ -9,4 +9,3 @@ def setClipboard(text: str):
 
     wcb.SetClipboardData(wc.CF_TEXT, text.encode("gbk"))
     wcb.CloseClipboard()
-

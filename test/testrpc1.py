@@ -1,4 +1,4 @@
-from cttqFuncs.common.rpcFunc import runRpcServer, loadRpcClient, BasicRpc
+from demos.rpcFunc import runRpcServer, loadRpcClient, BasicRpc
 import zerorpc
 import asyncio
 

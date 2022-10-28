@@ -2,7 +2,6 @@
 Author: Logic
 Date: 2022-05-17 14:24:15
 LastEditTime: 2022-05-19 09:45:30
-FilePath: \pyFuncs\cttqFuncs\basic\signClass.py
 Description: 
 '''
 
@@ -148,3 +147,109 @@ def build(cls):
 
     cls.build = func
     return cls
+
+class ZList(list):
+    
+    def map(self, __func: Callable[[Any], Any]):
+        return ZList(map(__func, self))
+
+
+
+
+    def flatMap(self, __func: Callable[[Any], List[Any]]):
+        res = []
+        for ts in map(__func, self):
+            if ts:
+                for t in ts:
+                    res.append(t)
+        return res
+
+
+    def appendAll(self, vs: List[T]) -> List[T]:
+        for v in vs:
+            self.append(v)
+        return self
+
+
+    def toSet(self):
+        return set(self)
+
+
+    def filter(self, __func: Callable[[Any], bool]):
+        return list(filter(__func, self))
+
+
+@sign(list, 'distinct')
+def distinct(self):
+    return list(set(self))
+
+
+@sign(list, 'groupByKey')
+def groupByKey(self: List[Tuple[str, T]]) -> Dict[str, List[T]]:  # ? 聚合函数
+    tmpMap = dict()
+    for data in self:
+        key = data[0]
+        value = data[1]
+        valueList = []
+        if key in tmpMap:
+            valueList = tmpMap[key]
+        valueList.append(value)
+        tmpMap[key] = valueList
+
+    return tmpMap
+
+
+@sign(list, 'toDict')
+def tupleToDict(self: List[Tuple[str, T]]) -> Dict[str, T]:
+    re = dict()
+    for t in self:
+        re[t[0]] = t[1]
+
+    return re
+
+
+@sign(list, 'reduce')
+def reduce(self, __func):
+    return reduceWith(__func, self)
+
+
+@sign(list, 'doSelf')
+def doSelf(self, __func):
+    return __func(self)
+
+
+@sign(list, 'sum')
+def sumWith(self: List):
+    return sum(self)
+
+
+@sign(list, 'reduceByKey')
+def reduceByKey(self: List[Tuple[str, T]], __func: Callable[[T], T]) -> Dict[str, T]:
+    re = self.groupByKey()\
+        .kvs()\
+        .map(lambda t: (t[0], t[1].reduce(__func)))\
+        .toDict()
+    return re
+
+
+@sign(list, 'foreach')
+def foreach(self, __func):
+    for t in self:
+        __func(t)
+    return self
+
+
+@sign(list, 'toStr')
+def listToStr(self) -> str:
+    return json.dumps(self, ensure_ascii=False)
+
+
+@sign(list, 'isEmpty')
+def listIsEmpty(self: List) -> bool:
+    return len(self) == 0
+
+
+@sign(list, 'sortBy')
+def sortBy(self: List, key, reverse=False) -> list:
+    self.sort(key=key, reverse=reverse)
+    return self

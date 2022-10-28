@@ -2,7 +2,6 @@
 Author: Logic
 Date: 2022-04-20 14:27:40
 LastEditTime: 2022-05-19 14:46:19
-FilePath: \pyFuncs\cttqFuncs\conn\mysqlFunc.py
 Description: 
 '''
 from typing import List

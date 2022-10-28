@@ -2,7 +2,6 @@
 Author: Logic
 Date: 2022-05-23 14:33:08
 LastEditTime: 2022-05-27 11:47:22
-FilePath: \PyShovel\impalaTableCheck\minioFuncs.py
 Description:
 '''
 

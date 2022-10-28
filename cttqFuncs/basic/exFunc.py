@@ -43,7 +43,7 @@ def dictToStr(self) -> str:
 def mapWith(self, __func: Callable[[Any], Any]):
     return list(map(__func, self))
 
-# * list
+
 
 
 @sign(list, 'flatMap')

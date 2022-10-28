@@ -6,7 +6,7 @@ Description:
 '''
 from prettytable import PrettyTable
 from prettytable import ALL as ALL
-import cttqFuncs.basic.exFunc
+from ..basic.exFunc import *
 from typing import List, Dict
 from textwrap import fill
 from IPython.display import display

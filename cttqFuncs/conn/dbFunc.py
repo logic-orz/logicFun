@@ -2,7 +2,6 @@
 Author: Logic
 Date: 2022-04-20 14:36:14
 LastEditTime: 2022-09-26 19:31:34
-FilePath: \pyFuncs\cttqFuncs\conn\dbFunc.py
 Description: 
 '''
 import json

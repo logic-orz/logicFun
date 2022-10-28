@@ -1,10 +1,2 @@
-'''
-Author: Logic
-Date: 2022-04-28 10:58:41
-LastEditTime: 2022-05-19 11:48:51
-FilePath: \pyFuncs\cttqFuncs\basic\__init__.py
-Description: 
-'''
-
-__all__ = ['configFunc', 'exClass', 'exFunc', 'signClass',  'fileFunc']
+__all__ = ['configFunc', 'exClass', 'exFunc', 'signClass']
 

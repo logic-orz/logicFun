@@ -2,12 +2,11 @@
 Author: Logic
 Date: 2022-04-29 19:10:30
 LastEditTime: 2022-05-19 15:02:48
-FilePath: \pyFuncs\cttqFuncs\basic\fileFunc.py
 Description: 
 '''
 import os
-from .exClass import StrBuild
-from .exFunc import *
+from ..basic.exClass import StrBuild
+from ..basic.exFunc import *
 import shutil
 import requests
 

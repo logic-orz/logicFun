@@ -11,22 +11,20 @@ from setuptools import setup
 installs = [
     'impyla',
     'pymysql',
-    'SQLAlchemy',
     'DBUtils',
     'IPython', 
     'prettytable'
 ]
 
 setup(name="cttqFuncs",
-      version="3.0",
+      version="4.0",
       description="能力扩展",
       author="Logic",
-      author_email=' ',
-      url='https://gitlab.cttq.com/8608858/pyfuncs',
+      author_email='',
+      url='',
       packages=['cttqFuncs',
                 'cttqFuncs.conn',
                 'cttqFuncs.basic',
-                'cttqFuncs.graph',
                 'cttqFuncs.common'
                 ],
       install_requires=installs

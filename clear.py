@@ -9,7 +9,7 @@ import os
 from typing import List
 
 
-from cttqFuncs.basic.fileFunc import deleteFile, listDir, listFile
+from cttqFuncs.common.fileFunc import deleteFile, listDir, listFile
 
 
 def clear(filepath):
@@ -26,4 +26,3 @@ if __name__ == "__main__":
     deleteFile("./dist")
     deleteFile("./cttqFuncs.egg-info")
     clear("cttqFuncs")
-    

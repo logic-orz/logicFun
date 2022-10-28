@@ -8,7 +8,7 @@ from typing import Any, List, Dict
 import xlwt
 import xlrd2
 import openpyxl
-from cttqFuncs.basic.exClass import CommonException
+from ..basic.exClass import CommonException
 
 
 class XlsWriter():
@@ -25,8 +25,6 @@ class XlsWriter():
         else:
             raise CommonException('文件类型不正确')
 
-    
-
     def save(self):
         self.workbook.save(self.path)
 
@@ -34,7 +32,7 @@ class XlsWriter():
                     sheetName: str):
         # 生成sheet
         if self.isXlsx:
-           
+
             sheet = self.workbook.create_sheet(sheetName)
             # 写入标题
             sheet.append(headers)

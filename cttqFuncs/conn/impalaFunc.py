@@ -2,7 +2,6 @@
 Author: Logic
 Date: 2022-04-20 14:25:56
 LastEditTime: 2022-05-19 16:32:18
-FilePath: \pyFuncs\cttqFuncs\conn\impalaFunc.py
 Description: 
 '''
 
