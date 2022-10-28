@@ -9,11 +9,11 @@ Description:
 from setuptools import setup
 
 installs = [
-    'impyla',
-    'pymysql',
-    'DBUtils',
-    'IPython', 
-    'prettytable'
+    # 'impyla',
+    # 'pymysql',
+    # 'DBUtils',
+    # 'IPython', 
+    # 'prettytable'
 ]
 
 setup(name="cttqFuncs",

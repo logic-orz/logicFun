@@ -9,7 +9,7 @@ Description:
 from typing import Dict, Callable, Any, List, Tuple, TypeVar
 import ctypes
 import json
-
+from functools import reduce as reduceWith
 
 T = TypeVar('T')
 
@@ -148,13 +148,11 @@ def build(cls):
     cls.build = func
     return cls
 
+
 class ZList(list):
-    
+
     def map(self, __func: Callable[[Any], Any]):
         return ZList(map(__func, self))
-
-
-
 
     def flatMap(self, __func: Callable[[Any], List[Any]]):
         res = []
@@ -164,16 +162,13 @@ class ZList(list):
                     res.append(t)
         return res
 
-
     def appendAll(self, vs: List[T]) -> List[T]:
         for v in vs:
             self.append(v)
         return self
 
-
     def toSet(self):
         return set(self)
-
 
     def filter(self, __func: Callable[[Any], bool]):
         return list(filter(__func, self))
