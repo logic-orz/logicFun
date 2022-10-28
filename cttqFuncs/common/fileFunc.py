@@ -37,7 +37,7 @@ def readLines(path: str, encoding='UTF-8'):
     re: List[str] = list()
     for line in open(path, 'r', encoding=encoding):
         if line.endswith("\n"):
-            line = line[:-2]
+            line = line[:-1]
         re.append(line)
 
     if re[-1]=='':
