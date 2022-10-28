@@ -1,7 +1,7 @@
-from functools import reduce
 from typing import Any, Callable, Dict, List, Tuple, TypeVar, Generic, Set
 import json
 import datetime
+import decimal
 
 T = TypeVar('T')
 
@@ -16,6 +16,8 @@ class MyEncoder(json.JSONEncoder):
             return obj.strftime("%Y-%m-%d %H:%M:%S")
         if isinstance(obj, BaseClass):
             return obj.toDict()
+        if isinstance(obj, decimal.Decimal):
+            return float(obj)
         return json.JSONEncoder.default(self, obj)
 
 
