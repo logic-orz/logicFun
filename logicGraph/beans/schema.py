@@ -14,7 +14,6 @@ import abc
 from abc import ABCMeta
 
 
-
 class Label:
     """
     @ labels * 属性标签

@@ -6,11 +6,13 @@ FilePath: \pyFuncs\cttqFuncs\graph\indexGraph.py
 Description: 
 '''
 
+from typing import Dict, List, Set, Tuple
+
 import cttqFuncs.basic.exFunc
 from cttqFuncs.basic.exClass import IndexList, Tree
-from .data import *
-from .schema import Concept, Relation
-from typing import Dict, Tuple, List, Set
+
+from ..beans.data import *
+from ..beans.schema import Concept, Relation
 
 
 class IndexGraph(Graph, GraphFunc):
