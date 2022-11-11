@@ -1,71 +1,34 @@
 
+from unicodedata import name
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.dialects.sqlite import insert
 from sqlalchemy import JSON, Column, String, Text, create_engine, Integer, DateTime, and_, or_
 from cttqFuncs.basic.exClass import Tree, IndexList
-from ..beans.data import *
+from ..data import *
 from cttqFuncs.basic.exFunc import *
 from cttqFuncs.basic.signClass import doBefore, doAfter
 
-from ..beans.schema import Concept
 from sqlalchemy import event
 
 Base = declarative_base()
 
 
-class DbConcept(Base):
-    __tablename__ = 't_concepts'
-    key = Column(String(300), name='c_key', primary_key=True)
-    parentKey = Column(String(300), name='c_parent_key')
-    name = Column(String(300), name='c_name')
-    nameTag = Column(String(300), name='c_name_tag')
-    labels = Column(Text, name='c_labels')
-    attrs = Column(Text, name='c_attrs')
-
-
-class DbRelation(Base):
-    __tablename__ = 't_relations'
-    id = Column(Integer, name='id', primary_key=True, autoincrement=True)
-    key = Column(String(300), name='c_key')
-    fromKey: List[str] = Column(Text, name='c_from_key')
-    toKey: List[str] = Column(Text, name='c_to_key')
-    name = Column(String(300), name='c_name')
-    desc = Column(String(300), name='c_desc')
-    labels: List[str] = Column(JSON, name='c_labels')
-
-
-class SqlDbSchema:
-
-    def __init__(self) -> None:
-        pass
-
-    def save(concept: Concept, parentKey: str) -> None:
-        pass
-
-    def getByKey(key: str) -> Concept:
-        pass
-
-    def getByName(name: str) -> List[Concept]:
-        pass
-
-# * 图结构 定义类 用于sqlite索引
-
-
 class DbNode(Base):
-    __tablename__ = 't_nodes'
-    key = Column(String(300), name='c_key', primary_key=True)
-    infos = Column(Text, name='c_infos')
-    tags = Column(Text, name='c_tags')
+    __tablename__ = 'nodes'
+    key = Column(String(300), name='key', primary_key=True)
+    infos = Column(Text, name='infos')
+    tags = Column(Text, name='tags')
 
 
 class DbEdge(Base):
-    __tablename__ = 't_edges'
+    __tablename__ = 'edges'
     id = Column(Integer, primary_key=True, autoincrement=True)
-    fromKey = Column(String(300), name='c_from_key', index=True)
-    toKey = Column(String(300), name='c_to_key', index=True)
-    infos = Column(Text, name='c_infos')
-    tags = Column(Text, name='c_tags')
+    fromKey = Column(String(300), name='from_key', index=True)
+    toKey = Column(String(300), name='to_key', index=True)
+    relaName = Column(String(50), name='rela_name')
+    infos = Column(Text, name='infos')
+    tags = Column(Text, name='tags')
 
 
 def parseNode(self, node: Node):
@@ -113,9 +76,7 @@ class SqlDbGraph(Graph, GraphFunc):
         Base.metadata.create_all(engine,
                                  tables=[
                                      DbNode.__table__,
-                                     DbEdge.__table__,
-                                     DbRelation.__table__,
-                                     DbConcept.__table__
+                                     DbEdge.__table__
                                  ], checkfirst=True)
 
     @doAfter(func=deParse)

@@ -5,7 +5,7 @@ LastEditTime: 2022-05-18 19:10:50
 Description: 
 '''
 from typing import Dict
-from ..beans.data import GraphFunc
+from ..data import GraphFunc
 import cttqFuncs.basic.exFunc
 
 

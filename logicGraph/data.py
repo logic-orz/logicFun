@@ -5,6 +5,7 @@ from enum import Enum
 from typing import Dict, Any, List
 import abc
 from abc import ABCMeta
+from enum import Enum
 
 
 class Tag:
@@ -21,48 +22,31 @@ class Tag:
     def __init__(self) -> None:
         self.tags: Dict[str, Any] = {}
 
-    def addTag(self, k, v):
-        self.tags[k] = v
+    # [(k,v)...]
+    def addTag(self, *kvs):
+        for k, v in kvs:
+            self.tags[k] = v
         return self
 
     def addTags(self, tag: Dict[str, Any]):
         self.tags.update(tag)
         return self
 
-    def removeTag(self, k):
-        del self.tags[k]
+    def removeTag(self, *ks):
+        for k in ks:
+            del self.tags[k]
         return self
 
 
 class Info(Tag, BaseClass):
     """
      * spo 属性定义类\n
-     @ Name  实体名称\n
-     @ NameKey  实体唯一消歧\n
-     @ Concept  实体概念\n
-     @ ConceptKey 实体概念消歧\n
-     @ RelaName 关系名称\n
-     @ Label 标签\n
     """
     Name = 'name'
-    NameKey = 'nameKey'
-
-    Concept = 'concept'
-    ConceptKey = 'conceptKey'
 
     FromName = 'fromName'
-    FromNameKey = 'fromNameKey'
-
-    FromConcept = 'fromConcept'
-    FromConceptKey = 'fromConceptKey'
 
     ToName = 'toName'
-    ToNameKey = 'toNameKey'
-
-    ToConcept = 'toConcept'
-    ToConceptKey = 'toConceptKey'
-
-    RelaName = 'relaName'
 
     Label = "label"
 
@@ -72,7 +56,7 @@ class Info(Tag, BaseClass):
         self.value = value
 
 
-class InfoBean:
+class Infos:
     """
     * 属性集合封装类
     """
@@ -80,24 +64,17 @@ class InfoBean:
     def __init__(self) -> None:
         self.infos: List[Info] = []
 
-    def addInfos(self, infos: List[Info]):
+    def addInfo(self, *infos: Info):
         for info in infos:
             self.infos.append(info)
-        return self
-
-    def addInfo(self, name: str, value: Any):
-        self.infos.append(Info(name, value))
         return self
 
     def getInfo(self, name: str) -> List[Info]:
         return self.infos.filter(lambda i: i.name == name)
 
-    def getFirstInfoValue(self, name: str) -> Any:
-        tmp: List[Info] = self.infos.filter(lambda i: i.name == name)
-        if tmp.isEmpty():
-            return None
-        else:
-            return tmp[0].value
+    def getInfoValue(self, name: str) -> Any:
+        tmp: List[Info] = self.infos.filter(
+            lambda i: i.name == name).map(lambda i: i.value)
 
     def removeInfo(self, name):
         self.infos = self.infos.filter(lambda info: info.name != name)
@@ -109,35 +86,44 @@ def infoToDict(d):
     return d
 
 
-class Node(Tag, InfoBean, BaseClass):
+class Node(Tag, Infos, BaseClass):
     """
     * 图节点 定义类
     """
 
-    def __init__(self, key: str = None):
+    def __init__(self, name: str, key: str = None):
         Tag.__init__(self)
-        InfoBean.__init__(self)
-        self.key: str = key
+        Infos.__init__(self)
+        self.name: str = name
+        self.key: str = key if key else name
 
     @doAfter(func=infoToDict)
     def toDict(self):
         return BaseClass.toDict(self)
 
 
-class Edge(Tag, InfoBean, BaseClass):
+class Edge(Tag, Infos, BaseClass):
     """
     * 图关系 定义类
     """
 
-    def __init__(self, fromKey=None, toKey=None) -> None:
+    def __init__(self, fromKey=None, toKey=None, relaName: str = None) -> None:
         Tag.__init__(self)
-        InfoBean.__init__(self)
+        Infos.__init__(self)
         self.fromKey = fromKey
         self.toKey = toKey
+        self.relaName = relaName
 
     @doAfter(func=infoToDict)
     def toDict(self):
         return BaseClass.toDict(self)
+
+
+class Opt(Enum):
+
+    Overwrite = 'overwrite'
+    Update = 'update'
+    Skip = 'skip'
 
 
 class GraphFunc(metaclass=ABCMeta):
@@ -176,7 +162,7 @@ class GraphFunc(metaclass=ABCMeta):
 
 @build
 @toStr
-class Graph(Tag):
+class Graph(Tag, GraphFunc):
     """
     * 图结构 定义类
     """
@@ -186,6 +172,35 @@ class Graph(Tag):
         self.name: str = name
         self.nodes: Dict[str, Node] = dict()
         self.edges: List[Edge] = list()
+
+    def allEdges(self) -> List[Edge]:
+        return self.edges
+
+    def allNodes(self) -> List[Node]:
+        return self.nodes.vs()
+
+    def addNode(self, node: Node, opt: Opt = Opt.Overwrite):
+        if opt == Opt.Overwrite:
+            self.nodes[node.key] = node
+        elif opt == Opt.Skip:
+            if node.key not in self.nodes:
+                self.nodes[node.key] = node
+        elif opt == Opt.Update:
+            if node.key in self.nodes:
+                tmp = self.nodes[node.key]
+
+    def addEdge(self, edge: Edge):
+        pass
+
+    # 节点检索
+    def queryNode(self, key: str, isFuzzy: bool = False) -> List[Node]:
+        #   todo 子类实现
+        pass
+
+    # * 一度 关系检索
+    def queryEdge(self, nodeKey: str, direct: int = 0) -> List[Edge]:
+        #   todo 子类实现
+        pass
 
     def toDict(self):
         return {'name': self.name,

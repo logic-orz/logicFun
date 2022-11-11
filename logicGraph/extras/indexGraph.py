@@ -11,8 +11,7 @@ from typing import Dict, List, Set, Tuple
 import cttqFuncs.basic.exFunc
 from cttqFuncs.basic.exClass import IndexList, Tree
 
-from ..beans.data import *
-from ..beans.schema import Concept, Relation
+from ..data import *
 
 
 class IndexGraph(Graph, GraphFunc):
