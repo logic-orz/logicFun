@@ -8,7 +8,7 @@ import json
 from typing import List, Dict
 from cttqFuncs.basic.exClass import BaseClass
 import abc
-
+import datetime
 
 class DbConfig(BaseClass):
     """
@@ -116,6 +116,10 @@ def createInsertSqls(tbName: str, datas: List[Dict]):
         for s in keys:
             if isinstance(data[s], str):
                 values.append('"%s"' % (data[s].replace("\"", "\\\"")))
+            elif isinstance(data[s], datetime.datetime):
+                values.append('"%s"' % (str(data[s]).replace("\"", "\\\"")))
+            elif not data[s]:
+                values.append("null")
             else:
                 values.append("%s" % (data[s]))
         tmpValue = tmpValue+"({values}),".format(values=','.join(values))
