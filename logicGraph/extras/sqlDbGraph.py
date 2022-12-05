@@ -1,5 +1,4 @@
 
-from unicodedata import name
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.dialects.sqlite import insert
