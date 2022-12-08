@@ -6,7 +6,7 @@ Description:
 '''
 import json
 from typing import List, Dict
-from cttqFuncs.basic.exClass import BaseClass
+from logicFunc.basic.exClass import BaseClass
 import abc
 import datetime
 
@@ -115,7 +115,7 @@ def createInsertSqls(tbName: str, datas: List[Dict]):
         values = []
         for s in keys:
             if isinstance(data[s], str):
-                values.append('"%s"' % (data[s].replace("\"", "\\\"")))
+                values.append('"%s"' % (data[s].replace("\\","\\\\").replace("\"", "\\\"")))
             elif isinstance(data[s], datetime.datetime):
                 values.append('"%s"' % (str(data[s]).replace("\"", "\\\"")))
             elif not data[s]:

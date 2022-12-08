@@ -1,6 +1,6 @@
 from typing import Dict, List
 from elasticsearch import Elasticsearch
-from cttqFuncs.basic.exClass import BaseClass
+from ..basic.exClass import BaseClass
 from elasticsearch import helpers
 from .dbFunc import DbColumn, DbConfig, DbFunc
 

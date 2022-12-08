@@ -8,9 +8,9 @@ Description:
 from minio import Minio as MinioConnect
 from minio.error import S3Error
 from minio.datatypes import Object as MinioObj
-from cttqFuncs.basic.configFunc import getDict
+from ..basic.configFunc import getDict
 from typing import List
-import cttqFuncs.basic.exFunc
+from ..basic.exFunc import *
 
 
 class Minio():

@@ -8,7 +8,7 @@ import os
 from typing import List
 
 
-from cttqFuncs.common.fileFunc import deleteFile, listDir, listFile
+from logicFunc.common.fileFunc import deleteFile, listDir, listFile
 
 
 def clear(filepath):

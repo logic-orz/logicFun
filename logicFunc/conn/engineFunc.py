@@ -1,5 +1,5 @@
 from .dbFunc import DbColumn, DbConfig, DbFunc
-from cttqFuncs.basic.configFunc import getDict
+from ..basic.configFunc import getDict
 from urllib.parse import quote_plus as urlquote
 
 

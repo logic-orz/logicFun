@@ -9,8 +9,8 @@ import pymysql
 from pymysql import connect
 from pymysql.cursors import DictCursor
 from dbutils.pooled_db import PooledDB
-from cttqFuncs.conn.dbFunc import DbFunc, DbColumn, DbConfig
-from cttqFuncs.basic.configFunc import getDict
+from .dbFunc import DbFunc, DbColumn, DbConfig
+from ..basic.configFunc import getDict
 
 
 class MysqlPool(DbFunc):

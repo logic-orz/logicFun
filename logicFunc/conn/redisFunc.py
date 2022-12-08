@@ -9,7 +9,7 @@ import redis  # 导入redis 模块
 from rediscluster import RedisCluster
 
 from .dbFunc import DbConfig
-from cttqFuncs.basic.configFunc import getDict
+from ..basic.configFunc import getDict
 
 
 class Redis:

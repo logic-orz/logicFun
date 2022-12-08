@@ -7,8 +7,8 @@ Description:
 
 import psycopg2
 import psycopg2.extras
-from cttqFuncs.basic.configFunc import getDict
-from cttqFuncs.conn.dbFunc import DbColumn, DbConfig, DbFunc
+from ..basic.configFunc import getDict
+from .dbFunc import DbColumn, DbConfig, DbFunc
 
 
 class PostGres(DbFunc):
