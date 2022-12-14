@@ -148,6 +148,22 @@ def sortBy(self: List, key, reverse=False) -> list:
     self.sort(key=key, reverse=reverse)
     return self
 
+@sign(list,'splitSize')
+def splitSize(self, size):
+    list_of_groups = zip(*(iter(self),) *size)
+    end_list = [list(i) for i in list_of_groups]
+    count = len(self) % size
+    end_list.append(self[-count:]) if count !=0 else end_list
+    return end_list
+
+@sign(list,'splitNum')
+def splitNum(self, num):
+    re=[]
+    for i in range(0,num):
+        re.append([])
+    for i in range(0,len(self)):
+        re[i%num].append(self[i])    
+    return re
 
 # * set
 
