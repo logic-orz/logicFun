@@ -6,4 +6,4 @@ Description:
 '''
 
 __all__ = ['md2Html', 'dataShow', 'excelFunc',
-           'logFunc', 'scheduleFunc', 'fileFunc']
+           'logFunc', 'scheduleFunc', 'fileFunc','formatTrans']

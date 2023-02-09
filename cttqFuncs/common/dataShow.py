@@ -6,17 +6,19 @@ Description:
 '''
 from prettytable import PrettyTable
 from prettytable import ALL as ALL
-from ..basic.exFunc import *
+
 from typing import List, Dict
 from textwrap import fill
 from IPython.display import display
+from ..basic.exFunc import *
 
-
-def showKTable(datas: List[Dict], title: str = '', fillWidth=100, show=True) -> PrettyTable:
+def showKTable(datas: List[Dict], title: str = '', fillWidth=100, show=True) -> str:
     '''
     将数据展示成宽表
     传入list
     '''
+    if len(datas)==0:
+        return ''
     x = PrettyTable()
     x.title = title
     ks: List[str] = datas.flatMap(lambda d: d.ks()).toSet().toList()
@@ -29,11 +31,13 @@ def showKTable(datas: List[Dict], title: str = '', fillWidth=100, show=True) -> 
     return '\n'+str(x)
 
 
-def showKTableWithMatrix(headers: List[str], datas: List[list], title: str = '', fillWidth=100, show=True) -> PrettyTable:
+def showKTableWithMatrix(headers: List[str], datas: List[list], title: str = '', fillWidth=100, show=True) -> str:
     '''
     将数据展示成宽表
     传入 表头和数据矩阵
     '''
+    if len(datas)==0:
+        return ''
     x = PrettyTable()
     x.title = title
     x.field_names = headers
@@ -44,10 +48,12 @@ def showKTableWithMatrix(headers: List[str], datas: List[list], title: str = '',
     return '\n'+str(x)
 
 
-def showZTable(data: Dict, title: str = '', fillWidth=100, show=True) -> PrettyTable:
+def showZTable(data: Dict, title: str = '', fillWidth=100, show=True) -> str:
     '''
     将数据展示成窄表
     '''
+    if len(data.keys())==0:
+        return ''
     x = PrettyTable(hrules=ALL)
     x.title = title
     x.field_names = ['name', 'value']
