@@ -10,6 +10,14 @@ from ..basic.exFunc import *
 import shutil
 import requests
 
+def isExist(path):
+    return os.path.exists(path)
+
+def createFile(path):
+    if not os.path.exists(path):
+        os.mknod("test.txt")
+
+
 
 def deleteFile(path: str):
     if os.path.exists(path):
@@ -33,22 +41,29 @@ def listDir(path: str):
     return list()
 
 
-def readLines(path: str, encoding='UTF-8'):
+def readLines(path: str, limit:int= -1 ,encoding='UTF-8'):
     re: List[str] = list()
-    for line in open(path, 'r', encoding=encoding):
-        if line.endswith("\n"):
-            line = line[:-1]
-        re.append(line)
-
-    if len(re) > 0 and re[-1]=='':
-        re=re[:-1]
+    if os.path.exists(path):
+        for line in open(path, 'r', encoding=encoding):
+            if line.endswith("\n"):
+                line = line[:-1]
+            re.append(line)
+            
+            if limit > 0 and len(re)>=limit:
+                break
+            
+        if len(re) > 0 and re[-1]=='':
+            re=re[:-1]
     return re
 
 
 def readStr(path: str, encoding='UTF-8') -> str:
+    
     sb = StrBuild()
-    for line in open(path, 'r', encoding=encoding):
-        sb.append(line)
+    if os.path.exists(path):
+        for line in open(path, 'r', encoding=encoding):
+            sb.append(line)
+            
     return sb.toStr()
 
 

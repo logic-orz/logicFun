@@ -9,7 +9,7 @@ import xlwt
 import xlrd2
 import openpyxl
 from ..basic.exClass import CommonException
-
+from .fileFunc import readLines,isExist,createFile,deleteFile,writeAppend
 
 class XlsWriter():
 
@@ -56,11 +56,11 @@ class XlsWriter():
                             sheetName: str):
         headers = list(dataList[0].keys())
         datas = []
-        for bill in dataList:
+        for data in dataList:
             tmp = []
             for t in headers:
-                if t in bill and bill[t]:
-                    tmp.append(bill[t])
+                if t in data and data[t]:
+                    tmp.append(data[t])
                 else:
                     tmp.append('')
             datas.append(tmp)
@@ -99,3 +99,47 @@ class XlsReader():
         for i in range(0, sh.nrows):
             re.append(sh.row_values(i))
         return re
+
+class CsvRW():
+    def __init__(self, path,splitFlag:str=',') -> None:
+        self.path=path
+        self.splitFlag=splitFlag
+        
+        if not isExist(self.path):
+            createFile(self.path)
+            
+            
+    def headers(self):
+        lines=readLines(self.path,1)
+        if len(lines)>=1:
+            return lines[0].split(self.splitFlag).filter(lambda s:s!='')
+        return []
+            
+    def read(self):
+        lines=readLines(self.path)
+        re = []
+        headers = self.headers()
+        for line in lines:
+            d = dict(zip(headers, line.split(self.splitFlag)))
+            re.append(d)
+        return re
+    
+    def clear(self):
+        deleteFile(self.path)
+        createFile(self.path)
+    
+    def write(self,datas:List[dict]):
+        headers=self.headers()
+        if len(headers)==0:
+            headers = list(datas[0].keys())
+        
+        strs=[]
+        for data in datas:
+            tmp = []
+            for t in headers:
+                if t in data and data[t]:
+                    tmp.append(data[t])
+                else:
+                    tmp.append('')
+            strs.append(self.splitFlag.join(tmp))
+        writeAppend(self.path,lines=strs)
