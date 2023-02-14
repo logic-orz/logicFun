@@ -40,7 +40,7 @@ def readLines(path: str, encoding='UTF-8'):
             line = line[:-1]
         re.append(line)
 
-    if re[-1]=='':
+    if len(re) > 0 and re[-1]=='':
         re=re[:-1]
     return re
 
