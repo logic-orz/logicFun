@@ -2,7 +2,7 @@
 Author: Logic
 Date: 2022-09-08 11:03:51
 LastEditTime: 2022-09-26 19:34:49
-Description: 
+Description:  如果出现  type object 'UserString' has no attribute 'append' 等 错误,需要改变引用顺序,保持dataShow在exFuncs之前引入
 '''
 from prettytable import PrettyTable
 from prettytable import ALL as ALL
