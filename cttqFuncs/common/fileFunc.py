@@ -15,8 +15,7 @@ def isExist(path):
 
 def createFile(path):
     if not os.path.exists(path):
-        os.mknod("test.txt")
-
+        open(path,'w')
 
 
 def deleteFile(path: str):

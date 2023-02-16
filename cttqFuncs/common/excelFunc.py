@@ -100,23 +100,25 @@ class XlsReader():
             re.append(sh.row_values(i))
         return re
 
+
 class CsvRW():
-    def __init__(self, path,splitFlag:str=',') -> None:
+    def __init__(self, path,splitFlag:str=',',encoding='utf-8') -> None:
         self.path=path
         self.splitFlag=splitFlag
+        self.encoding=encoding
         
         if not isExist(self.path):
             createFile(self.path)
             
             
     def headers(self):
-        lines=readLines(self.path,1)
+        lines=readLines(self.path,1,encoding=self.encoding)
         if len(lines)>=1:
             return lines[0].split(self.splitFlag).filter(lambda s:s!='')
         return []
             
     def read(self):
-        lines=readLines(self.path)
+        lines=readLines(self.path,encoding=self.encoding)
         re = []
         headers = self.headers()
         for line in lines:
@@ -130,16 +132,17 @@ class CsvRW():
     
     def write(self,datas:List[dict]):
         headers=self.headers()
+        strs=[]
         if len(headers)==0:
             headers = list(datas[0].keys())
-        
-        strs=[]
+            strs.append(self.splitFlag.join(headers)+'\n')
+            
         for data in datas:
             tmp = []
             for t in headers:
                 if t in data and data[t]:
-                    tmp.append(data[t])
+                    tmp.append('"'+str(data[t]).replace('\\','\\\\').replace('"','\"')+'"')
                 else:
-                    tmp.append('')
-            strs.append(self.splitFlag.join(tmp))
-        writeAppend(self.path,lines=strs)
+                    tmp.append('""')
+            strs.append(self.splitFlag.join(tmp)+'\n')
+        writeAppend(self.path,lines=strs,encoding=self.encoding)
