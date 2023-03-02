@@ -144,9 +144,25 @@ def sortBy(self: List, key, reverse=False) -> list:
     self.sort(key=key, reverse=reverse)
     return self
 
+
 @sign(list,'split')
-def reshape(self:List[Any], num:int=-1,size:int=-1):
-    return  np.array(self).reshape(num, size)
+def splitList(self:List[Any], num:int=-1,size:int=-1):    
+    lens=len(self)
+    if num!=-1:
+        re=[[] for i in range(0,num)]
+        for i in range(0,lens):
+            v=self[i]
+            l=re[i%num]
+            l.append(v)
+    elif size != -1:
+        re=[]
+        for i in range(0,lens,size):
+            if i+size > lens:
+                re.append(self[i:])
+            else:
+                re.append(self[i:i+size])
+    return re
+
 
 # * set
 @sign(set, 'toList')
