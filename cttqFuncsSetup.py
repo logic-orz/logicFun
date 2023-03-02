@@ -25,14 +25,15 @@ setup(name="cttqFuncs",
       packages=['cttqFuncs',
                 'cttqFuncs.conn',
                 'cttqFuncs.basic',
-                'cttqFuncs.common'
+                'cttqFuncs.common',
+                'cttqFuncs.algorithm'
                 ],
       install_requires=installs
       )
 """
 * step1: python cttqFuncsSetup.py check
 * step2: python cttqFuncsSetup.py build
-* step3: python cttqFuncsSetup.py  bdist_wheel
+* step3: python cttqFuncsSetup.py bdist_wheel
 * 上传: python cttqFuncsSetup.py sdist bdist_wheel  upload -r cttq 
 * 卸载 : pip uninstall cttqFuncs -y
 * 远程安装: pip  --no-cache-dir install -U cttqFuncs --trusted-host=172.16.0.224 -i http://172.16.0.224:8180/simple 

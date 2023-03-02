@@ -9,6 +9,7 @@ import xlwt
 import xlrd2
 import openpyxl
 from ..basic.exClass import CommonException
+from ..basic.exFunc import *
 from .fileFunc import readLines,isExist,createFile,deleteFile,writeAppend
 
 class XlsWriter():
@@ -54,7 +55,10 @@ class XlsWriter():
 
     def createSheetWithDict(self, dataList: List[Dict[str, Any]],
                             sheetName: str):
-        headers = list(dataList[0].keys())
+        if len(dataList)>10:
+            headers=list(set(dataList[0:10].flatMap(lambda d:d.ks())))
+        else:
+            headers =list(set(dataList.flatMap(lambda d:d.ks())))
         datas = []
         for data in dataList:
             tmp = []

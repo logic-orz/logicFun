@@ -7,7 +7,7 @@ from functools import reduce as reduceWith
 from typing import Dict, Callable, Any, List, Tuple, TypeVar
 from .signClass import sign, T
 import json
-
+import numpy as np
 
 # * 函数注册
 
@@ -31,6 +31,17 @@ def kvs(self: dict) -> list:
         re.append((k, v))
     return re
 
+@sign(dict, 'del')
+def delDictKV(self:dict,key:str)->dict:
+    del self[key]
+    return self
+
+@sign(dict, 'rename')
+def reNameDictKey(self:dict,fkey:str,tkey:str)->dict:
+    if fkey in self:
+        v=self.pop(fkey)
+        self[tkey]=v
+    return self
 
 @sign(dict, 'toStr')
 def dictToStr(self) -> str:
@@ -43,23 +54,17 @@ def dictToStr(self) -> str:
 def mapWith(self, __func: Callable[[Any], Any]):
     return list(map(__func, self))
 
-
-
-
 @sign(list, 'flatMap')
 def flatMapWith(self, __func: Callable[[Any], List[Any]]):
     res = []
     for ts in map(__func, self):
         if ts:
-            for t in ts:
-                res.append(t)
+            res.extend(ts)
     return res
 
-
 @sign(list, 'appendAll')
-def appendAll(self, vs: List[T]) -> List[T]:
-    for v in vs:
-        self.append(v)
+def appendAll(self:List[T], vs: List[T]) -> List[T]:
+    self.extend(vs)
     return self
 
 
@@ -80,26 +85,17 @@ def distinct(self):
 
 @sign(list, 'groupByKey')
 def groupByKey(self: List[Tuple[str, T]]) -> Dict[str, List[T]]:  # ? 聚合函数
-    tmpMap = dict()
-    for data in self:
-        key = data[0]
-        value = data[1]
-        valueList = []
-        if key in tmpMap:
-            valueList = tmpMap[key]
-        valueList.append(value)
-        tmpMap[key] = valueList
-
+    tmpMap:Dict[str,List[T]] = dict()
+    for key,value in self:
+        if key not in tmpMap:
+            tmpMap[key]=[]
+        tmpMap[key].append(value)
     return tmpMap
 
 
 @sign(list, 'toDict')
 def tupleToDict(self: List[Tuple[str, T]]) -> Dict[str, T]:
-    re = dict()
-    for t in self:
-        re[t[0]] = t[1]
-
-    return re
+    return dict(self)
 
 
 @sign(list, 'reduce')
@@ -121,7 +117,7 @@ def sumWith(self: List):
 def reduceByKey(self: List[Tuple[str, T]], __func: Callable[[T], T]) -> Dict[str, T]:
     re = self.groupByKey()\
         .kvs()\
-        .map(lambda t: (t[0], t[1].reduce(__func)))\
+        .map(lambda t: (t[0], reduceWith(__func,t[1])))\
         .toDict()
     return re
 
@@ -148,26 +144,11 @@ def sortBy(self: List, key, reverse=False) -> list:
     self.sort(key=key, reverse=reverse)
     return self
 
-@sign(list,'splitSize')
-def splitSize(self, size):
-    list_of_groups = zip(*(iter(self),) *size)
-    end_list = [list(i) for i in list_of_groups]
-    count = len(self) % size
-    end_list.append(self[-count:]) if count !=0 else end_list
-    return end_list
-
-@sign(list,'splitNum')
-def splitNum(self, num):
-    re=[]
-    for i in range(0,num):
-        re.append([])
-    for i in range(0,len(self)):
-        re[i%num].append(self[i])    
-    return re
+@sign(list,'split')
+def reshape(self:List[Any], num:int=-1,size:int=-1):
+    return  np.array(self).reshape(num, size)
 
 # * set
-
-
 @sign(set, 'toList')
 def toList(self):
     return list(self)
@@ -195,7 +176,6 @@ def endsIn(self: str, *keys):
 @sign(str, 'append')
 def appendStr(self: str, s: str):
     return self + str(s)
-
 
 @sign(str, 'toJson')
 def toJson(self: str):

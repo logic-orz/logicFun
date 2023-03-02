@@ -13,6 +13,10 @@ configPaths = ['./resources/config.ini']
 def initConfig():
     global _config
     _config = configparser.RawConfigParser()
+    
+    # 设置大小写敏感
+    _config.optionxform=lambda option:option
+    
     for configPath in configPaths:
         if os.path.exists(configPath):
             _config.read(configPath, encoding="utf-8-sig")
@@ -27,11 +31,8 @@ def getDict(nameSpace: str) -> Dict:
     Description: 以dict的方式返回配置
     '''
     tmpList = _config.items(nameSpace)
-    re = {}
-    for t in tmpList:
-        re[t[0]] = t[1]
-
-    return re
+    
+    return dict(tmpList)
 
 
 def getValue(nameSpace: str, key: str) -> str:
