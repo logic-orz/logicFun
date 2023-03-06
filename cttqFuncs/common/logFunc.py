@@ -5,15 +5,15 @@ from logging import Logger
 import colorlog
 import traceback
 from logging.handlers import RotatingFileHandler, TimedRotatingFileHandler
-from logging import StreamHandler, Formatter, INFO, DEBUG, WARNING, ERROR, getLogger, getLevelName
+from logging import StreamHandler, Formatter, INFO, DEBUG, WARNING, ERROR, getLogger, getLevelName,Handler
 from ..basic.configFunc import getDict,getValue
 from typing import Dict
 
 class BasicLog():
     
-    _formatter = Formatter('[%(asctime)s | %(name)s | %(levelname)s]  %(message)s', datefmt="%Y-%m-%d %H:%M:%S")
+    _formatter = Formatter('[%(asctime)s | %(name)s | %(levelname)-8s]  %(message)s', datefmt="%Y-%m-%d %H:%M:%S")
     _color_formatter = colorlog.ColoredFormatter(
-            '%(log_color)s [%(asctime)s | %(name)s |  %(log_color)s%(levelname)s]  %(message)s',
+            '%(log_color)s [%(asctime)s | %(name)s |  %(log_color)s%(levelname)-8s]  %(message)s',
             datefmt="%Y-%m-%d %H:%M:%S",
             reset=True,
             log_colors={
@@ -40,6 +40,7 @@ class BasicLog():
     def _streamRoute(self):
         stream_handler = StreamHandler()
         stream_handler.setFormatter(BasicLog._color_formatter)
+        stream_handler.setLevel(DEBUG)
         return stream_handler
         
 
@@ -49,7 +50,7 @@ class BasicLog():
                                                      when=when,
                                                      backupCount=0,
                                                      encoding="utf-8")
-
+        time_file_handler.setLevel()
         time_file_handler.setFormatter(BasicLog._formatter)
         return time_file_handler
     
@@ -82,12 +83,18 @@ class BasicLog():
 
         root_logger.addHandler(self._streamRoute())
 
+        
         if useTimeRoute:
-            root_logger.addHandler(self._timeRoute(timeWhen))
+            handler=self._timeRoute(timeWhen)
+            self.setLevel(handler,logLevel) 
+            root_logger.addHandler(handler)
         if useSizeRoute:
-            root_logger.addHandler(self._sizeRoute(maxBytes))
+            handler=self._sizeRoute(maxBytes)
+            self.setLevel(handler,logLevel) 
+            root_logger.addHandler(handler)
+        
 
-        self.setLevel(root_logger,logLevel) 
+        
         
     
     def checkLogPath(self,logPath):
@@ -99,10 +106,10 @@ class BasicLog():
         if not os.path.isdir(self.logPath):
             os.mkdir(self.logPath)
     
-    def setLevel(self,logger:Logger, level):
+    def setLevel(self,handler:Handler, level):
         level = str.upper(level)
         assert level in {'DEBUG', 'INFO', 'WARNING', 'ERROR'}
-        logger.setLevel(getLevelName(level))
+        handler.setLevel(getLevelName(level))
 
     def get(self,code_file):
         # Construct the name of the logger based on the file path

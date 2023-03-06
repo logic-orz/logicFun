@@ -1,20 +1,16 @@
 from .dbFunc import DbColumn, DbConfig, DbFunc
 from cttqFuncs.basic.configFunc import getDict
 from urllib.parse import quote_plus as urlquote
+from sqlalchemy import create_engine
 
 
-def mySqlEngine(ns: str = 'mysql', isFlask: bool = False):
+def mySqlEngine(ns: str = 'mysql'):
 
     config = DbConfig().build(getDict(ns))
 
     DB_CONNECT = 'mysql+pymysql://%s:%s@%s:%s/%s?charset=utf8' % (
         config.user, urlquote(config.pwd), config.host, config.port, config.db)
-
-    if isFlask:
-        from flask_sqlalchemy import create_engine
-    else:
-        from sqlalchemy import create_engine
-
+    
     engine = create_engine(
         DB_CONNECT,
         max_overflow=5,  # 超过连接池大小外最多创建的连接
@@ -26,17 +22,12 @@ def mySqlEngine(ns: str = 'mysql', isFlask: bool = False):
     return engine
 
 
-def postGresEngine(ns: str = 'postgres', isFlask: bool = False):
+def postGresEngine(ns: str = 'postgres'):
 
     config = DbConfig().build(getDict(ns))
 
     DB_CONNECT = 'postgresql+psycopg2://%s:%s@%s:%s/%s' % (
         config.user, urlquote(config.pwd), config.host, config.port, config.db)
-
-    if isFlask:
-        from flask_sqlalchemy import create_engine
-    else:
-        from sqlalchemy import create_engine
 
     engine = create_engine(
         DB_CONNECT,
