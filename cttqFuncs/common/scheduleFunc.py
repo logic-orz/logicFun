@@ -8,7 +8,7 @@ _sched.start()
 class MyCronTrigger(CronTrigger):
 
     @classmethod
-    def my_from_crontab(cls, expr, timezone=None):
+    def my_from_crontab(cls, expr, timezone="Asia/Shanghai"):
         values = expr.split(" ")
         if len(values) != 7:
             raise ValueError(
