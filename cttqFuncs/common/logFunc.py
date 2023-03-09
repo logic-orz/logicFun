@@ -50,7 +50,6 @@ class BasicLog():
                                                      when=when,
                                                      backupCount=0,
                                                      encoding="utf-8")
-        time_file_handler.setLevel()
         time_file_handler.setFormatter(BasicLog._formatter)
         return time_file_handler
     

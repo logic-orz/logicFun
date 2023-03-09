@@ -28,17 +28,40 @@ class CommonException(Exception):
     def __str__(self):
         return self.ErrorInfo
 
-
+class Page:
+    def __init__(self) -> None:
+        self.pageNo=None
+        self.pageSize=None
+    
+class Return:
+    def __init__(self) -> None:
+        self.code=200
+        self.data=None
+        self.msg=None
+        self.page=None
+        
+        
+        
 class BaseClass:
 
     """
     * 基础父类,提供面向dict的转换方法
     """
 
+    def __init__(self) -> None:
+        pass
+    
     def build(self, _obj: Dict):
         if _obj:
             self.__dict__.update(_obj)
         return self
+    
+    @classmethod
+    def build(cls, _obj: Dict):
+        re=cls()
+        if _obj:
+            re.__dict__.update(_obj)
+        return re
 
     def toDict(self):
         dict = {}
