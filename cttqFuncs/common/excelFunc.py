@@ -10,7 +10,8 @@ import xlrd2
 import openpyxl
 from ..basic.exClass import CommonException
 from ..basic.exFunc import *
-from .fileFunc import readLines,isExist,createFile,deleteFile,writeAppend
+from .fileFunc import readLines, isExist, createFile, deleteFile, writeAppend
+
 
 class XlsWriter():
 
@@ -55,10 +56,10 @@ class XlsWriter():
 
     def createSheetWithDict(self, dataList: List[Dict[str, Any]],
                             sheetName: str):
-        if len(dataList)>10:
-            headers=list(set(dataList[0:10].flatMap(lambda d:d.ks())))
+        if len(dataList) > 10:
+            headers = list(set(dataList[0:10].flatMap(lambda d: d.ks())))
         else:
-            headers =list(set(dataList.flatMap(lambda d:d.ks())))
+            headers = list(set(dataList.flatMap(lambda d: d.ks())))
         datas = []
         for data in dataList:
             tmp = []
@@ -106,47 +107,47 @@ class XlsReader():
 
 
 class CsvRW():
-    def __init__(self, path,splitFlag:str=',',encoding='utf-8') -> None:
-        self.path=path
-        self.splitFlag=splitFlag
-        self.encoding=encoding
-        
+    def __init__(self, path, splitFlag: str = ',', encoding='utf-8') -> None:
+        self.path = path
+        self.splitFlag = splitFlag
+        self.encoding = encoding
+
         if not isExist(self.path):
             createFile(self.path)
-            
-            
+
     def headers(self):
-        lines=readLines(self.path,1,encoding=self.encoding)
-        if len(lines)>=1:
-            return lines[0].split(self.splitFlag).filter(lambda s:s!='')
+        lines = readLines(self.path, 1, encoding=self.encoding)
+        if len(lines) >= 1:
+            return lines[0].split(self.splitFlag).filter(lambda s: s != '')
         return []
-            
+
     def read(self):
-        lines=readLines(self.path,encoding=self.encoding)
+        lines = readLines(self.path, encoding=self.encoding)
         re = []
         headers = self.headers()
         for line in lines:
             d = dict(zip(headers, line.split(self.splitFlag)))
             re.append(d)
         return re
-    
+
     def clear(self):
         deleteFile(self.path)
         createFile(self.path)
-    
-    def write(self,datas:List[dict]):
-        headers=self.headers()
-        strs=[]
-        if len(headers)==0:
+
+    def write(self, datas: List[dict]):
+        headers = self.headers()
+        strs = []
+        if len(headers) == 0:
             headers = list(datas[0].keys())
             strs.append(self.splitFlag.join(headers)+'\n')
-            
+
         for data in datas:
             tmp = []
             for t in headers:
                 if t in data and data[t]:
-                    tmp.append('"'+str(data[t]).replace('\\','\\\\').replace('"','\"')+'"')
+                    tmp.append(
+                        '"'+str(data[t]).replace('\\', '\\\\').replace('"', '\"')+'"')
                 else:
                     tmp.append('""')
             strs.append(self.splitFlag.join(tmp)+'\n')
-        writeAppend(self.path,lines=strs,encoding=self.encoding)
+        writeAppend(self.path, lines=strs, encoding=self.encoding)
