@@ -37,6 +37,3 @@ class PostGres(DbFunc):
             self.__conn__.close()
             self.__conn__ = None
 
-    @staticmethod
-    def fixedPostGres(ns: str = 'postgres'):
-        return PostGres(DbConfig().build(getDict(ns)))

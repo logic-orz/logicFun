@@ -29,19 +29,20 @@ class CommonException(Exception):
         return self.ErrorInfo
 
 class Page:
-    def __init__(self) -> None:
-        self.pageNo=None
-        self.pageSize=None
+    def __init__(self,pageNo:int=1,pageSize:int=10) -> None:
+        self.pageNo=pageNo
+        self.pageSize=pageSize
     
 class Return:
-    def __init__(self) -> None:
-        self.code=200
-        self.data=None
-        self.msg=None
-        self.page=None
+    def __init__(self,code:int=200,msg:str="success",data=None,page:Page=None) -> None:
+        self.code=code
+        self.data=data
+        self.msg = msg
+        if page :
+            self.page=page
         
-        
-        
+    
+
 class BaseClass:
 
     """

@@ -40,5 +40,5 @@ class Minio():
         return files
 
     @staticmethod
-    def fixedMinio(ns='minio'):
+    def fix(ns='minio'):
         return Minio(getDict(ns))

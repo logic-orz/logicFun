@@ -26,10 +26,6 @@ class Redis:
     def close(self):
         self.pool.disconnect()
 
-    @staticmethod
-    def fixedRedis(ns: str = 'redis'):
-        return Redis(DbConfig().build(getDict(ns)))
-
 
 class RedisClu:
 

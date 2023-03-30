@@ -17,6 +17,7 @@ class Impala(DbFunc):
     默认连接加密配置为不加密
     '''
     __auth_mechanism__ = 'PLAIN'
+    __config_ns__= 'impala'
 
     def __init__(self,  config: DbConfig):
         self.__conn__ = connect(host=config.host,
@@ -70,7 +71,3 @@ class Impala(DbFunc):
     def createSql(self, tbName: str) -> str:
         sql = " show create table  "+tbName
         return self.execQuery(sql)[0]['result']
-
-    @staticmethod
-    def fixedImpala(ns: str = 'impala'):
-        return Impala(DbConfig().build(getDict(ns)))

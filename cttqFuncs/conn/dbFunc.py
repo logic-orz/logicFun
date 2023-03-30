@@ -7,9 +7,12 @@ Description:
 import json
 from typing import List, Dict
 from cttqFuncs.basic.exClass import BaseClass
+from cttqFuncs.basic.configFunc import getDict
 import abc
 import datetime
+from dataclasses import dataclass
 
+@dataclass(init=False)
 class DbConfig(BaseClass):
     """
     数据库连接配置对象
@@ -21,7 +24,7 @@ class DbConfig(BaseClass):
     db: str = None
     hosts: str = None
 
-
+@dataclass(init=False)
 class DbColumn(BaseClass):
     """
     字段信息对象
@@ -29,13 +32,16 @@ class DbColumn(BaseClass):
     name: str = None
     type: str = None
     comment: str = None
-    primary_key = None
-    default_value = None
-    nullable = None
+    primary_key:str = None
+    default_value:str = None
+    nullable:str = None
 
 
 class DbFunc(metaclass=abc.ABCMeta):
-
+    
+    def __init__(self,config: DbConfig) -> None:
+        pass
+    
     @abc.abstractmethod
     def conn(self):
         # * 创建连接对象
@@ -89,6 +95,12 @@ class DbFunc(metaclass=abc.ABCMeta):
         todo 子类实现
         """
         raise Exception("方法未实现")
+    
+    @classmethod
+    def fix(cls,ns:str=None):
+        if not ns:
+            ns=cls.__name__.lower()
+        return cls(DbConfig.build(getDict(ns)))
 
 
 def createInsertSql(tbName: str, data: Dict):

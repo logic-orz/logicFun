@@ -60,7 +60,3 @@ class Mysql(DbFunc):
             self.__conn__.close()
             self.__conn__ = None
 
-
-    @staticmethod
-    def fixedMysql(ns: str = 'mysql'):
-        return Mysql(DbConfig().build(getDict(ns)))

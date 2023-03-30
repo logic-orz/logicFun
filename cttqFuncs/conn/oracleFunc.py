@@ -52,6 +52,3 @@ class Oracle(DbFunc):
             self.__conn__.close()
             self.__conn__ = None
 
-    @staticmethod
-    def fixedOracle(ns: str = 'oracle'):
-        return Oracle(DbConfig().build(getDict(ns)))
