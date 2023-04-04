@@ -31,7 +31,7 @@ class XlsWriter():
         self.workbook.save(self.path)
 
     def createSheet(self, headers: List[str], datas: List[List[Any]],
-                    sheetName: str):
+                    sheetName: str='sheet1'):
         # 生成sheet
         if self.isXlsx:
 
@@ -55,7 +55,7 @@ class XlsWriter():
                     sheet.write(row + 1, col, col_data)
 
     def createSheetWithDict(self, dataList: List[Dict[str, Any]],
-                            sheetName: str):
+                            sheetName: str='sheet1'):
         if len(dataList) > 10:
             headers = list(set(dataList[0:10].flatMap(lambda d: d.ks())))
         else:
@@ -89,7 +89,7 @@ class XlsReader():
             re.append(d)
         return re
 
-    def readSheetByIndex(self, sheetIndex: int) -> List[Dict[str, Any]]:
+    def readSheetByIndex(self, sheetIndex: int=0) -> List[Dict[str, Any]]:
         sh = self.workbook.sheet_by_index(sheetIndex)
         re = []
         headers = sh.row_values(0)

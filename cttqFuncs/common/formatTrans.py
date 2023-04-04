@@ -149,3 +149,34 @@ def moneyChar2Num(amount:str):
     amount_float += amount_yuan
 
     return amount_float
+
+
+def isNumberStr(s)->bool:
+    try:
+        float(s)
+        return True
+    except ValueError:
+        pass
+
+    try:
+        import unicodedata
+        unicodedata.numeric(s)
+        return True
+    except (TypeError, ValueError):
+        pass
+
+    return False
+
+
+def toCamel(name: str) -> str:
+    """下划线转小驼峰法命名"""
+    return re.sub('_([a-zA-Z])', lambda m: (m.group(1).upper()), name.lower())
+
+
+def toSnake(name: str) -> str:
+    """驼峰转下划线"""
+    if '_' not in name:
+        name = re.sub(r'([a-z])([A-Z])', r'\1_\2', name)
+    else:
+        raise ValueError(f'{name}字符中包含下划线，无法转换')
+    return name.lower()
