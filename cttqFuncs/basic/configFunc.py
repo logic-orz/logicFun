@@ -65,9 +65,8 @@ def initSqlConfig(sqlPath: str):
     if k != '':
         _sqlConfig[k] = v
 
-
-def getSql(key: str, hotLoading: bool = False) -> str:
-    if len(_sqlConfig) == 0 or hotLoading:
+def getSql(key: str) -> str:
+    if len(_sqlConfig) == 0 :
         for sqlPath in sqlPaths:
             if os.path.exists(sqlPath):
                 initSqlConfig(sqlPath)

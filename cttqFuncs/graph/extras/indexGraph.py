@@ -11,7 +11,7 @@ from typing import Dict, List, Set, Tuple
 import cttqFuncs.basic.exFunc
 from cttqFuncs.basic.exClass import IndexList, Tree
 
-from ..data import *
+from ..models import *
 
 
 class IndexGraph(Graph, GraphFunc):

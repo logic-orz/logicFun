@@ -43,7 +43,7 @@ class MysqlPool(DbFunc):
 class Mysql(DbFunc):
 
     def __init__(self, config: DbConfig):
-        self.__conn__ = connect(host=config.host,
+        self._conn = connect(host=config.host,
                                 port=int(config.port),
                                 user=config.user,
                                 password=config.pwd,
@@ -52,11 +52,11 @@ class Mysql(DbFunc):
                                 cursorclass=DictCursor)
 
     def conn(self):
-        self.__conn__.ping(reconnect=True)
-        return self.__conn__
+        self._conn.ping(reconnect=True)
+        return self._conn
 
     def close(self):
-        if self.__conn__ is not None:
-            self.__conn__.close()
-            self.__conn__ = None
+        if self._conn is not None:
+            self._conn.close()
+            self._conn = None
 

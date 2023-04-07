@@ -26,6 +26,10 @@ class Redis:
     def close(self):
         self.pool.disconnect()
 
+    @staticmethod
+    def fix(ns='redis'):
+        return Redis(DbConfig.build(getDict(ns)))
+
 
 class RedisClu:
 
@@ -51,5 +55,6 @@ class RedisClu:
     def close(self):
         self.conn.close()
 
-    def fixedRedisClu(ns: str = 'redis'):
+    @staticmethod
+    def fix(ns: str = 'redis'):
         return RedisClu(DbConfig().build(getDict(ns)))

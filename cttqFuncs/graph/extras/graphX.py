@@ -1,11 +1,5 @@
-'''
-Author: Logic
-Date: 2022-05-18 15:17:54
-LastEditTime: 2022-05-18 19:10:50
-Description: 
-'''
 from typing import Dict
-from ..data import GraphFunc
+from ..models import GraphFunc
 import cttqFuncs.basic.exFunc
 
 

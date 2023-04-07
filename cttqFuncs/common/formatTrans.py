@@ -151,7 +151,7 @@ def moneyChar2Num(amount:str):
     return amount_float
 
 
-def isNumberStr(s)->bool:
+def isNumberStr(s:str)->bool:
     try:
         float(s)
         return True
@@ -169,12 +169,12 @@ def isNumberStr(s)->bool:
 
 
 def toCamel(name: str) -> str:
-    """下划线转小驼峰法命名"""
+    """下划线转驼峰命名"""
     return re.sub('_([a-zA-Z])', lambda m: (m.group(1).upper()), name.lower())
 
 
 def toSnake(name: str) -> str:
-    """驼峰转下划线"""
+    """驼峰转下划线命名"""
     if '_' not in name:
         name = re.sub(r'([a-z])([A-Z])', r'\1_\2', name)
     else:

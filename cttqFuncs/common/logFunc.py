@@ -2,9 +2,7 @@ import sys
 from loguru import logger as log
 
 class SimpleLog():
-    _format = "<green>{time:YYYY-MM-DD HH:mm:ss}</green> | <level>{level: <8}</level> | <cyan>{name: <10}</cyan>:<cyan>{function: <20}</cyan>:<cyan>{line: <3}</cyan> | <level>{message}</level>"
-
-
+    _format = "<green>{time:YYYY-MM-DD HH:mm:ss}</green> [<level>{level}</level>] <cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> | <level>{message}</level>"
     @staticmethod
     def init(logFileName: str = 'tmp',
              useTimeRoute=False,
@@ -13,6 +11,7 @@ class SimpleLog():
              logLevel: str = 'INFO') -> None:
         
         log.remove()
+        
         log.add(
             sys.stdout,
             format=SimpleLog._format,
