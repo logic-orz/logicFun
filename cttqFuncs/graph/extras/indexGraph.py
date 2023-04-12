@@ -43,11 +43,3 @@ class IndexGraph(Graph, GraphFunc):
 
     def addEdge(self, edge: Edge):
         self.edges.add(edge, [edge.fromKey, edge.toKey])
-
-
-class LinkGraph(GraphFunc):
-    """
-    邻接多重表
-    [nodeKey,[Node,Set[Edge]]]
-    """
-    data: Dict[str, Tuple[Node, List[Edge]]] = dict()

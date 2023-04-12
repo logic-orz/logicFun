@@ -22,7 +22,7 @@ def mySqlEngine(ns: str = 'mysql',isAsync=False):
 
     engine = create_engine(
         db_connect_url, 
-        echo=True,
+        echo=False,
         future=True,
         max_overflow=5,  # 超过连接池大小外最多创建的连接
         pool_size=5,  # 连接池大小
