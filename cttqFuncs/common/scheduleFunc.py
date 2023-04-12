@@ -1,5 +1,3 @@
-import asyncio
-
 from apscheduler.executors.pool import ProcessPoolExecutor, ThreadPoolExecutor
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -10,11 +8,16 @@ timezone="Asia/Shanghai"
 def _fromCron(cron:str):
     values = cron.split(" ")
     if len(values) != 7:
-        raise ValueError(
-                'Wrong number of fields; got {}, expected 7'.format(len(values)))
+        raise ValueError(f'Wrong number of fields; got {len(values)}, expected 7')
 
-    return CronTrigger(second=values[0], minute=values[1], hour=values[2], day=values[3], month=values[4],
-                   day_of_week=values[5], year=values[6], timezone=timezone)
+    return CronTrigger(second=values[0], 
+                       minute=values[1], 
+                       hour=values[2], 
+                       day=values[3], 
+                       month=values[4],
+                       day_of_week=values[5], 
+                       year=values[6], 
+                       timezone=timezone)
   
 class backSchedule(object):
     """
@@ -41,10 +44,9 @@ class backSchedule(object):
     def removeJob(id:str):
         backSchedule._sched.remove_job(id)
     
-    def __init__(self, cron: str, id=None,isAsync=False):
+    def __init__(self, cron: str, id=None):
         self.cron = cron
         self.id = id
-        self.isAsync=isAsync
 
     def __call__(self, __func):  # 接受函数
         if not self.id:
@@ -63,25 +65,30 @@ class asyncSchedule(object):
     后台同步任务调度
     cron: 0 0 0 * * * *
     """
-    _sched =None
+    _sched:AsyncIOScheduler =None
     
+    @staticmethod
+    def init():
+        import nest_asyncio
+        nest_asyncio.apply()
+        asyncSchedule._sched = AsyncIOScheduler(timezone=timezone)
+        asyncSchedule._sched.start()
+        
     @staticmethod
     def addJob(func, cron:str, id:str=None):
         if not id:
             id = func.__name__
         if not asyncSchedule._sched:
-            asyncSchedule._sched = AsyncIOScheduler(timezone=timezone)
-            asyncSchedule._sched.start()
+            asyncSchedule.init()
         asyncSchedule._sched.add_job(func, trigger=_fromCron(cron), id=id)
     
     @staticmethod
     def removeJob(id:str):
         asyncSchedule._sched.remove_job(id)
     
-    def __init__(self, cron: str, id=None,isAsync=False):
+    def __init__(self, cron: str, id=None):
         self.cron = cron
         self.id = id
-        self.isAsync=isAsync
 
     def __call__(self, __func):  # 接受函数
         if not self.id:
