@@ -93,3 +93,18 @@ class asyncSchedule(object):
         def wrapper(*args, **kwargs):
             return __func(*args, **kwargs)
         return wrapper  # 返回函数
+
+import datetime
+import time
+
+
+@asyncSchedule(cron='*/5 * * * * * *')
+async def run1():
+    
+    t1=datetime.datetime.now()
+    await asyncio.sleep(3)
+    # time.sleep(3)
+    print(t1,datetime.datetime.now(),1)
+    
+asyncio.get_event_loop().run_forever()
+    

@@ -5,5 +5,5 @@ LastEditTime: 2022-05-19 11:45:36
 FilePath: \pyFuncs\cttqFuncs\__init__.py
 Description: 
 '''
-__all__ = ['basic', 'conn','common','algorithm']
+__all__ = ['basic', 'conn','common','algorithm','graph']
 __version__ = "1.0"
