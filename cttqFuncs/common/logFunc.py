@@ -1,6 +1,6 @@
 import sys
 from typing import Any, Callable
-from loguru import Record, logger as log
+from loguru import logger as log
 
 
 class SimpleLog():
@@ -21,10 +21,10 @@ class SimpleLog():
         if SimpleLog._hasInit:
             return
 
-        if logPath.endswith('/'):
-            logPath = logPath[:-1]
-
-        SimpleLog._logPath = logPath
+        if logPath:
+            if logPath.endswith('/'):
+                logPath = logPath[:-1]
+            SimpleLog._logPath = logPath
 
         log.remove()
         log.add(
@@ -58,8 +58,17 @@ class SimpleLog():
         SimpleLog._hasInit = True
 
     @staticmethod
-    def addTimeRoute(logFileName: str, logLevel: str = 'INFO',filter:Callable[[Record], bool]=lambda record:True):
+    def addTimeRoute(logFileName: str,
+                     logLevel: str = 'INFO',
+                     filterByName:str=None,
+                     filterByFunc:str=None):
         path = SimpleLog._logPath+'/'+logFileName+"_{time:YYYY-MM-DD}.log"
+        
+        if filterByName:
+            filter=lambda record:record['name'] == filterByName
+        elif filterByFunc:
+            filter=lambda record:record['function'] ==filterByFunc
+            
         log.add(path,
                 rotation="00:00",
                 encoding="utf-8",
@@ -71,8 +80,17 @@ class SimpleLog():
                 filter=filter)
 
     @staticmethod
-    def addSizeRoute(logFileName: str, logLevel: str = 'INFO',filter:Callable[[Record], bool]=lambda record:True):
+    def addSizeRoute(logFileName: str, 
+                     logLevel: str = 'INFO',
+                     filterByName=None,
+                     filterByFunc=None):
         path = SimpleLog._logPath+'/'+logFileName+"_{time:YYYY-MM-DD}.log"
+        
+        if filterByName:
+            filter=lambda record:record['name'] == filterByName
+        elif filterByFunc:
+            filter=lambda record:record['function'] ==filterByFunc
+            
         log.add(path,
                 rotation="100MB",
                 encoding="utf-8",
