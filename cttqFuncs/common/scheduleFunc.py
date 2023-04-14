@@ -2,7 +2,6 @@ from apscheduler.executors.pool import ProcessPoolExecutor, ThreadPoolExecutor
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.cron import CronTrigger
-
 timezone="Asia/Shanghai"
 
 def _fromCron(cron:str):
@@ -26,34 +25,36 @@ class backSchedule(object):
     """
     executors = {
         'default': ThreadPoolExecutor(20),
-        'processpool': ProcessPoolExecutor(10)
+        'process': ProcessPoolExecutor(10)
     }
     _sched =None
     
     @staticmethod
-    def addJob(func, cron:str, id:str=None):
+    def addJob(func, cron:str, id:str=None,useProcess:bool=False):
         if not id:
             id = func.__name__
         if not backSchedule._sched:
             backSchedule._sched = BackgroundScheduler(timezone=timezone,
                                          executors=backSchedule.executors)
             backSchedule._sched.start()
-        backSchedule._sched.add_job(func, trigger=_fromCron(cron), id=id)
+        backSchedule._sched.add_job(func, trigger=_fromCron(cron), id=id,executor='process' if useProcess else 'default')
     
     @staticmethod
     def removeJob(id:str):
         backSchedule._sched.remove_job(id)
     
-    def __init__(self, cron: str, id=None):
+    def __init__(self, cron: str, id:str=None,useProcess:bool=False):
         self.cron = cron
         self.id = id
+        self.useProcess=useProcess
 
     def __call__(self, __func):  # 接受函数
         if not self.id:
             self.id = __func.__name__
         backSchedule.addJob(__func, 
                             cron=self.cron, 
-                            id=self.id)
+                            id=self.id,
+                            useProcess=self.useProcess)
 
         def wrapper(*args, **kwargs):
             return __func(*args, **kwargs)
@@ -100,3 +101,4 @@ class asyncSchedule(object):
         def wrapper(*args, **kwargs):
             return __func(*args, **kwargs)
         return wrapper  # 返回函数
+    

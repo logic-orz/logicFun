@@ -5,7 +5,7 @@ from sqlalchemy.orm import sessionmaker
 
 from basic.exFunc import *
 
-from ..models import Edge, GraphFunc, Node
+from graph.models import Edge, GraphFunc, Node
 
 Base = declarative_base()
 
@@ -48,7 +48,7 @@ class SqlDbGraph(GraphFunc):
         with self.Session() as session:
             res = session.query(DbNode)
 
-            if isFuzzy:
+            if isFuzzy: 
                 res = res.filter(DbNode.name.like('%'+key+'%'))
             else:
                 res = res.filter(DbNode.name == key)

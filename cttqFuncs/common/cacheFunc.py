@@ -36,7 +36,7 @@ class cacheable(object):
         if key not in _caches:
             _caches[key]=MRUCache(ttl=expire)
 
-    def __call__(self, __func):  # 接受函数
+    def __call__(self, __func):  #  
 
         def wrapper(*args, **kwargs):
             k= list(args) + list(kwargs.values())

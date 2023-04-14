@@ -10,7 +10,7 @@ from prettytable import ALL as ALL
 from typing import List, Dict
 from textwrap import fill
 from IPython.display import display
-from ..basic.exFunc import *
+from basic.exFunc import *
 
 def showKTable(datas: List[Dict], title: str = '', fillWidth=100, show=True) -> str:
     '''
