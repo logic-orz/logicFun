@@ -6,7 +6,7 @@ from .dbFunc import DbConfig
 from sqlalchemy.ext.declarative import declarative_base
 from ..exFunc import *
 
-Base=declarative_base()
+BaseModel=declarative_base()
 
 def mySqlEngine(ns: str = 'mysql',isAsync=False):
 
