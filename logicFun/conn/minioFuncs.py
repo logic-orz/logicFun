@@ -1,0 +1,37 @@
+from minio import Minio as MinioConnect
+from minio.error import S3Error
+from minio.datatypes import Object as MinioObj
+from ..basic.configFunc import getDict
+from typing import List
+from ..exFunc import *
+
+
+class Minio():
+    def __init__(self, config) -> None:
+        self.client = MinioConnect(config['host'],
+                                   access_key=config['user'],
+                                   secret_key=config['pwd'],
+                                   secure=False)
+        self.bucket = config['db']
+
+    def upload(self, remoteName, localPath, content_type="application/octet-stream", metadata: dict = {}):
+        self.client.fput_object(self.bucket, remoteName, localPath,
+                                content_type, metadata)
+
+    def remove(self, name):
+        self.client.remove_object(self.bucket, name)
+
+    def download(self, name, path):
+        self.client.fget_object(self.bucket, name, path)
+
+    def listFiles(self, path: str = '') -> List[MinioObj]:
+        files = list(self.client.list_objects(
+            self.bucket, prefix=path,
+            recursive=True,
+            include_user_meta=True))
+
+        return files
+
+    @staticmethod
+    def fix(ns='minio'):
+        return Minio(getDict(ns))
