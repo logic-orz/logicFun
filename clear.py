@@ -23,6 +23,6 @@ def clear(filepath):
 if __name__ == "__main__":
     deleteFile("./build")
     deleteFile("./dist")
-    deleteFile("./cttqFuncs.egg-info")
-    clear("cttqFuncs")
+    deleteFile("./logicFun.egg-info")
+    clear("logicFun")
 

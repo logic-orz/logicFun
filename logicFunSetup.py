@@ -1,11 +1,3 @@
-'''
-Author: Logic
-Date: 2022-04-27 08:56:43
-LastEditTime: 2022-05-25 14:32:10
-FilePath: \pyFuncs\cttqFuncsSetup.py
-Description: 
-'''
-
 from setuptools import setup
 
 installs = [
@@ -26,7 +18,7 @@ installs = [
     'loguru'
 ]
 
-setup(name="logicFunc",
+setup(name="logicFun",
       version="4.1",
       description="能力扩展",
       author="Logic",
