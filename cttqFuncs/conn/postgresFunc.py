@@ -1,10 +1,3 @@
-'''
-Author: Logic
-Date: 2022-04-20 14:27:40
-LastEditTime: 2022-06-14 16:23:19
-Description: 
-'''
-
 import psycopg2
 import psycopg2.extras
 from cttqFuncs.basic.configFunc import getDict

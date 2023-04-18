@@ -1,9 +1,3 @@
-'''
-Author: Logic
-Date: 2022-05-17 14:24:15
-LastEditTime: 2022-05-19 09:45:30
-Description: 
-'''
 import json
 from typing import Callable,Any, Dict
 

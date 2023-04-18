@@ -1,10 +1,3 @@
-'''
-Author: Logic
-Date: 2022-05-23 14:33:08
-LastEditTime: 2022-05-27 11:47:22
-Description:
-'''
-
 from minio import Minio as MinioConnect
 from minio.error import S3Error
 from minio.datatypes import Object as MinioObj

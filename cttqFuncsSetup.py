@@ -1,19 +1,21 @@
-'''
-Author: Logic
-Date: 2022-04-27 08:56:43
-LastEditTime: 2022-05-25 14:32:10
-FilePath: \pyFuncs\cttqFuncsSetup.py
-Description: 
-'''
-
 from setuptools import setup
 
 installs = [
-    # 'impyla',
-    # 'pymysql',
-    # 'DBUtils',
-    # 'IPython', 
-    # 'prettytable'
+    'impyla',
+    'pymysql',
+    'DBUtils',
+    'IPython', 
+    'prettytable',
+    'redis',
+    'redis-py-cluster',
+    'cacheout',
+    'xlwt',
+    'xlrd2',
+    'openpyxl',
+    'sqlalchemy',
+    'python-consul',
+    'apscheduler',
+    'loguru'
 ]
 
 setup(name="cttqFuncs",

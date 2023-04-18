@@ -1,7 +1,3 @@
-'''
-Author: Logic
-Description: 配置读取工具类
-'''
 import configparser
 from typing import Dict
 import os

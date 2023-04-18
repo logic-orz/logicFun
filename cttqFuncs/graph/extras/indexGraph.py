@@ -1,11 +1,3 @@
-'''
-Author: Logic
-Date: 2022-05-12 13:27:54
-LastEditTime: 2022-05-19 10:35:40
-FilePath: \pyFuncs\cttqFuncs\graph\indexGraph.py
-Description: 
-'''
-
 from typing import Dict, List, Set, Tuple
 
 from ...basic.exClass import IndexList, Tree

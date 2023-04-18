@@ -1,9 +1,3 @@
-'''
-Author: Logic
-Date: 2022-04-20 14:36:14
-LastEditTime: 2022-09-26 19:31:34
-Description: 
-'''
 import json
 from typing import List, Dict
 from ..basic.exClass import BaseClass

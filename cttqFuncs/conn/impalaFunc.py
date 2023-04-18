@@ -1,10 +1,3 @@
-'''
-Author: Logic
-Date: 2022-04-20 14:25:56
-LastEditTime: 2022-05-19 16:32:18
-Description: 
-'''
-
 from impala.dbapi import connect
 from .dbFunc import DbColumn, DbConfig, DbFunc
 from typing import List

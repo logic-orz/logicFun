@@ -1,8 +1,3 @@
-'''
-Author: Logic
-Date: 2022-04-28 11:03:17
-Description: 
-'''
 import ctypes
 import json
 from functools import reduce as reduceWith
