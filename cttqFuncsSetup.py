@@ -17,7 +17,7 @@ installs = [
 ]
 
 setup(name="cttqFuncs",
-      version="4.2",
+      version='4.3',
       description="能力扩展",
       author="Logic",
       author_email='',
@@ -26,7 +26,10 @@ setup(name="cttqFuncs",
                 'cttqFuncs.conn',
                 'cttqFuncs.basic',
                 'cttqFuncs.common',
-                'cttqFuncs.algorithm'
+                'cttqFuncs.algorithm',
+                'cttqFuncs.graph',
+                'cttqFuncs.graph.extras',
+                'cttqFuncs.web'
                 ],
       install_requires=installs
       )

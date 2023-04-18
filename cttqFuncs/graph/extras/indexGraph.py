@@ -11,7 +11,7 @@ from typing import Dict, List, Set, Tuple
 import cttqFuncs.basic.exFunc
 from cttqFuncs.basic.exClass import IndexList, Tree
 
-from ..models import *
+from models import *
 
 
 class IndexGraph(Graph, GraphFunc):
@@ -27,7 +27,6 @@ class IndexGraph(Graph, GraphFunc):
     def toDict(self):
         return {
             'name': self.name,
-            'tags': self.tags,
             'nodes': self.nodes.vs().map(lambda n: n.toDict()),
             'edges': self.edges.vs().map(lambda n: n.toDict())
         }

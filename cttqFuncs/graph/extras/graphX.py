@@ -1,5 +1,5 @@
 from typing import Dict
-from ..models import GraphFunc
+from models import GraphFunc
 import cttqFuncs.basic.exFunc
 
 

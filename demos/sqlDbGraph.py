@@ -3,9 +3,9 @@ from sqlalchemy import ( Column,Integer, String, or_)
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-from basic.exFunc import *
+from cttqFuncs.basic.exFunc import *
 
-from graph.models import Edge, GraphFunc, Node
+from cttqFuncs.graph.models import Edge, GraphFunc, Node
 
 Base = declarative_base()
 

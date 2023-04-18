@@ -1,1 +1,1 @@
-all=['graphX','indexGraph','sqlDbGraph']
+__all__=['graphX','indexGraph']

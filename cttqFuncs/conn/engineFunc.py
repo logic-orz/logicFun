@@ -1,12 +1,12 @@
 from urllib.parse import quote_plus as urlquote
-
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import sessionmaker
+from basic.configFunc import getDict
+from dbFunc import DbConfig
+from sqlalchemy.ext.declarative import declarative_base
+import basic.exFunc
 
-from cttqFuncs.basic.configFunc import getDict
-
-from .dbFunc import DbConfig
-
+Base=declarative_base()
 
 def mySqlEngine(ns: str = 'mysql',isAsync=False):
 
@@ -35,3 +35,16 @@ def mySqlEngine(ns: str = 'mysql',isAsync=False):
     else:
         Session=sessionmaker(bind=engine)
     return (engine,Session)
+
+def addOrmInfo(cls):
+    cls.tb=cls.metadata.tables[cls.__tablename__]
+    cls.columns=cls.tb.columns._all_columns
+    def func(self,dic):
+        cn=cls.columns.map(lambda c:(c.comment,c.name)).toDict()
+        for c,v in dic.kvs():
+            if c in cn:
+                n=cn[c]
+                self[n]=v
+    cls.buildByComment = func
+    return cls
+

@@ -1,6 +1,6 @@
 import cttqFuncs.basic.exFunc
-from cttqFuncs.basic.exClass import StrBuild, BaseClass,CommonException,T
-from cttqFuncs.basic.signClass import build, toDict, toStr, doAfter, doBefore
+from basic.exClass import StrBuild, BaseClass,CommonException,T
+from basic.signClass import build, toDict, toStr, doAfter, doBefore
 from enum import Enum
 from typing import Dict, Any, Generic, List
 import abc
@@ -71,7 +71,6 @@ class GraphFunc(metaclass=ABCMeta):
         pass
 
 
-@build
 @toStr
 class Graph(GraphFunc):
     """
