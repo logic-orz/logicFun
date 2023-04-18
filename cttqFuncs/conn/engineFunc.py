@@ -4,7 +4,7 @@ from sqlalchemy.orm import sessionmaker
 from ..basic import getDict
 from .dbFunc import DbConfig
 from sqlalchemy.ext.declarative import declarative_base
-import basic.exFunc
+from ..exFunc import *
 
 Base=declarative_base()
 
