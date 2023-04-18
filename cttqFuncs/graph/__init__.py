@@ -6,3 +6,5 @@ FilePath: \pyFuncs\cttqFuncs\graph\__init__.py
 Description: 
 '''
 __all__ = ['models','extras']
+
+from .models import Node,Edge,Graph,GraphFunc,Opt

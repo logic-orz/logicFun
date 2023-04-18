@@ -1,8 +1,8 @@
 from urllib.parse import quote_plus as urlquote
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import sessionmaker
-from basic.configFunc import getDict
-from dbFunc import DbConfig
+from ..basic import getDict
+from .dbFunc import DbConfig
 from sqlalchemy.ext.declarative import declarative_base
 import basic.exFunc
 

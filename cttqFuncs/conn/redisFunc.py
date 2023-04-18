@@ -1,9 +1,6 @@
-'''
-Author: Logic
-Date: 2022-04-20 14:27:43
-LastEditTime: 2022-05-19 14:47:59
-Description: 
-'''
+"""
+pip install redis,redis-py-cluster
+"""
 import redis  # 导入redis 模块
 
 from rediscluster import RedisCluster

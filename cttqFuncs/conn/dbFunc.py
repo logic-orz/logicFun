@@ -6,8 +6,8 @@ Description:
 '''
 import json
 from typing import List, Dict
-from cttqFuncs.basic.exClass import BaseClass
-from cttqFuncs.basic.configFunc import getDict
+from ..basic.exClass import BaseClass
+from ..basic.configFunc import getDict
 import abc
 import datetime
 from dataclasses import dataclass
@@ -103,26 +103,26 @@ class DbFunc(metaclass=abc.ABCMeta):
         return cls(DbConfig.build(getDict(ns)))
 
 
-def createInsertSql(tbName: str, data: Dict):
+# def createInsertSql(tbName: str, data: Dict):
 
-    keys = list(data.keys())
-    values = []
-    for s in keys:
-        if isinstance(data[s], str):
-            values.append('"%s"' % (data[s].replace("\\","\\\\").replace("\"", "\\\"")))
-        elif isinstance(data[s], datetime.datetime):
-            values.append('"%s"' % (str(data[s]).replace("\"", "\\\"")))
-        elif not data[s]:
-            values.append("null")
-        else:
-            values.append("%s" % (data[s]))
+#     keys = list(data.keys())
+#     values = []
+#     for s in keys:
+#         if isinstance(data[s], str):
+#             values.append('"%s"' % (data[s].replace("\\","\\\\").replace("\"", "\\\"")))
+#         elif isinstance(data[s], datetime.datetime):
+#             values.append('"%s"' % (str(data[s]).replace("\"", "\\\"")))
+#         elif not data[s]:
+#             values.append("null")
+#         else:
+#             values.append("%s" % (data[s]))
 
-    sql = 'INSERT INTO {table}({keys}) VALUES ({values})'.format(
-        table=tbName, keys=', '.join(keys), values=', '.join(values))
-    return sql
+#     sql = 'INSERT INTO {table}({keys}) VALUES ({values})'.format(
+#         table=tbName, keys=', '.join(keys), values=', '.join(values))
+#     return sql
 
 
-def createInsertSqls(tbName: str, datas: List[Dict]):
+def createInsertSql(tbName: str, *datas):
 
     keys = list(datas[0].keys())
 
@@ -130,16 +130,24 @@ def createInsertSqls(tbName: str, datas: List[Dict]):
     for data in datas:
         values = []
         for s in keys:
+            
             if isinstance(data[s], str):
-                values.append('"%s"' % (data[s].replace("\\","\\\\").replace("\"", "\\\"")))
+                vs='"%s"' % (data[s].replace("\\","\\\\").replace("\"", "\\\""))
+                # values.append('"%s"' % (data[s].replace("\\","\\\\").replace("\"", "\\\"")))
             elif isinstance(data[s], datetime.datetime):
-                values.append('"%s"' % (str(data[s]).replace("\"", "\\\"")))
+                vs='"%s"' % (str(data[s]).replace("\"", "\\\""))
+                # values.append('"%s"' % (str(data[s]).replace("\"", "\\\"")))
             elif not data[s]:
-                values.append("null")
+                vs="null"
+                # values.append("null")
             else:
-                values.append("%s" % (data[s]))
+                vs="%s" % (data[s])
+                
+            values.append(vs)
+            
         tmpValue = tmpValue+"({values}),".format(values=','.join(values))
-
-    sql = 'INSERT INTO {table}({keys}) VALUES {valueStr}'.format(
-        table=tbName, keys=', '.join(keys), valueStr=tmpValue[:-1])
+    
+    fields=', '.join(keys)
+    valueStr=tmpValue[:-1]
+    sql = f'INSERT INTO {tbName}({fields}) VALUES {valueStr}'
     return sql

@@ -1,6 +1,6 @@
 from typing import Dict
 from models import GraphFunc
-import cttqFuncs.basic.exFunc
+from ...exFunc import *
 
 
 class PageRank:

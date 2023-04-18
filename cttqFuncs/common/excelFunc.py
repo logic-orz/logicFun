@@ -1,15 +1,9 @@
-'''
-Author: Logic
-Date: 2022-09-08 11:03:51
-LastEditTime: 2022-09-26 19:33:23
-Description: 
-'''
 from typing import Any, List, Dict
 import xlwt
 import xlrd2
 import openpyxl
 from ..basic.exClass import CommonException
-from ..basic.exFunc import *
+from ..exFunc import *
 from .fileFunc import readLines, isExist, createFile, deleteFile, writeAppend
 
 

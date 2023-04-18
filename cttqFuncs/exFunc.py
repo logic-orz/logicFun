@@ -3,11 +3,47 @@ Author: Logic
 Date: 2022-04-28 11:03:17
 Description: 
 '''
-from functools import reduce as reduceWith
-from typing import Dict, Callable, Any, List, Tuple, TypeVar
-from .signClass import sign, T
+import ctypes
 import json
-import numpy as np
+from functools import reduce as reduceWith
+from typing import Any, Callable, Dict, List, Tuple, TypeVar
+
+T = TypeVar('T')
+
+
+class _PyObject(ctypes.Structure):
+    class PyType(ctypes.Structure):
+        pass
+
+    s_size = ctypes.c_int64 if ctypes.sizeof(
+        ctypes.c_void_p) == 8 else ctypes.c_int32
+    _fields_ = [
+        ('ob_refcnt', s_size),
+        ('ob_type', ctypes.POINTER(PyType)),
+    ]
+
+
+def sign(cls, funcName):  # * 功能注册装饰器,加在函数上,可以将函数注册到特定类
+    """
+    ? cls class类名
+    ? funcName 注册的函数名称
+    """
+    def _(function):
+        class SlotsProxy(_PyObject):
+            _fields_ = [('dict', ctypes.POINTER(_PyObject))]
+
+        name, target = cls.__name__, cls.__dict__
+        proxy_dict = SlotsProxy.from_address(id(target))
+        namespace = {}
+        ctypes.pythonapi.PyDict_SetItem(
+            ctypes.py_object(namespace),
+            ctypes.py_object(name),
+            proxy_dict.dict,
+        )
+        namespace[name][funcName] = function
+
+    return _
+
 
 # * 函数注册
 

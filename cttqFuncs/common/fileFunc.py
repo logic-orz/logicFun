@@ -6,7 +6,7 @@ Description:
 '''
 import os
 from ..basic.exClass import StrBuild
-from ..basic.exFunc import *
+from ..exFunc import *
 import shutil
 import requests
 

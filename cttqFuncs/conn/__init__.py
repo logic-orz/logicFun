@@ -6,3 +6,5 @@ Description:
 '''
 
 __all__ = ['dbFunc', 'impalaFunc', 'mysqlFunc', 'redisFunc', 'postgresFunc']
+
+from .dbFunc import DbColumn,DbConfig,createInsertSql

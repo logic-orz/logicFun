@@ -10,7 +10,7 @@ from minio.error import S3Error
 from minio.datatypes import Object as MinioObj
 from cttqFuncs.basic.configFunc import getDict
 from typing import List
-import cttqFuncs.basic.exFunc
+import cttqFuncs.exFunc
 
 
 class Minio():

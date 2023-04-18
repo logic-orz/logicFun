@@ -2,7 +2,7 @@ from cacheout import MRUCache
 from typing import Dict
 _caches:Dict[str,MRUCache]={}
 
-class cacheput(object):
+class cachePut(object):
     """
     * 后置函数，操作对象为被装饰函数的返回结果
     """

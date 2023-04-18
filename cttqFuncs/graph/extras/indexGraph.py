@@ -8,10 +8,9 @@ Description:
 
 from typing import Dict, List, Set, Tuple
 
-import cttqFuncs.basic.exFunc
-from cttqFuncs.basic.exClass import IndexList, Tree
-
-from models import *
+from ...basic.exClass import IndexList, Tree
+from ...exFunc import *
+from ..models import *
 
 
 class IndexGraph(Graph, GraphFunc):

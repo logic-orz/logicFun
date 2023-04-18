@@ -4,47 +4,8 @@ Date: 2022-05-17 14:24:15
 LastEditTime: 2022-05-19 09:45:30
 Description: 
 '''
-
-
-from typing import Dict, Callable, Any, List, Tuple, TypeVar
-import ctypes
 import json
-
-T = TypeVar('T')
-
-
-class PyObject(ctypes.Structure):
-    class PyType(ctypes.Structure):
-        pass
-
-    ssize = ctypes.c_int64 if ctypes.sizeof(
-        ctypes.c_void_p) == 8 else ctypes.c_int32
-    _fields_ = [
-        ('ob_refcnt', ssize),
-        ('ob_type', ctypes.POINTER(PyType)),
-    ]
-
-
-def sign(clazz, funcName):  # * 功能注册装饰器,加在函数上,可以将函数注册到特定类
-    """
-    ? clazz class类名
-    ? funcName 注册的函数名称
-    """
-    def _(function):
-        class SlotsProxy(PyObject):
-            _fields_ = [('dict', ctypes.POINTER(PyObject))]
-
-        name, target = clazz.__name__, clazz.__dict__
-        proxy_dict = SlotsProxy.from_address(id(target))
-        namespace = {}
-        ctypes.pythonapi.PyDict_SetItem(
-            ctypes.py_object(namespace),
-            ctypes.py_object(name),
-            proxy_dict.dict,
-        )
-        namespace[name][funcName] = function
-
-    return _
+from typing import Callable,Any, Dict
 
 
 class doJoin(object):

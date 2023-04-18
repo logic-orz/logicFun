@@ -3,7 +3,7 @@ from sqlalchemy import ( Column,Integer, String, or_)
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-from cttqFuncs.basic.exFunc import *
+from cttqFuncs.exFunc import *
 
 from cttqFuncs.graph.models import Edge, GraphFunc, Node
 

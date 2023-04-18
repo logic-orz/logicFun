@@ -1,8 +1,5 @@
 '''
-Author: Logic
-Date: 2022-06-07 15:51:17
-LastEditTime: 2022-06-07 16:53:39
-Description: 
+pip install python-consul
 '''
 
 from dataclasses import dataclass
@@ -10,13 +7,12 @@ from typing import List
 
 import consul
 
-import cttqFuncs.basic.exFunc
-from cttqFuncs.basic.configFunc import getDict
-from cttqFuncs.basic.exClass import BaseClass
+from ..exFunc import *
+from ..basic.configFunc import getDict
+from ..basic.exClass import BaseClass
 
 
 class ServiceInfo(BaseClass):
-
     def __init__(self,data:dict) -> None:
         self.id= data['ID']
         self.name=data["Service"]
