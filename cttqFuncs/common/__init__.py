@@ -10,6 +10,6 @@ __all__ = [
 ]
 
 from .excelFunc import XlsReader,XlsWriter
-from .fileFunc import readLines,readStr,writeAppend,listDir,listFile
+from .fileFunc import readLines,readStr,writeAppend,listDir,listFile,deleteFile
 from .logFunc import SimpleLog,log
 from .scheduleFunc import backSchedule,asyncSchedule
