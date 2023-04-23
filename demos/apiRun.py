@@ -27,7 +27,7 @@ app.add_middleware(
     )
 
 app.mount("/templates",
-            StaticFiles(directory="zentaoFuncs/templates"),
+            StaticFiles(directory="/templates"),
             name="templates")
 
 @app.get("/", response_class=HTMLResponse)

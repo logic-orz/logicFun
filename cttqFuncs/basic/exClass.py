@@ -1,7 +1,8 @@
-from typing import Any, Callable, Dict, List, Tuple, TypeVar, Generic, Set
+from typing import Any, Callable, Dict, List, Tuple, TypeVar, Generic, Set, Union
 import json
 import datetime
 import decimal
+from pydantic import BaseModel
 
 T = TypeVar('T')
 
@@ -28,19 +29,16 @@ class CommonException(Exception):
     def __str__(self):
         return self.ErrorInfo
 
-class Page:
-    def __init__(self,pageNo:int=1,pageSize:int=10) -> None:
-        self.pageNo=pageNo
-        self.pageSize=pageSize
+class Page(BaseModel):
+    pageNo:int=1
+    pageSize:int=10
     
-class Return:
-    def __init__(self,code:int=200,msg:str="success",data=None,page:Page=None) -> None:
-        self.code=code
-        self.data=data
-        self.msg = msg
-        if page :
-            self.page=page
-        
+class Return(BaseModel):
+    
+    code:int=200
+    msg:str="success"
+    data:Union[list,dict]=None
+    page:Page=None
     
 
 class BaseClass:
@@ -144,77 +142,52 @@ class StrBuild():  # * 面向长字符串多次需要拼接的场景
         return ''.join(self.__strList__)
 
 
-class Tree(Generic[T]):
 
+class TNode(Generic[T]):
+    def __init__(self,name:str=None,value:T=None) -> None:
+        self.name:str=name
+        self.value:T=value
+        self.children:Dict[str,TNode]={}
+        
+    def add(self,name:str,value:T):
+        self.children[name]=value
+        
+        
+    def get(self,name:str):
+        if name not in self.children:
+            return None
+        return self.children[name]
+    
+class Tree:
+    nameSplitFlag:str='.'
     """
-    * data:Dict[str:Tuple[str,T]] 对象字典:[key,[parentKey,value]]
-    * path:Dict[str:set[str]] 路径层级关系
+    
     """
+    def __init__(self,name:str=None,value:T=None) -> None:
+        self.root=TNode(name,value)
+        
+    def _find(self,names:List[str]):
+        tNode:TNode=self.root
+        for name in names:
+            tNode=tNode.get(name)
+            if not tNode:
+                return None
+        return tNode
+    
+    def find(self,path:str):
+        return self._find(path.split(Tree.nameSplitFlag))
+            
+    def add(self, path: str, value: T):
+        names=path.split(Tree.nameSplitFlag)
+        tNode=self._find(names[0:-1])
+        if tNode:
+            tNode.add(names[-1],value)
 
-    def __init__(self, name: str = '') -> None:
-        self.name = name
-        #Dict[str, Tuple[str, T]]
-        self.data = dict()
-        self.child: Dict[str, Set[str]] = dict()
-
-    def add(self, key: str, v: T, parentKey: str = None):
-        self.data[key] = (parentKey, v)
-
-        children = set()
-        if parentKey in self.child:
-            children = self.child[parentKey]
-
-        children.add(key)
-        self.child[parentKey] = children
-
-    def get(self, key: str) -> T:
-        if key in self.data:
-            return self.data[key][1]
-        return None
-
-    def delete(self, key: str):
-        childKeys = {key}
-
-        tmpKeys: List[str] = list()
-        tmpKeys.append(key)
-
-        while len(tmpKeys) > 0:
-            ts = list()
-            for tmp in tmpKeys:
-                ts.appendAll(self.getChildrenKeys(tmp))
-
-            tmpKeys.clear()
-            tmpKeys.appendAll(ts)
-
-        pk = self.data[key][0]
-        ps = self.child[pk]
-        ps.remove(key)
-        if len(ps) == 0:
-            del self.child[pk]
-        for k in childKeys:
-            del self.child[k]
-            del self.data[k]
-
-    def getChildren(self, key: str) -> List[T]:
-        if key in self.child:
-            childKeys: set[int] = self.child[key]
-            return childKeys.toList().map(lambda k: self.data[k][1])
-        return []
-
-    def getChildrenKeys(self, key: str) -> List[str]:
-        if key in self.child:
-            return self.child[key].toList()
-        return []
-
-    def getParent(self, key: str) -> T:
-        if key in self.data:
-            pk = self.data[key][0]
-            return self.data[pk][1]
-        return None
-
-    def values(self):
-        return self.data.vs().map(lambda t: t[1])
-
+    def delete(self, path: str):
+        names=path.split(Tree.nameSplitFlag)
+        tNode=self._find(names[0:-1])
+        if tNode and names[-1] in tNode.children:
+            del tNode.children[names[-1]]
 
 class Matrix():
     """

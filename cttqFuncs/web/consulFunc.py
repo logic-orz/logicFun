@@ -2,7 +2,6 @@
 pip install python-consul
 '''
 
-from dataclasses import dataclass
 from typing import List
 
 import consul
@@ -10,7 +9,7 @@ import consul
 from ..exFunc import *
 from ..basic.configFunc import getDict
 from ..basic.exClass import BaseClass
-
+from ..basic.configFunc import initStr
 
 class ServiceInfo(BaseClass):
     def __init__(self,data:dict) -> None:
@@ -23,25 +22,33 @@ class ServiceInfo(BaseClass):
         self.dataCenter=data["Datacenter"]
 
 
-@dataclass(init=False)
 class ConsulFunc(BaseClass):
-    consul_ip: str = None
-    consul_port: int = 8500
-    local_ip: str = None
-    service_id: str=None
-    service_name: str = None
-    local_port: int = None
-    token: str = None
+  
+    def __init__(self,consulIp:str='127.0.0.1',consulPort:int=8500) -> None:
+        
+        self.consulIp = consulIp
+        self.consulPort = consulPort
+        
+        self.local_ip: str = '127.0.0.1'
+        self.local_port: int = None
+        
+        self.service_id: str=None
+        self.service_name: str = None
+        
+        self.token: str = None
+        self.cons=None
 
-    def fixConfig(self, ns: str = 'consul'):
+    def fix(self, ns: str = 'consul'):
         self.build(getDict(ns))
         return self
 
-    def init(self):
+    def _connect(self):
         # 初始化 Consul 服务
-        self.cons = consul.Consul(host=self.consul_ip, port=8500)
+        self.cons = consul.Consul(host=self.consulIp, port=self.consulPort)
 
     def register(self):
+        if self.cons is None:
+            self._connect()
         # 注册服务到 Consul
         self.cons.agent.service.register(
             service_id=self.service_id if self.service_id else self.service_name,
@@ -53,8 +60,26 @@ class ConsulFunc(BaseClass):
             check=consul.Check().tcp(self.local_ip, self.local_port, '5s', '30s', '60s'),
             tags=[]
         )
-
+    
+    def getKV(self,key:str):
+        if self.cons is None:
+            self._connect()
+            
+        kv=self.cons.kv.get(key)
+        if not kv:
+            return None
+        v=kv[1]['Value']
+        v= str(v, encoding = "utf-8")
+        return v
+    
+    def syncConfig(self,key:str):
+        initStr(self.getKV(key))
+        
+    
     def getService(self, name:str=None)->List[ServiceInfo]:
+        if self.cons is None:
+            self._connect()
+            
         services = self.cons.agent.services()
         sis=[]
         for id,service in services.kvs():
@@ -65,3 +90,4 @@ class ConsulFunc(BaseClass):
             sis=sis.filter(lambda si:si.name == name)
             
         return sis
+

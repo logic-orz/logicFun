@@ -157,7 +157,6 @@ def isNumberStr(s:str)->bool:
         return True
     except ValueError:
         pass
-
     try:
         import unicodedata
         unicodedata.numeric(s)
@@ -166,6 +165,32 @@ def isNumberStr(s:str)->bool:
         pass
 
     return False
+
+
+def isIdCard(idStr)->bool:
+    """
+    判断是否为身份证
+    """
+    if len(idStr) == 18:   #校验省份证长度是否是18位
+        num17 = idStr[0:17]
+        if not isNumberStr(num17):
+            return False
+        last_num = idStr[-1]  #截取前17位和最后一位
+        moduls = [7,9,10,5,8,4,2,1,6,3,7,9,10,5,8,4,2]
+        num17 = map(int,num17)
+        num_tuple = zip(num17,moduls)  # [(1, 4), (2, 5), (3, 6)]
+        num = map(lambda x:x[0]*x[1],num_tuple)
+        mod = sum(num)%11
+        yushu1 = [0,1,2,3,4,5,6,7,8,9,10]
+        yushu2 = [1,0,'X',9,8,7,6,5,4,3,2]
+        last_yushu = dict(zip(yushu1,yushu2))
+        if last_num == str(last_yushu[mod]):
+            return True
+        else:
+            return False
+    else:
+        return False
+
 
 
 def toCamel(name: str) -> str:

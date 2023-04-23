@@ -1,4 +1,3 @@
-import json
 from typing import List, Dict
 from ..basic.exClass import BaseClass
 from ..basic.configFunc import getDict
@@ -95,25 +94,6 @@ class DbFunc(metaclass=abc.ABCMeta):
         if not ns:
             ns=cls.__name__.lower()
         return cls(DbConfig.build(getDict(ns)))
-
-
-# def createInsertSql(tbName: str, data: Dict):
-
-#     keys = list(data.keys())
-#     values = []
-#     for s in keys:
-#         if isinstance(data[s], str):
-#             values.append('"%s"' % (data[s].replace("\\","\\\\").replace("\"", "\\\"")))
-#         elif isinstance(data[s], datetime.datetime):
-#             values.append('"%s"' % (str(data[s]).replace("\"", "\\\"")))
-#         elif not data[s]:
-#             values.append("null")
-#         else:
-#             values.append("%s" % (data[s]))
-
-#     sql = 'INSERT INTO {table}({keys}) VALUES ({values})'.format(
-#         table=tbName, keys=', '.join(keys), values=', '.join(values))
-#     return sql
 
 
 def createInsertSql(tbName: str, *datas):

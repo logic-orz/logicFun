@@ -9,8 +9,7 @@ __all__ = [
     'zipFunc'
 ]
 
-# from .dataShow import showKTable,showZTable
 from .excelFunc import XlsReader,XlsWriter
-from .fileFunc import readLines,readStr,writeAppend
+from .fileFunc import readLines,readStr,writeAppend,listDir,listFile
 from .logFunc import SimpleLog,log
 from .scheduleFunc import backSchedule,asyncSchedule

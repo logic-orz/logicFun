@@ -1,9 +1,11 @@
-from minio import Minio as MinioConnect
-from minio.error import S3Error
-from minio.datatypes import Object as MinioObj
-from cttqFuncs.basic.configFunc import getDict
 from typing import List
-import cttqFuncs.exFunc
+
+from minio import Minio as MinioConnect
+from minio.datatypes import Object as MinioObj
+from minio.error import S3Error
+
+from ..basic.configFunc import getDict
+from ..exFunc import *
 
 
 class Minio():
