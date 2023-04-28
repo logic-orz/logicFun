@@ -60,6 +60,8 @@ class ConsulFunc(BaseClass):
             check=consul.Check().tcp(self.local_ip, self.local_port, '5s', '30s', '60s'),
             tags=[]
         )
+    def deRegister(self):
+        self.cons.agent.service.deregister(service_id=self.service_id if self.service_id else self.service_name)
     
     def getKV(self,key:str):
         if self.cons is None:
