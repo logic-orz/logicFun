@@ -4,9 +4,11 @@ from ..basic.configFunc import getDict
 import abc
 import datetime
 from dataclasses import dataclass
+from pydantic import BaseModel
+from ..exFunc import *
 
-@dataclass(init=False)
-class DbConfig(BaseClass):
+
+class DbConfig(BaseModel, BaseClass):
     """
     数据库连接配置对象
     """
@@ -17,24 +19,53 @@ class DbConfig(BaseClass):
     db: str = None
     hosts: str = None
 
-@dataclass(init=False)
-class DbColumn(BaseClass):
+
+class DbColumn(BaseModel, BaseClass):
     """
     字段信息对象
     """
     name: str = None
     type: str = None
     comment: str = None
-    primary_key:str = None
-    default_value:str = None
-    nullable:str = None
+    primary_key: str = None
+    default_value: str = None
+    nullable: str = None
+
+
+def transData(datas: List[Dict], colums: List[DbColumn], z2e: bool = True):
+    """_summary_
+    数据字段名转换
+    @param z2e: True中文转英文(默认) False:英文转中文
+    """
+    for data in datas:
+        for col in colums:
+            if z2e:
+                fkey = col.comment
+                tKey = col.name
+            else:
+                fkey = col.name
+                tKey = col.comment
+
+            vType = col.type
+            if fkey in data.keys():
+                v = data.pop(fkey)
+                if vType.startswith('float') and isinstance(v, str):
+                    v = float(v)
+                elif vType.startswith('int') and isinstance(v, str):
+                    v = int(v)
+                elif vType.startswith('double') and isinstance(v, str):
+                    v = float(v)
+                elif vType.startswith('decimal') and isinstance(v, str):
+                    v = float(v)
+                data[tKey] = v
+    return datas
 
 
 class DbFunc(metaclass=abc.ABCMeta):
-    
-    def __init__(self,config: DbConfig) -> None:
+
+    def __init__(self, config: DbConfig) -> None:
         pass
-    
+
     @abc.abstractmethod
     def conn(self):
         # * 创建连接对象
@@ -54,22 +85,23 @@ class DbFunc(metaclass=abc.ABCMeta):
         cur.close()
         return res_list
 
-    def execQueryIte(self, sql: str, batchSize: int = 100, showStep: bool = False):
+    def execQueryIte(self, sql: str, batchSize: int = 100):
         conn = self.conn()
         cur = conn.cursor()
         cur.execute(sql)
         i = 0
         while True:
             i += 1
-            if showStep:
-                print("fetch batch ", i)
             res_list = cur.fetchmany(batchSize)
             if not res_list:
                 cur.close()
                 return
             yield res_list
 
-    def execQueryNoRes(self, *sqls) -> None:
+    def execQueryNoRes(self, *sqls: List[str]) -> None:
+        self.execSqls(*sqls)
+
+    def execSqls(self, *sqls: List[str]) -> None:
         conn = self.conn()
         cur = conn.cursor()
         for sql in sqls:
@@ -88,11 +120,11 @@ class DbFunc(metaclass=abc.ABCMeta):
         todo 子类实现
         """
         raise Exception("方法未实现")
-    
+
     @classmethod
-    def fix(cls,ns:str=None):
+    def fix(cls, ns: str = None):
         if not ns:
-            ns=cls.__name__.lower()
+            ns = cls.__name__.lower()
         return cls(DbConfig.build(getDict(ns)))
 
 
@@ -104,24 +136,21 @@ def createInsertSql(tbName: str, *datas):
     for data in datas:
         values = []
         for s in keys:
-            
             if isinstance(data[s], str):
-                vs='"%s"' % (data[s].replace("\\","\\\\").replace("\"", "\\\""))
-                # values.append('"%s"' % (data[s].replace("\\","\\\\").replace("\"", "\\\"")))
+                vs = '"%s"' % (data[s].replace(
+                    "\\", "\\\\").replace("\"", "\\\""))
             elif isinstance(data[s], datetime.datetime):
-                vs='"%s"' % (str(data[s]).replace("\"", "\\\""))
-                # values.append('"%s"' % (str(data[s]).replace("\"", "\\\"")))
+                vs = '"%s"' % (str(data[s]).replace("\"", "\\\""))
             elif not data[s]:
-                vs="null"
-                # values.append("null")
+                vs = "null"
             else:
-                vs="%s" % (data[s])
-                
+                vs = "%s" % (data[s])
+
             values.append(vs)
-            
+
         tmpValue = tmpValue+"({values}),".format(values=','.join(values))
-    
-    fields=', '.join(keys)
-    valueStr=tmpValue[:-1]
+
+    fields = ', '.join(keys)
+    valueStr = tmpValue[:-1]
     sql = f'INSERT INTO {tbName}({fields}) VALUES {valueStr}'
     return sql

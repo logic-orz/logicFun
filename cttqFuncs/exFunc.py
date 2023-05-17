@@ -69,7 +69,7 @@ def delDictKV(self:dict,key:str)->dict:
 
 @sign(dict, 'rename')
 def reNameDictKey(self:dict,fkey:str,tkey:str)->dict:
-    if fkey in self:
+    if fkey in self.keys():
         v=self.pop(fkey)
         self[tkey]=v
     return self
