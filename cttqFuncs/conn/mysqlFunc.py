@@ -86,11 +86,13 @@ class MysqlPoolAsync:
                 while True:
                     res_list = cur.fetchmany(batchSize)
                     if not res_list:
-                        cur.close()
                         return
                     yield res_list
 
     async def execQueryNoRes(self, *sqls) -> None:
+        await self.execSql(*sqls)
+
+    async def execSql(self, *sqls) -> None:
         if not self.pool:
             await self.__initPool()
         async with self.pool.acquire() as conn:
