@@ -141,10 +141,11 @@ def createInsertSql(tbName: str, *datas):
                     "\\", "\\\\").replace("\"", "\\\""))
             elif isinstance(data[s], datetime.datetime):
                 vs = '"%s"' % (str(data[s]).replace("\"", "\\\""))
-            elif not data[s]:
+            elif data[s] is None:
                 vs = "null"
-            else:
-                vs = "%s" % (data[s])
+                # values.append("null")
+            else:  # 默认类型可以兼容
+                vs = f"{data[s]}"
 
             values.append(vs)
 
