@@ -3,14 +3,13 @@ from .dbFunc import DbColumn, DbConfig, DbFunc
 from typing import List
 from ..exFunc import *
 
+
 class Impala(DbFunc):
 
     '''
     默认连接加密配置为不加密
     '''
     __auth_mechanism__ = 'PLAIN'
-    __config_ns__= 'impala'
-
     def __init__(self,  config: DbConfig):
         self.__conn__ = connect(host=config.host,
                                 port=int(config.port),
@@ -51,7 +50,6 @@ class Impala(DbFunc):
                 cur.close()
                 return
             yield res_list
-            
 
     def tables(self) -> List[str]:
         return self.execQuery(' show tables ').map(lambda x: x['name'])

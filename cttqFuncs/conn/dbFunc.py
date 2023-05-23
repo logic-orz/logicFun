@@ -3,7 +3,6 @@ from ..basic.exClass import BaseClass
 from ..basic.configFunc import getDict
 import abc
 import datetime
-from dataclasses import dataclass
 from pydantic import BaseModel
 from ..exFunc import *
 
@@ -32,13 +31,13 @@ class DbColumn(BaseModel, BaseClass):
     nullable: str = None
 
 
-def transData(datas: List[Dict], colums: List[DbColumn], z2e: bool = True):
+def transData(datas: List[Dict], columns: List[DbColumn], z2e: bool = True):
     """_summary_
     数据字段名转换
     @param z2e: True中文转英文(默认) False:英文转中文
     """
     for data in datas:
-        for col in colums:
+        for col in columns:
             if z2e:
                 fkey = col.comment
                 tKey = col.name
@@ -141,10 +140,10 @@ def createInsertSql(tbName: str, *datas):
                     "\\", "\\\\").replace("\"", "\\\""))
             elif isinstance(data[s], datetime.datetime):
                 vs = '"%s"' % (str(data[s]).replace("\"", "\\\""))
-            elif not data[s]:
+            elif data[s] is None:
                 vs = "null"
-            else:
-                vs = "%s" % (data[s])
+            else:  # 默认类型可以兼容
+                vs = f"{data[s]}"
 
             values.append(vs)
 
