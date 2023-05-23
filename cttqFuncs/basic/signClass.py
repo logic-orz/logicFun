@@ -1,27 +1,48 @@
 import json
-from typing import Callable,Any, Dict
+from typing import Callable, Any, Dict
+
+
+class doJoin(object):
+    """
+    * 并行函数，参数和被装饰函数的参数保持一致
+    * 执行逻辑与被装饰内容无关，只为了执行被装饰函数时，并行执行某个方法
+    * isAfter: 执行顺序，默认是在函数执行之前执行
+    * reSkip: 在前置执行时,如果函数返回True,则会跳过被修饰函数
+    """
+
+    def __init__(self, func: Callable[[Any], Any], isAfter: bool = False, reSkip: bool = False):
+        self.func = func
+        self.isAfter = isAfter
+        self.reSkip = reSkip
+
+    def __call__(self, __func):  # 接受函数
+        def wrapper(*args, **kwargs):
+            if not self.isAfter:
+                r=self.func(*args, **kwargs)
+                if self.reSkip and r:
+                    return 
+            res = __func(*args, **kwargs)
+            if self.isAfter:
+                self.func(*args, **kwargs)
+            return res
+        return wrapper  # 返回函数
+
 
 class doBefore(object):
     """
-    * 前置函数
-    * isJoin: 是否并行
-    *   true:   执行逻辑与被装饰内容无关，只为了执行被装饰函数时，并行执行某个方法
-    *           参数和被装饰函数的参数保持一致
-    *   false:  前置函数返回值,作为被装饰函数的输入
-    *           参数和被装饰函数的参数保持一致
-    *           为了避免 got multiple values for argument 错误,需要返回的参数,请以kwargs的形式传入
-    *           返回参数会更新kwargs,所以请以字典形式传入变更的参数
+    * 前置函数,参数和被装饰函数的参数保持一致
+    * 前置函数返回值,作为被装饰函数的输入
+    * 为了避免 got multiple values for argument 错误,需要返回的参数,请以kwargs的形式传入
+    * 返回参数会更新kwargs,所以请以字典形式返回变更的参数
     """
 
-    def __init__(self, func: Callable[[Any], Any],isJoin=False):
+    def __init__(self, func: Callable[[Any], Any]):
         self.func = func
-        self.isJoin =isJoin
 
     def __call__(self, __func):  # 接受函数
         def wrapper(*args, **kwargs):
             kwargsT = self.func(*args, **kwargs)
-            if not self.isJoin:
-                kwargs.update(kwargsT)
+            kwargs.update(kwargsT)
             return __func(*args, **kwargs)
 
         return wrapper  # 返回函数
@@ -29,27 +50,19 @@ class doBefore(object):
 
 class doAfter(object):
     """
-    * 后置函数
-    * isJoin: 是否并行
-    *   true:   执行逻辑与被装饰内容无关，只为了执行被装饰函数时，并行执行某个方法
-    *           参数和被装饰函数的参数保持一致
-    *   false:  操作对象为被装饰函数的返回结果
+    * 后置函数，操作对象为被装饰函数的返回结果
     """
 
-    def __init__(self, func: Callable[[Any], Any],isJoin=False):
+    def __init__(self, func: Callable[[Any], Any]):
         self.func = func
-        self.isJoin =isJoin
-
 
     def __call__(self, __func):  # 接受函数
         def wrapper(*args, **kwargs):
             res = __func(*args, **kwargs)
-            if self.isJoin:
-                return self.func(res)
-            else:
-                return self.func(res)
+            return self.func(res)
 
         return wrapper  # 返回函数
+
 
 def toDict(cls):
     def func(self):
