@@ -1,5 +1,7 @@
+from typing import Dict, List, Tuple
+
 from ..exFunc import *
-from typing import Dict,List,Tuple
+
 
 def spaceCalWithOrderAdd(datas:List[Tuple[str,int]],limitSize:int)->List[Tuple[List[str],int]]:
     '''

@@ -62,17 +62,20 @@ def kvs(self: dict) -> list:
         re.append((k, v))
     return re
 
+
 @sign(dict, 'del')
-def delDictKV(self:dict,key:str)->dict:
+def delDictKV(self: dict, key: str) -> dict:
     del self[key]
     return self
 
+
 @sign(dict, 'rename')
-def reNameDictKey(self:dict,fkey:str,tkey:str)->dict:
+def reNameDictKey(self: dict, fkey: str, tkey: str) -> dict:
     if fkey in self.keys():
-        v=self.pop(fkey)
-        self[tkey]=v
+        v = self.pop(fkey)
+        self[tkey] = v
     return self
+
 
 @sign(dict, 'toStr')
 def dictToStr(self) -> str:
@@ -85,6 +88,7 @@ def dictToStr(self) -> str:
 def mapWith(self, __func: Callable[[Any], Any]):
     return list(map(__func, self))
 
+
 @sign(list, 'flatMap')
 def flatMapWith(self, __func: Callable[[Any], List[Any]]):
     res = []
@@ -93,8 +97,9 @@ def flatMapWith(self, __func: Callable[[Any], List[Any]]):
             res.extend(ts)
     return res
 
+
 @sign(list, 'appendAll')
-def appendAll(self:List[T], vs: List[T]) -> List[T]:
+def appendAll(self: List[T], vs: List[T]) -> List[T]:
     self.extend(vs)
     return self
 
@@ -116,10 +121,10 @@ def distinct(self):
 
 @sign(list, 'groupByKey')
 def groupByKey(self: List[Tuple[str, T]]) -> Dict[str, List[T]]:  # ? 聚合函数
-    tmpMap:Dict[str,List[T]] = dict()
-    for key,value in self:
+    tmpMap: Dict[str, List[T]] = dict()
+    for key, value in self:
         if key not in tmpMap:
-            tmpMap[key]=[]
+            tmpMap[key] = []
         tmpMap[key].append(value)
     return tmpMap
 
@@ -148,7 +153,7 @@ def sumWith(self: List):
 def reduceByKey(self: List[Tuple[str, T]], __func: Callable[[T], T]) -> Dict[str, T]:
     re = self.groupByKey()\
         .kvs()\
-        .map(lambda t: (t[0], reduceWith(__func,t[1])))\
+        .map(lambda t: (t[0], reduceWith(__func, t[1])))\
         .toDict()
     return re
 
@@ -176,18 +181,18 @@ def sortBy(self: List, key, reverse=False) -> list:
     return self
 
 
-@sign(list,'split')
-def splitList(self:List[Any], num:int=-1,size:int=-1):    
-    lens=len(self)
-    if num!=-1:
-        re=[[] for i in range(0,num)]
-        for i in range(0,lens):
-            v=self[i]
-            l=re[i%num]
+@sign(list, 'split')
+def splitList(self: List[Any], num: int = -1, size: int = -1):
+    lens = len(self)
+    if num != -1:
+        re = [[] for i in range(0, num)]
+        for i in range(0, lens):
+            v = self[i]
+            l = re[i % num]
             l.append(v)
     elif size != -1:
-        re=[]
-        for i in range(0,lens,size):
+        re = []
+        for i in range(0, lens, size):
             if i+size > lens:
                 re.append(self[i:])
             else:
@@ -223,6 +228,7 @@ def endsIn(self: str, *keys):
 @sign(str, 'append')
 def appendStr(self: str, s: str):
     return self + str(s)
+
 
 @sign(str, 'toJson')
 def toJson(self: str):

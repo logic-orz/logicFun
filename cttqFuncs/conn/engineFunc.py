@@ -38,15 +38,26 @@ def mySqlEngine(ns: str = 'mysql',isAsync=False):
         Session=sessionmaker(bind=engine)
     return (engine,Session)
 
-def addOrmInfo(cls):
-    cls.tb=cls.metadata.tables[cls.__tablename__]
-    cls.columns=cls.tb.columns._all_columns
-    def func(self,dic):
-        cn=cls.columns.map(lambda c:(c.comment,c.name)).toDict()
-        for c,v in dic.kvs():
-            if c in cn:
-                n=cn[c]
-                self[n]=v
-    cls.buildByComment = func
-    return cls
 
+class OrmBuilder():
+
+    @property
+    def columns(self):
+        return self.__class__.metadata.tables[self.__class__.__tablename__].columns._all_columns
+
+    def buildByComment(self, data: Dict):
+        cn = self.columns.map(lambda c: (c.comment, c.name)).toDict()
+        for c, v in data.kvs():
+            if c in cn:
+                n = cn[c]
+                self.__dict__[n] = v
+        return self
+
+    def toDictWithComment(self):
+        data = self.__dict__
+        cn = self.columns.map(lambda c: (c.name, c.comment)).toDict()
+        for c, v in data.kvs():
+            if c in cn:
+                n = cn[c]
+                data[n] = v
+        return data

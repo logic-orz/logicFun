@@ -12,22 +12,22 @@ class Oracle(DbFunc):
 
     def conn(self):
         return self.__conn__
-    
-    def execQuery(self, *sqls):
+
+    def execQuery(self, *sqls: str):
         conn = self.conn()
         cur = conn.cursor()
-        
         for sql in sqls:
+            if sql.strip().endswith(";"):
+                sql = sql.strip()[:-1]
             cur.execute(sql)
         cols = [d[0] for d in cur.description]
         resList = []
         for tup in cur.fetchall():
-            resList.append(dict(zip(cols,tup)))
+            resList.append(dict(zip(cols, tup)))
 
         cur.close()
         return resList
 
-    
     def execQueryIte(self, sql: str, batchSize: int = 100, showStep: bool = False):
         conn = self.conn()
         cur = conn.cursor()
@@ -38,10 +38,10 @@ class Oracle(DbFunc):
             i += 1
             if showStep:
                 print("fetch batch ", i)
-            
+
             resList = []
             for tup in cur.fetchmany(batchSize):
-                resList.append(dict(zip(cols,tup)))
+                resList.append(dict(zip(cols, tup)))
             if not resList:
                 cur.close()
                 return
@@ -51,4 +51,3 @@ class Oracle(DbFunc):
         if self.__conn__ is not None:
             self.__conn__.close()
             self.__conn__ = None
-
