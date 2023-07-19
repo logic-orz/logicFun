@@ -10,6 +10,7 @@ class Impala(DbFunc):
     默认连接加密配置为不加密
     '''
     __auth_mechanism__ = 'PLAIN'
+
     def __init__(self,  config: DbConfig):
         self.__conn__ = connect(host=config.host,
                                 port=int(config.port),
