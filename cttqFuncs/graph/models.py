@@ -12,9 +12,9 @@ class Node(BaseClass):
     """
     * 图节点 定义类
     """
-    
+
     @abc.abstractmethod
-    def key(self)->str:
+    def key(self) -> str:
         raise CommonException("方法未定义")
 
 
@@ -23,11 +23,11 @@ class Edge(BaseClass):
     * 图关系 定义类
     """
     @abc.abstractmethod
-    def fromKey(self)->str:
+    def fromKey(self) -> str:
         raise CommonException("方法未定义")
-    
+
     @abc.abstractmethod
-    def toKey(self)->str:
+    def toKey(self) -> str:
         raise CommonException("方法未定义")
 
 
@@ -111,5 +111,3 @@ class Graph(GraphFunc):
     def queryEdge(self, nodeKey: str, direct: int = 0) -> List[Edge]:
         #   todo 子类实现
         pass
-
-    
