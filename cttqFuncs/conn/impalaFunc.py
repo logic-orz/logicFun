@@ -3,7 +3,6 @@ from .dbFunc import DbColumn, DbConfig, DbFunc
 from typing import List
 from ..exFunc import *
 
-
 class Impala(DbFunc):
 
     '''

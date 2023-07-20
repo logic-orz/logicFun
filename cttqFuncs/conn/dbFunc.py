@@ -16,7 +16,7 @@ class DbConfig(BaseModel, BaseClass):
     user: str = None
     pwd: str = None
     db: str = None
-    hosts: str = None
+    address: str = None
 
 
 class DbColumn(BaseModel, BaseClass):
@@ -26,9 +26,6 @@ class DbColumn(BaseModel, BaseClass):
     name: str = None
     type: str = None
     comment: str = None
-    primary_key: str = None
-    default_value: str = None
-    nullable: str = None
 
 
 def transData(datas: List[Dict], columns: List[DbColumn], z2e: bool = True):

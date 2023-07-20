@@ -8,22 +8,23 @@ from ..basic import getDict
 from ..exFunc import *
 from .dbFunc import DbConfig
 
-BaseModel=declarative_base()
+DBModel = declarative_base()
 
-def mySqlEngine(ns: str = 'mysql',isAsync=False):
+
+def mySqlEngine(ns: str = 'mysql', isAsync=False):
 
     config = DbConfig.build(getDict(ns))
     if isAsync:
         from sqlalchemy.ext.asyncio import create_async_engine as create_engine
-        driver='aiomysql'
+        driver = 'aiomysql'
     else:
         from sqlalchemy import create_engine
-        driver='pymysql'
-    
+        driver = 'pymysql'
+
     db_connect_url = f'mysql+{driver}://{config.user}:{urlquote(config.pwd)}@{config.host}:{config.port}/{config.db}?charset=utf8'
 
     engine = create_engine(
-        db_connect_url, 
+        db_connect_url,
         echo=False,
         future=True,
         max_overflow=5,  # 超过连接池大小外最多创建的连接
@@ -33,10 +34,10 @@ def mySqlEngine(ns: str = 'mysql',isAsync=False):
         pool_pre_ping=True,
     )
     if isAsync:
-        Session=sessionmaker(bind=engine,class_=AsyncSession)
+        Session = sessionmaker(bind=engine, class_=AsyncSession)
     else:
-        Session=sessionmaker(bind=engine)
-    return (engine,Session)
+        Session = sessionmaker(bind=engine)
+    return (engine, Session)
 
 
 class OrmBuilder():

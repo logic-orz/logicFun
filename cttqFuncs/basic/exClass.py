@@ -29,17 +29,20 @@ class CommonException(Exception):
     def __str__(self):
         return self.ErrorInfo
 
+
 class Page(BaseModel):
-    pageNo:int=1
-    pageSize:int=10
-    
+    pageNo: int = 1
+    pageSize: int = 10
+    total: int = 0
+
+
 class Return(BaseModel):
-    
-    code:int=200
-    msg:str="success"
-    data:Union[list,dict]=None
-    page:Page=None
-    
+
+    code: int = 200
+    msg: str = "success"
+    data: Union[list, dict] = None
+    page: Page = None
+
 
 class BaseClass:
 
@@ -49,15 +52,15 @@ class BaseClass:
 
     def __init__(self) -> None:
         pass
-    
+
     def build(self, _obj: Dict):
         if _obj:
             self.__dict__.update(_obj)
         return self
-    
+
     @classmethod
     def build(cls, _obj: Dict):
-        re=cls()
+        re = cls()
         if _obj:
             re.__dict__.update(_obj)
         return re
@@ -142,52 +145,53 @@ class StrBuild():  # * 面向长字符串多次需要拼接的场景
         return ''.join(self.__strList__)
 
 
-
 class TNode(Generic[T]):
-    def __init__(self,name:str=None,value:T=None) -> None:
-        self.name:str=name
-        self.value:T=value
-        self.children:Dict[str,TNode]={}
-        
-    def add(self,name:str,value:T):
-        self.children[name]=value
-        
-        
-    def get(self,name:str):
+    def __init__(self, name: str = None, value: T = None) -> None:
+        self.name: str = name
+        self.value: T = value
+        self.children: Dict[str, TNode] = {}
+
+    def add(self, name: str, value: T):
+        self.children[name] = value
+
+    def get(self, name: str):
         if name not in self.children:
             return None
         return self.children[name]
-    
+
+
 class Tree:
-    nameSplitFlag:str='.'
+    nameSplitFlag: str = '.'
     """
     
     """
-    def __init__(self,name:str=None,value:T=None) -> None:
-        self.root=TNode(name,value)
-        
-    def _find(self,names:List[str]):
-        tNode:TNode=self.root
+
+    def __init__(self, name: str = None, value: T = None) -> None:
+        self.root = TNode(name, value)
+
+    def _find(self, names: List[str]):
+        tNode: TNode = self.root
         for name in names:
-            tNode=tNode.get(name)
+            tNode = tNode.get(name)
             if not tNode:
                 return None
         return tNode
-    
-    def find(self,path:str):
+
+    def find(self, path: str):
         return self._find(path.split(Tree.nameSplitFlag))
-            
+
     def add(self, path: str, value: T):
-        names=path.split(Tree.nameSplitFlag)
-        tNode=self._find(names[0:-1])
+        names = path.split(Tree.nameSplitFlag)
+        tNode = self._find(names[0:-1])
         if tNode:
-            tNode.add(names[-1],value)
+            tNode.add(names[-1], value)
 
     def delete(self, path: str):
-        names=path.split(Tree.nameSplitFlag)
-        tNode=self._find(names[0:-1])
+        names = path.split(Tree.nameSplitFlag)
+        tNode = self._find(names[0:-1])
         if tNode and names[-1] in tNode.children:
             del tNode.children[names[-1]]
+
 
 class Matrix():
     """
@@ -266,7 +270,6 @@ class Matrix():
                 t = t[0:index].append(v[i]) + t[index:]
                 self.matrix[i] = t
 
-   
 
 def matrixCut(a: Matrix, colL, rowL, x=0, y=0):
     tmpMatrix = Matrix(rowL, colL, None)
