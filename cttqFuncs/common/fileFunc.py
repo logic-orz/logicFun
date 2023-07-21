@@ -44,7 +44,7 @@ def listDeep(path: str):
         re.append(f)
     dirs = listDir(path)
     for d in dirs:
-        re.extend(listFileDeep(d))
+        re.extend(listDeep(d))
     return re
 
 
