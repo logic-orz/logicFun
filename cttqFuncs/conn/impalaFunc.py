@@ -36,10 +36,11 @@ class Impala(DbFunc):
         cur.close()
         return resList
 
-    def execQueryIte(self, sql: str, batchSize: int = 100, showStep: bool = False):
+    def execQueryIte(self, *sqls: str, batchSize: int = 100, showStep: bool = False):
         conn = self.conn()
         cur = conn.cursor(dictify=True)
-        cur.execute(sql)
+        for sql in sqls:
+            cur.execute(sql)
         i = 0
         while True:
             i += 1

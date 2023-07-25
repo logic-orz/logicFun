@@ -1,21 +1,23 @@
+import sys
+
 import uvicorn
-from fastapi.openapi.docs import get_swagger_ui_html
-from fastapi import FastAPI,applications
+from fastapi import FastAPI, applications
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.openapi.docs import get_swagger_ui_html
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
-import sys
+
 app = FastAPI(title="标题", description="描述", version='1.0.0')
 
-def swagger_monkey_patch(*args, **kwargs):
-    return get_swagger_ui_html(
-        *args, **kwargs,
-        swagger_js_url='https://cdn.bootcdn.net/ajax/libs/swagger-ui/4.10.3/swagger-ui-bundle.js',
-        swagger_css_url='https://cdn.bootcdn.net/ajax/libs/swagger-ui/4.10.3/swagger-ui.css',
+# def swagger_monkey_patch(*args, **kwargs):
+#     return get_swagger_ui_html(
+#         *args, **kwargs,
+#         swagger_js_url='https://cdn.bootcdn.net/ajax/libs/swagger-ui/4.10.3/swagger-ui-bundle.js',
+#         swagger_css_url='https://cdn.bootcdn.net/ajax/libs/swagger-ui/4.10.3/swagger-ui.css',
         
-    )
+#     )
 
-applications.get_swagger_ui_html = swagger_monkey_patch
+# applications.get_swagger_ui_html = swagger_monkey_patch
     
 
 app.add_middleware(

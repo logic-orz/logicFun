@@ -81,10 +81,11 @@ class DbFunc(metaclass=abc.ABCMeta):
         cur.close()
         return res_list
 
-    def execQueryIte(self, sql: str, batchSize: int = 100):
+    def execQueryIte(self, *sqls: str, batchSize: int = 1000):
         conn = self.conn()
         cur = conn.cursor()
-        cur.execute(sql)
+        for sql in sqls:
+            cur.execute(sql)
         i = 0
         while True:
             i += 1
@@ -95,9 +96,9 @@ class DbFunc(metaclass=abc.ABCMeta):
             yield res_list
 
     def execQueryNoRes(self, *sqls: List[str]) -> None:
-        self.execSqls(*sqls)
+        self.execSql(*sqls)
 
-    def execSqls(self, *sqls: List[str]) -> None:
+    def execSql(self, *sqls: List[str]) -> None:
         conn = self.conn()
         cur = conn.cursor()
         for sql in sqls:
