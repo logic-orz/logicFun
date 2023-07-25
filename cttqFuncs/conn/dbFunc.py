@@ -95,9 +95,6 @@ class DbFunc(metaclass=abc.ABCMeta):
                 return
             yield res_list
 
-    def execQueryNoRes(self, *sqls: List[str]) -> None:
-        self.execSql(*sqls)
-
     def execSql(self, *sqls: List[str]) -> None:
         conn = self.conn()
         cur = conn.cursor()

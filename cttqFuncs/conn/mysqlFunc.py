@@ -64,12 +64,13 @@ class MysqlPoolAsync:
             await self.pool.wait_closed()
             self.pool = None
 
-    async def execQuery(self, sql: str) -> List[dict]:
+    async def execQuery(self, *sqls: str) -> List[dict]:
         if not self.pool:
             await self.__initPool()
         async with self.pool.acquire() as conn:
             async with conn.cursor() as cur:
-                await cur.execute(sql)
+                for sql in sqls:
+                    await cur.execute(sql)
                 if cur.rowcount > 0:
                     res_list = await cur.fetchall()
                 else:
@@ -77,22 +78,20 @@ class MysqlPoolAsync:
 
                 return res_list
 
-    async def execQueryIte(self, sql: str, batchSize: int = 100):
+    async def execQueryIte(self, *sqls: str, batchSize: int = 100):
         if not self.pool:
             await self.__initPool()
         async with self.pool.acquire() as conn:
             async with conn.cursor() as cur:
-                await cur.execute(sql)
+                for sql in sqls:
+                    await cur.execute(sql)
                 while True:
                     res_list = cur.fetchmany(batchSize)
                     if not res_list:
                         return
                     yield res_list
 
-    async def execQueryNoRes(self, *sqls) -> None:
-        await self.execSql(*sqls)
-
-    async def execSql(self, *sqls) -> None:
+    async def execSql(self, *sqls:str) -> None:
         if not self.pool:
             await self.__initPool()
         async with self.pool.acquire() as conn:

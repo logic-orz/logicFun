@@ -5,7 +5,6 @@ import random
 import time
 from typing import Callable
 
-import ujson
 from kafka import KafkaConsumer, KafkaProducer
 from loguru import logger as log
 from pydantic import BaseModel
@@ -79,4 +78,3 @@ class KafkaOperate(object):
                 self.producer.flush()
             count += 1
         self.producer.flush()
-        pass
