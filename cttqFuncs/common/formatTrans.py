@@ -214,10 +214,10 @@ def toSnake(name: str) -> str:
     return name.lower()
 
 
-def textArt(txt: str, font: str = 'standard'):
+def textArt(txt: str, font: str = 'standard', width: int = 200):
     """
     @font : 字体库-> http://www.figlet.org/examples.html
     """
-    f = Figlet(font)
+    f = Figlet(font=font, width=width)
     text = f.renderText(txt)
     return text
