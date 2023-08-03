@@ -1,5 +1,6 @@
 import sys
 from loguru import logger as log
+from typing import Any, Callable
 
 
 class SimpleLog():
@@ -51,45 +52,41 @@ class SimpleLog():
                     enqueue=True,
                     compression="zip",
                     format=SimpleLog._format,
-                    retention="100 days",
+                    retention="365 days",
                     level=logLevel)
-            
+
         SimpleLog._hasInit = True
+
+    # ?     filter=lambda record:record['name'] == 'filterByName'
+    # ?     filter=lambda record:record['function'] =='filterByFunc'
+    # ?     filter=lambda record:record['level'].name == 'filterByLevel'
 
     @staticmethod
     def addTimeRoute(logFileName: str,
-                     logLevel: str = 'INFO',
-                     filterByName:str=None,
-                     filterByFunc:str=None):
+                     logLevel: str = 'DEBUG',
+                     filter: Callable[[Any], bool] = None):
+
         path = SimpleLog._logPath+'/'+logFileName+"_{time:YYYY-MM-DD}.log"
-        
-        if filterByName:
-            filter=lambda record:record['name'] == filterByName
-        elif filterByFunc:
-            filter=lambda record:record['function'] ==filterByFunc
-            
+
         log.add(path,
                 rotation="00:00",
                 encoding="utf-8",
                 enqueue=True,
                 compression="zip",
-                retention="100 days",
+                retention="365 days",
                 format=SimpleLog._format,
                 level=logLevel,
                 filter=filter)
 
+    # ?     filter=lambda record:record['name'] == 'filterByName'
+    # ?     filter=lambda record:record['function'] =='filterByFunc'
+    # ?     filter=lambda record:record['level'].name == 'filterByLevel'
     @staticmethod
-    def addSizeRoute(logFileName: str, 
-                     logLevel: str = 'INFO',
-                     filterByName=None,
-                     filterByFunc=None):
+    def addSizeRoute(logFileName: str,
+                     logLevel: str = 'DEBUG',
+                     filter: Callable[[Any], bool] = None):
         path = SimpleLog._logPath+'/'+logFileName+"_{time:YYYY-MM-DD}.log"
-        
-        if filterByName:
-            filter=lambda record:record['name'] == filterByName
-        elif filterByFunc:
-            filter=lambda record:record['function'] ==filterByFunc
-            
+
         log.add(path,
                 rotation="100MB",
                 encoding="utf-8",

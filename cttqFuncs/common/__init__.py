@@ -9,7 +9,8 @@ __all__ = [
     'zipFunc'
 ]
 
-from .excelFunc import XlsReader,XlsWriter
-from .fileFunc import readLines,readStr,writeAppend,listDir,listFile,deleteFile
-from .logFunc import SimpleLog,log
-from .scheduleFunc import backSchedule,asyncSchedule
+from .excelFunc import XlsReader, XlsWriter
+from .fileFunc import readLines, readStr, writeAppend, listDir, listFile, deleteFile
+from .logFunc import SimpleLog, log
+from .scheduleFunc import backSchedule, asyncSchedule
+from .formatTrans import textArt, isNumberStr

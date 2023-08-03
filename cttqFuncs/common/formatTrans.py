@@ -1,6 +1,7 @@
 import warnings
 from decimal import Decimal
 import re
+from pyfiglet import Figlet
 
 
 def moneyNum2Char(value, capital=True, prefix=False, classical=None):
@@ -186,7 +187,7 @@ def isIdCard(idStr) -> bool:
         moduls = [7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2]
         num17 = map(int, num17)
         num_tuple = zip(num17, moduls)  # [(1, 4), (2, 5), (3, 6)]
-        num = map(lambda x: x[0]*x[1], num_tuple)
+        num = map(lambda x: x[0] * x[1], num_tuple)
         mod = sum(num) % 11
         yushu1 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
         yushu2 = [1, 0, 'X', 9, 8, 7, 6, 5, 4, 3, 2]
@@ -211,3 +212,12 @@ def toSnake(name: str) -> str:
     else:
         raise ValueError(f'{name}字符中包含下划线，无法转换')
     return name.lower()
+
+
+def textArt(txt: str, font: str = 'standard'):
+    """
+    @font : 字体库-> http://www.figlet.org/examples.html
+    """
+    f = Figlet(font)
+    text = f.renderText(txt)
+    return text
