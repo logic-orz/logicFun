@@ -1,8 +1,6 @@
 __all__ = ['configFunc', 'exClass', 'exFunc', 'signClass']
 
-from .configFunc import configPaths,getDict,getValue
-from .configFunc import sqlPaths,getSql
-from .exClass import BaseClass,StrBuild
-from .exClass import Page,Return,CommonException,MyEncoder,Tree
-from .signClass import doAfter,doBefore,doJoin
-from .signClass import toDict,toStr,build
+from .configFunc import configDirs, getDict, getSql, getValue
+from .exClass import (BaseClass, CommonException, MyEncoder, Page, Return,
+                      StrBuild, Tree)
+from .signClass import build, doAfter, doBefore, doJoin, toDict, toStr

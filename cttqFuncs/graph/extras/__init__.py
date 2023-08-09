@@ -1,1 +1,1 @@
-__all__=['graphX','indexGraph']
+__all__ = ['graphX', 'indexGraph']

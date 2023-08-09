@@ -10,7 +10,8 @@ __all__ = [
 ]
 
 from .excelFunc import XlsReader, XlsWriter
-from .fileFunc import readLines, readStr, writeAppend, listDir, listFile, deleteFile
+from .fileFunc import (deleteFile, listDir, listFile, readLines, readStr,
+                       writeAppend)
+from .formatTrans import isNumberStr, textArt
 from .logFunc import SimpleLog, log
-from .scheduleFunc import backSchedule, asyncSchedule
-from .formatTrans import textArt, isNumberStr
+from .scheduleFunc import asyncSchedule, backSchedule

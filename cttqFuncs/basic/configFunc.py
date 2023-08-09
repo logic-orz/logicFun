@@ -1,5 +1,5 @@
 import configparser
-from typing import Dict
+from typing import Dict, List
 import os
 
 
@@ -7,19 +7,26 @@ _config = configparser.RawConfigParser()
 # 设置大小写敏感
 _config.optionxform = lambda option: option
 
-configPaths = ['./resources/config.ini']
-
+configDirs = ['./resources']
 
 _sqlConfig = dict()
-sqlPaths = ['./resources/config.sql']
+
+
+def _listFile(path: str):
+    reList: List[str] = []
+    if os.path.exists(path):
+        for s in os.listdir(path):
+            tmpPath = path + ("" if path.endswith("/") else "/") + s
+            if os.path.isfile(tmpPath):
+                reList.append(tmpPath)
+    return reList
 
 
 def initFile():
-    for configPath in configPaths:
-        if os.path.exists(configPath):
-            _config.read(configPath, encoding="utf-8-sig")
-        else:
-            print("配置文件不存在：%s " % configPath)
+    for configPath in configDirs:
+        for tmpPath in _listFile(configPath):
+            if tmpPath.endswith(".ini"):
+                _config.read(tmpPath, encoding="utf-8-sig")
 
 
 def initStr(dataStr):
@@ -40,7 +47,7 @@ def initSql(sqlPath: str):
 
             k = line[2:-2].strip()
         elif not line.strip().startswith("--"):
-            v = v+line+"\n"
+            v = v + line + "\n"
 
     if k != '':
         _sqlConfig[k] = v
@@ -65,11 +72,10 @@ def getValue(nameSpace: str, key: str) -> str:
 
 def getSql(key: str) -> str:
     if len(_sqlConfig) == 0:
-        for sqlPath in sqlPaths:
-            if os.path.exists(sqlPath):
-                initSql(sqlPath)
-            else:
-                print("配置文件不存在：%s " % sqlPath)
+        for sqlPath in configDirs:
+            for tPath in _listFile(sqlPath):
+                if tPath.endswith(".sql"):
+                    initSql(sqlPath)
     if key in _sqlConfig:
         return _sqlConfig[key]
     else:

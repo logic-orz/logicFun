@@ -27,13 +27,13 @@ def deleteFile(path: str):
 
 def listFile(path: str):
     if os.path.exists(path):
-        return os.listdir(path).map(lambda s: path+("" if path.endswith("/") else "/")+s).filter(lambda p: os.path.isfile(p))
+        return os.listdir(path).map(lambda s: path + ("" if path.endswith("/") else "/") + s).filter(lambda p: os.path.isfile(p))
     return list()
 
 
 def listDir(path: str):
     if os.path.exists(path):
-        return os.listdir(path).map(lambda s: path+("" if path.endswith("/") else "/")+s).filter(lambda p: os.path.isdir(p))
+        return os.listdir(path).map(lambda s: path + ("" if path.endswith("/") else "/") + s).filter(lambda p: os.path.isdir(p))
     return list()
 
 
