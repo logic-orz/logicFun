@@ -135,6 +135,8 @@ def createInsertSql(tbName: str, *datas):
                     "\\", "\\\\").replace("\"", "\\\""))
             elif isinstance(data[s], datetime.datetime):
                 vs = '"%s"' % (str(data[s]).replace("\"", "\\\""))
+            elif isinstance(data[s], dict) or isinstance(data[s], list):
+                vs = json.dumps(data[s], ensure_ascii=False)
             elif data[s] is None:
                 vs = "null"
             else:  # 默认类型可以兼容
@@ -142,7 +144,7 @@ def createInsertSql(tbName: str, *datas):
 
             values.append(vs)
 
-        tmpValue = tmpValue+"({values}),".format(values=','.join(values))
+        tmpValue = tmpValue + "({values}),".format(values=','.join(values))
 
     fields = '`, `'.join(keys)
     valueStr = tmpValue[:-1]
