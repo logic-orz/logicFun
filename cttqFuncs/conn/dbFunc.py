@@ -144,7 +144,7 @@ def createInsertSql(tbName: str, *datas):
 
         tmpValue = tmpValue+"({values}),".format(values=','.join(values))
 
-    fields = ', '.join(keys)
+    fields = '`, `'.join(keys)
     valueStr = tmpValue[:-1]
-    sql = f'INSERT INTO {tbName}({fields}) VALUES {valueStr}'
+    sql = f'INSERT INTO {tbName}(`{fields}`) VALUES {valueStr}'
     return sql
