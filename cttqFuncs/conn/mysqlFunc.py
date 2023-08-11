@@ -8,7 +8,7 @@ from pymysql import connect
 from pymysql.cursors import DictCursor
 
 from ..basic.configFunc import getDict
-from ..conn.dbFunc import DbConfig, DbFunc, DbColumn
+from .dbFunc import DbConfig, DbFunc, DbColumn
 
 
 class MysqlPool(DbFunc):
@@ -91,7 +91,7 @@ class MysqlPoolAsync:
                         return
                     yield res_list
 
-    async def execSql(self, *sqls:str) -> None:
+    async def execSql(self, *sqls: str) -> None:
         if not self.pool:
             await self.__initPool()
         async with self.pool.acquire() as conn:

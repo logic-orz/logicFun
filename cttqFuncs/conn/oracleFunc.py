@@ -1,6 +1,6 @@
 # python 连接 oracle 需要 加载三个dll驱动
-from cttqFuncs.conn.dbFunc import DbFunc, DbColumn, DbConfig
-from cttqFuncs.basic.configFunc import getDict
+from .dbFunc import DbFunc, DbColumn, DbConfig
+from ..basic.configFunc import getDict
 from typing import List
 import cx_Oracle
 

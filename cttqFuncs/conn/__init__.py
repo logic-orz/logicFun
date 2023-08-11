@@ -5,3 +5,4 @@ from .engineFunc import DBModel, mySqlEngine
 from .impalaFunc import Impala
 from .mysqlFunc import Mysql, MysqlPool, MysqlPoolAsync
 from .redisFunc import Redis, RedisClu
+from .mongoFunc import Mongo

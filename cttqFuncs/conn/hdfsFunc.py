@@ -13,4 +13,3 @@ class Hdfs:
 
     def listDir(self, path: str):
         return self.client.listdir(path)
-

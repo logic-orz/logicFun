@@ -131,8 +131,7 @@ def createInsertSql(tbName: str, *datas):
         values = []
         for s in keys:
             if isinstance(data[s], str):
-                vs = '"%s"' % (data[s].replace(
-                    "\\", "\\\\").replace("\"", "\\\""))
+                vs = '"%s"' % (data[s].replace("\\", "\\\\").replace("\"", "\\\""))
             elif isinstance(data[s], datetime.datetime):
                 vs = '"%s"' % (str(data[s]).replace("\"", "\\\""))
             elif isinstance(data[s], dict) or isinstance(data[s], list):

@@ -15,7 +15,7 @@ class EsClient():
         self.index = config.db
 
     def createIndex(self, indexName,):
-        self.client.indices.create(index=indexName,ignore=400)
+        self.client.indices.create(index=indexName, ignore=400)
 
     def deleteIndex(self, indexName):
         self.client.indices.delete(index=indexName, ignore=400)

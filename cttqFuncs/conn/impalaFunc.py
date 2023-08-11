@@ -3,6 +3,7 @@ from .dbFunc import DbColumn, DbConfig, DbFunc
 from typing import List
 from ..exFunc import *
 
+
 class Impala(DbFunc):
 
     '''
@@ -10,7 +11,7 @@ class Impala(DbFunc):
     '''
     __auth_mechanism__ = 'PLAIN'
 
-    def __init__(self,  config: DbConfig):
+    def __init__(self, config: DbConfig):
         self.__conn__ = connect(host=config.host,
                                 port=int(config.port),
                                 user=config.user,
@@ -60,5 +61,5 @@ class Impala(DbFunc):
         return self.execQuery(sql).map(lambda x: DbColumn().build(x))
 
     def createSql(self, tbName: str) -> str:
-        sql = " show create table  "+tbName
+        sql = " show create table  " + tbName
         return self.execQuery(sql)[0]['result']
