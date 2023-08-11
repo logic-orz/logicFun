@@ -75,7 +75,7 @@ def getSql(key: str) -> str:
         for sqlPath in configDirs:
             for tPath in _listFile(sqlPath):
                 if tPath.endswith(".sql"):
-                    initSql(sqlPath)
+                    initSql(tPath)
     if key in _sqlConfig:
         return _sqlConfig[key]
     else:

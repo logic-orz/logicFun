@@ -17,7 +17,9 @@ installs = [
     'apscheduler',
     'loguru',
     'aiohttp',
-    'pyfiglet'
+    'pyfiglet',
+    'aiomysql',
+    'pymongo'
 ]
 
 setup(name="cttqFuncs",
