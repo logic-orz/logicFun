@@ -16,19 +16,34 @@ class Minio():
                                    secure=False)
         self.bucket = config['db']
 
-    def upload(self, remoteName, localPath, content_type="application/octet-stream", metadata: dict = {}):
-        self.client.fput_object(self.bucket, remoteName, localPath,
-                                content_type, metadata)
+    def upload(self, remoteName, localPath: str = None, fileData=None, bucket: str = None, content_type="application/octet-stream", metadata: dict = {}):
+        if not bucket:
+            bucket = self.bucket
+
+        if fileData:
+            self.client.put_object(bucket_name=bucket, object_name=remoteName, data=fileData, content_type=content_type, metadata=metadata)
+        else:
+            self.client.fput_object(bucket_name=bucket, object_name=remoteName, file_path=localPath, content_type=content_type, metadata=metadata)
 
     def remove(self, name):
         self.client.remove_object(self.bucket, name)
 
-    def download(self, name, path):
-        self.client.fget_object(self.bucket, name, path)
+    def download(self, name, bucket: str = None, path: str = None):
+        if not bucket:
+            bucket = self.bucket
+        if path:
+            self.client.fget_object(bucket_name=bucket, object_name=name, file_path=path)
+            return None
+        else:
+            data = self.client.get_object(bucket_name=bucket, object_name=name)
+            return data
 
-    def listFiles(self, path: str = '') -> List[MinioObj]:
+    def listFiles(self, bucket: str = None, path: str = '') -> List[MinioObj]:
+        if not bucket:
+            bucket = self.bucket
+
         files = list(self.client.list_objects(
-            self.bucket, prefix=path,
+            bucket, prefix=path,
             recursive=True,
             include_user_meta=True))
 
