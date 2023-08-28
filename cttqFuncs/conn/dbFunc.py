@@ -32,8 +32,10 @@ def transData(datas: List[Dict], columns: List[DbColumn], z2e: bool = True):
     """_summary_
     数据字段名转换
     @param z2e: True中文转英文(默认) False:英文转中文
+    不在范围内的字段,会被删除
     """
     for data in datas:
+        fk_tk_types: Dict[str, Tuple[str, str]] = {}
         for col in columns:
             if z2e:
                 fkey = col.comment
@@ -41,10 +43,14 @@ def transData(datas: List[Dict], columns: List[DbColumn], z2e: bool = True):
             else:
                 fkey = col.name
                 tKey = col.comment
+            fk_tk_types[fkey] = (tKey, col.type)
 
-            vType = col.type
-            if fkey in data.keys():
-                v = data.pop(fkey)
+        for fkey in data.ks():
+
+            v = data.pop(fkey)
+            if fkey in fk_tk_types:
+                tKey, vType = fk_tk_types[fkey]
+
                 if vType.startswith('float') and isinstance(v, str):
                     v = float(v)
                 elif vType.startswith('int') and isinstance(v, str):

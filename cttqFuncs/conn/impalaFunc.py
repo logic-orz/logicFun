@@ -2,6 +2,7 @@ from impala.dbapi import connect
 from .dbFunc import DbColumn, DbConfig, DbFunc
 from typing import List
 from ..exFunc import *
+from impala.hiveserver2 import HiveServer2Connection
 
 
 class Impala(DbFunc):
@@ -12,13 +13,14 @@ class Impala(DbFunc):
     __auth_mechanism__ = 'PLAIN'
 
     def __init__(self, config: DbConfig):
-        self.__conn__ = connect(host=config.host,
-                                port=int(config.port),
-                                user=config.user,
-                                password=config.pwd,
-                                database=config.db,
-                                auth_mechanism=self.__auth_mechanism__,
-                                )
+        self.config: DbConfig = config
+        self.__conn__: HiveServer2Connection = connect(host=config.host,
+                                                       port=int(config.port),
+                                                       user=config.user,
+                                                       password=config.pwd,
+                                                       database=config.db,
+                                                       auth_mechanism=self.__auth_mechanism__,
+                                                       )
 
     def conn(self):
         return self.__conn__
