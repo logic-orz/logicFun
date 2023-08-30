@@ -8,7 +8,9 @@ import cx_Oracle
 class Oracle(DbFunc):
     def __init__(self, config: DbConfig):
         self.__conn__ = cx_Oracle.connect(
-            config.user, config.pwd, config.host+':'+config.port+'/'+config.db)
+            config.user, config.pwd,
+            config.host+':'+config.port+'/'+config.db
+        )
 
     def conn(self):
         return self.__conn__

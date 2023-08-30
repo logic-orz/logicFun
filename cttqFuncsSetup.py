@@ -19,11 +19,10 @@ installs = [
     'aiohttp',
     'pyfiglet',
     'aiomysql',
-    'pymongo'
 ]
 
 setup(name="cttqFuncs",
-      version='4.5',
+      version='4.6',
       description="能力扩展",
       author="Logic",
       author_email='',

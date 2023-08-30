@@ -12,6 +12,5 @@ __all__ = [
 from .excelFunc import XlsReader, XlsWriter
 from .fileFunc import (deleteFile, listDir, listFile, readLines, readStr,
                        writeAppend)
-from .formatTrans import isNumberStr, textArt
 from .logFunc import SimpleLog, log
 from .scheduleFunc import asyncSchedule, backSchedule

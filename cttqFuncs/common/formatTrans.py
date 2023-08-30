@@ -162,6 +162,8 @@ def moneyChar2Num(amount: str):
 def isNumberStr(s: str) -> bool:
     try:
         float(s)
+        if "E" in s or "e" in s:
+            return False
         return True
     except ValueError:
         pass

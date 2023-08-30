@@ -46,7 +46,7 @@ class OrmBuilder():
     def columns(self):
         return self.__class__.metadata.tables[self.__class__.__tablename__].columns._all_columns
 
-    def buildByComment(self, data: Dict):
+    def buildWithComment(self, data: Dict):
         cn = self.columns.map(lambda c: (c.comment, c.name)).toDict()
         for c, v in data.kvs():
             if c in cn:
