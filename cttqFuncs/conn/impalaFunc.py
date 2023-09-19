@@ -60,7 +60,16 @@ class Impala(DbFunc):
 
     def tableMeta(self, tbName: str) -> List[DbColumn]:
         sql = 'DESCRIBE ' + tbName
-        return self.execQuery(sql).map(lambda x: DbColumn().build(x))
+        
+        res:List[DbColumn]=[]
+        datas=self.execQuery(sql)
+        for x in datas:
+            dc=DbColumn(name=x['name'],type=x['type'],comment=x['comment'])
+            if 'primary_key' in x:
+                dc.isId= bool(x['primary_key'])
+                
+            res.append(dc)
+        return res
 
     def createSql(self, tbName: str) -> str:
         sql = " show create table  " + tbName

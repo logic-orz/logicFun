@@ -102,8 +102,7 @@ class MysqlPoolAsync:
     async def tableMeta(self, tbName: str) -> List[DbColumn]:
         sql = f"show full columns from {tbName} "
         datas: List[Dict] = await self.execQuery(sql)
-        cols: List[DbColumn] = datas.map(lambda d: DbColumn(
-            name=d['Field'], comment=d['Comment'], type=d['Type']))
+        cols: List[DbColumn] = datas.map(lambda d: DbColumn(name=d['Field'], comment=d['Comment'], type=d['Type'],isId= (d['Key']=='PRI') ))
         return cols
 
     @staticmethod
@@ -134,6 +133,5 @@ class Mysql(DbFunc):
     def tableMeta(self, tbName: str) -> List[DbColumn]:
         sql = f"show full columns from {tbName} "
         datas: List[Dict] = self.execQuery(sql)
-        cols: List[DbColumn] = datas.map(lambda d: DbColumn(
-            name=d['Field'], comment=d['Comment'], type=d['Type']))
+        cols: List[DbColumn] = datas.map(lambda d: DbColumn(name=d['Field'], comment=d['Comment'], type=d['Type'],isId= (d['Key']=='PRI') ))
         return cols

@@ -26,6 +26,7 @@ class DbColumn(BaseModel, BaseClass):
     name: str = None
     type: str = None
     comment: str = None
+    isId: bool = False
 
 
 def transData(datas: List[Dict], columns: List[DbColumn], z2e: bool = True):
