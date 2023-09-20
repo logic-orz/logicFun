@@ -40,7 +40,7 @@ class SimpleLog():
                     rotation="00:00",
                     encoding="utf-8",
                     enqueue=True,
-                    compression="zip",
+                    # compression="zip",
                     retention="100 days",
                     format=SimpleLog._format,
                     level=logLevel)
@@ -50,9 +50,9 @@ class SimpleLog():
                     rotation="100MB",
                     encoding="utf-8",
                     enqueue=True,
-                    compression="zip",
+                    # compression="zip",
                     format=SimpleLog._format,
-                    retention="365 days",
+                    retention="100 days",
                     level=logLevel)
 
         SimpleLog._hasInit = True
@@ -72,8 +72,8 @@ class SimpleLog():
                 rotation="00:00",
                 encoding="utf-8",
                 enqueue=True,
-                compression="zip",
-                retention="365 days",
+                # compression="zip",
+                retention="100 days",
                 format=SimpleLog._format,
                 level=logLevel,
                 filter=filter)
@@ -91,7 +91,7 @@ class SimpleLog():
                 rotation="100MB",
                 encoding="utf-8",
                 enqueue=True,
-                compression="zip",
+                # compression="zip",
                 format=SimpleLog._format,
                 retention="100 days",
                 level=logLevel,

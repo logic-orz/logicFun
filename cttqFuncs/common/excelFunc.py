@@ -1,11 +1,10 @@
 from typing import Any, List, Dict
 import xlwt
 import xlrd2
-import openpyxl
 from ..basic.exClass import CommonException
 from ..exFunc import *
 from .fileFunc import readLines, isExist, createFile, deleteFile, writeAppend
-
+import xlsxwriter
 
 class XlsWriter():
 
@@ -14,7 +13,7 @@ class XlsWriter():
 
         if path.endswith('.xlsx'):
             self.isXlsx = True
-            self.workbook = openpyxl.Workbook(write_only=True)
+            self.workbook = xlsxwriter.Workbook(path, options=dict(constant_memory=True))
         elif path.endswith('.xls'):
             self.isXlsx = False
             self.workbook = xlwt.Workbook(encoding="utf-8")
@@ -22,20 +21,26 @@ class XlsWriter():
             raise CommonException('文件类型不正确')
 
     def save(self):
-        self.workbook.save(self.path)
+        if not self.isXlsx:
+            self.workbook.save(self.path)
+        else:
+            self.workbook.close()
 
     def createSheet(self, headers: List[str], datas: List[List[Any]],
                     sheetName: str = 'sheet1'):
         # 生成sheet
         if self.isXlsx:
 
-            sheet = self.workbook.create_sheet(sheetName)
+            sheet = self.workbook.add_worksheet(sheetName)
             # 写入标题
-            sheet.append(headers)
+            sheet.write_row(0, 0, headers)
 
             # 写入每一行
+            i=0
             for data in datas:
-                sheet.append(data)
+                i+=1
+                sheet.write_row(i, 0,data)
+                
         else:
 
             sheet = self.workbook.add_sheet(sheetName)

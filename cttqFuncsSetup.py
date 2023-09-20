@@ -11,7 +11,7 @@ installs = [
     'cacheout',
     'xlwt',
     'xlrd2',
-    'openpyxl',
+    'xlsxwriter',
     'sqlalchemy',
     # 'python-consul',
     'apscheduler',
