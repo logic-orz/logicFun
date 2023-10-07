@@ -10,8 +10,7 @@ class _PyObject(ctypes.Structure):
     class PyType(ctypes.Structure):
         pass
 
-    s_size = ctypes.c_int64 if ctypes.sizeof(
-        ctypes.c_void_p) == 8 else ctypes.c_int32
+    s_size = ctypes.c_int64 if ctypes.sizeof(ctypes.c_void_p) == 8 else ctypes.c_int32
     _fields_ = [
         ('ob_refcnt', s_size),
         ('ob_type', ctypes.POINTER(PyType)),

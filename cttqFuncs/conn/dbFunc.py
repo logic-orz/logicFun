@@ -103,7 +103,7 @@ class DbFunc(metaclass=abc.ABCMeta):
                 return
             yield res_list
 
-    def execSql(self, *sqls: List[str]) -> None:
+    def execSql(self, *sqls: str) -> None:
         conn = self.conn()
         cur = conn.cursor()
         for sql in sqls:
