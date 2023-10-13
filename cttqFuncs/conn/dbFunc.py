@@ -51,16 +51,16 @@ def transData(datas: List[Dict], columns: List[DbColumn], z2e: bool = True):
             v = data.pop(fkey)
             if fkey in fk_tk_types:
                 tKey, vType = fk_tk_types[fkey]
-                if vType.startswith('float') and isinstance(v, str):   
-                    v = float(v) if v!='' else None
+                if vType.startswith('float') and isinstance(v, str):
+                    v = float(v) if v != '' else None
                 elif vType.startswith('int') and isinstance(v, str):
-                    v = int(v) if v!='' else None
+                    v = int(v) if v != '' else None
                 elif vType.startswith('double') and isinstance(v, str):
-                    v = float(v) if v!='' else None
+                    v = float(v) if v != '' else None
                 elif vType.startswith('decimal') and isinstance(v, str):
-                    v = float(v) if v!='' else None
+                    v = float(v) if v != '' else None
                 elif vType.startswith('date') and isinstance(v, str):
-                    v = v if v!='' else None
+                    v = v if v != '' else None
                 data[tKey] = v
     return datas
 

@@ -13,7 +13,7 @@ from pydantic import BaseModel
 class KafkaOperate(object):
     groupId: str = 'my_group'
 
-    def __init__(self, servers):
+    def __init__(self, servers: str):
         if not servers:
             raise Exception('bootstrap_servers is None')
 
@@ -24,7 +24,7 @@ class KafkaOperate(object):
         self.producer = None
         self.consumer = None
 
-    def _consume(self, topic:str,batchSize:int=100):
+    def _consume(self, topic: str, batchSize: int = 100):
         if not self.consumer:
             self.consumer = KafkaConsumer(
                 topic=topic,
@@ -33,7 +33,7 @@ class KafkaOperate(object):
             )
         # for msg in self.consumer:
         #     doFunc(msg)
-        msgs=self.consumer.poll(max_records=batchSize)
+        msgs = self.consumer.poll(max_records=batchSize)
         return msgs
 
     def _produce(self, topic: str, data, keyStr: str = None, partition: int = None):

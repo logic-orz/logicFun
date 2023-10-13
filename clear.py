@@ -6,8 +6,26 @@ Description:
 '''
 import os
 from typing import List
+import shutil
 
-from cttqFuncs.common.fileFunc import deleteFile, listDir
+import cttqFuncs
+
+
+def deleteFile(path: str):
+    if os.path.exists(path):
+        if os.path.isfile(path):
+            os.remove(path)
+        else:
+            try:
+                shutil.rmtree(path)
+            except OSError as e:
+                print("Error: %s - %s." % (e.filename, e.strerror))
+
+
+def listDir(path: str):
+    if os.path.exists(path):
+        return os.listdir(path).map(lambda s: path + ("" if path.endswith("/") else "/") + s).filter(lambda p: os.path.isdir(p))
+    return list()
 
 
 def clear(filepath):
@@ -24,4 +42,3 @@ if __name__ == "__main__":
     deleteFile("./dist")
     deleteFile("./cttqFuncs.egg-info")
     clear("cttqFuncs")
-
