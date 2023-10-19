@@ -1,4 +1,5 @@
-from typing import List
+import motor.motor_asyncio
+from typing import Dict, List
 import pymongo
 from .dbFunc import DbConfig, DbFunc
 from pymongo.collection import Collection, ReturnDocument, ObjectId
@@ -7,43 +8,62 @@ from pymongo.results import InsertManyResult, InsertOneResult, BulkWriteResult, 
 from ..basic import getDict
 
 
+def parseObjIdWithDicts(docs: List[Dict]) -> List[Dict]:
+    for doc in docs:
+        if doc['_id'] and isinstance(doc['_id'], ObjectId):
+            doc['_id'] = str(doc['_id'])
+    return docs
+
+
+def parseObjIds(objIds: List[ObjectId]) -> List[str]:
+    res = []
+    for objId in objIds:
+        res.append(str(objId))
+    return res
+
+
+def toObjIdWithDicts(docs: List[Dict]) -> List[Dict]:
+    for doc in docs:
+        if doc['_id'] and isinstance(doc['_id'], str):
+            doc['_id'] = ObjectId(doc['_id'])
+    return docs
+
+
+def toObjIds(ids: List[str]) -> List[ObjectId]:
+    res = []
+    for id in ids:
+        res.append(ObjectId(id))
+    return res
+
+
 class MongoDB():
     def __init__(self, config: DbConfig) -> None:
         self.client = pymongo.MongoClient(f"mongodb://{config.host}:{config.port}/")
         self.db: Database = self.client[config.db]  # 选择数据库
-        pass
 
     def coll(self, tb: str) -> Collection:
-
         collection: Collection = self.db[tb]
         return collection
 
-    def query(self, tb, data: dict, pageNo: int = None, pageSize: int = None):
+    def query(self, tb, filter: dict, pageNo: int = None, pageSize: int = None):
         coll = self.coll(tb)
 
-        results = coll.find(data)
+        results = coll.find(filter)
         if pageNo and pageSize:
             results = results.skip((pageNo-1)*pageSize).limit(pageSize)
 
         re = []
         for doc in results:
-            if doc['_id']:
-                tId: ObjectId = doc['_id']
-                doc['_id'] = str(tId)
-
             re.append(doc)
-        return re
 
-    def delete(self, tb, data: dict, optMany: bool = False):
+        return parseObjIdWithDicts(re)
+
+    def delete(self, tb, filter: dict, optMany: bool = False):
         coll = self.coll(tb)
-        if data['_id']:
-            tId: str = data['_id']
-            data['_id'] = ObjectId(tId)
-
         if optMany:
-            coll.delete_many(data)
+            coll.delete_many(filter)
         else:
-            coll.delete_one(data)
+            coll.delete_one(filter)
 
     def insert(self, tb: str, datas: List[dict]):
         for data in datas:
@@ -52,11 +72,11 @@ class MongoDB():
         coll = self.coll(tb)
         coll.insert_many(datas)
 
-    def update(self, tb, data, filter=None, optMany: bool = False):
+    def update(self, tb, data, filter: dict, optMany: bool = False):
         coll = self.coll(tb)
-        if data['_id']:
-            tId: str = data['_id']
-            data['_id'] = ObjectId(tId)
+
+        if '_id' in data:
+            del data['_id']
 
         if optMany:
             coll.update_many(filter, data)
@@ -66,14 +86,75 @@ class MongoDB():
     def aggregate(self, tb: str, agg: List[dict]):
         self.coll(tb).aggregate(agg)
 
-    def count(self, tb: str, query):
+    def count(self, tb: str, query: dict):
         return self.coll(tb).count_documents(query)
 
     def tables(self):
         return self.db.list_collection_names()
 
     @classmethod
-    def fix(cls, ns: str = None):
-        if not ns:
-            ns = cls.__name__.lower()
+    def fix(cls, ns: str = 'mongodb'):
+        return cls(DbConfig.build(getDict(ns)))
+
+
+class MongoDBAsync():
+    def __init__(self, config: DbConfig) -> None:
+
+        self.client = motor.motor_asyncio.AsyncIOMotorClient(config.host, config.port)
+        self.db = self.client[config.db]
+
+    def coll(self, tb: str) -> Collection:
+
+        collection: Collection = self.db[tb]
+        return collection
+
+    async def query(self, tb, filter: dict, pageNo: int = None, pageSize: int = None):
+        coll = self.coll(tb)
+
+        results = coll.find(filter)
+        if pageNo and pageSize:
+            results = results.skip((pageNo-1)*pageSize).limit(pageSize)
+
+        res = []
+        async for doc in results:
+            res.append(doc)
+
+        return parseObjIdWithDicts(res)
+
+    async def delete(self, tb, filter: dict, optMany: bool = False):
+        coll = self.coll(tb)
+        if optMany:
+            await coll.delete_many(filter)
+        else:
+            await coll.delete_one(filter)
+
+    async def insert(self, tb: str, datas: List[dict]):
+        for data in datas:
+            if '_id' in data:
+                del data['_id']
+
+        coll = self.coll(tb)
+        await coll.insert_many(datas)
+
+    async def update(self, tb, data, filter=dict, optMany: bool = False):
+        coll = self.coll(tb)
+        if '_id' in data:
+            del data['_id']
+
+        if optMany:
+            await coll.update_many(filter, data)
+        else:
+            await coll.update_one(filter, data)
+
+    async def aggregate(self, tb: str, agg: List[dict]):
+        return await self.coll(tb).aggregate(agg)
+
+    async def count(self, tb: str, query):
+        return await self.coll(tb).count_documents(query)
+
+    async def tables(self):
+        return await self.db.list_collection_names()
+
+    @classmethod
+    def fix(cls, ns: str = 'mongodb'):
         return cls(DbConfig.build(getDict(ns)))
