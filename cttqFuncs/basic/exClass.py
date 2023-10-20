@@ -31,9 +31,9 @@ class CommonException(Exception):
 
 
 class Page(BaseModel):
-    pageNo: int = 1
-    pageSize: int = 10
-    total: int = 0
+    pageNo: int
+    pageSize: int
+    total: int
 
 
 class Return(BaseModel):
@@ -89,7 +89,7 @@ class IndexList(Generic[T]):
     """
 
     def __init__(self) -> None:
-        #List[Tuple[T, List[str]]]
+        # List[Tuple[T, List[str]]]
         self.data = list()
         self.index: Dict[str, Set[int]] = dict()
 
