@@ -69,6 +69,10 @@ class MongoDB():
         for data in datas:
             if '_id' in data:
                 del data['_id']
+
+            if 'id' in data:
+                del data['id']
+
         coll = self.coll(tb)
         coll.insert_many(datas)
 
@@ -77,6 +81,9 @@ class MongoDB():
 
         if '_id' in data:
             del data['_id']
+
+        if 'id' in data:
+            del data['id']
 
         if optMany:
             coll.update_many(filter, data)
@@ -133,6 +140,9 @@ class MongoDBAsync():
             if '_id' in data:
                 del data['_id']
 
+            if 'id' in data:
+                del data['id']
+
         coll = self.coll(tb)
         await coll.insert_many(datas)
 
@@ -140,6 +150,9 @@ class MongoDBAsync():
         coll = self.coll(tb)
         if '_id' in data:
             del data['_id']
+
+        if 'id' in data:
+            del data['id']
 
         if optMany:
             await coll.update_many(filter, data)
