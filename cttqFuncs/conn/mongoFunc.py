@@ -107,7 +107,7 @@ class MongoDB():
 class MongoDBAsync():
     def __init__(self, config: DbConfig) -> None:
 
-        self.client = motor.motor_asyncio.AsyncIOMotorClient(config.host, config.port)
+        self.client = motor.motor_asyncio.AsyncIOMotorClient(f"mongodb://{config.host}:{config.port}/")
         self.db = self.client[config.db]
 
     def coll(self, tb: str) -> Collection:
