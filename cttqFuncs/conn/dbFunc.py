@@ -94,7 +94,7 @@ class DbFunc(metaclass=abc.ABCMeta):
         return cls(DbConfig.build(getDict(ns)))
 
 
-def createInsertSql(tbName: str, *datas):
+def createInsertSql(tbName: str, datas: List[dict]):
 
     keys = list(datas[0].keys())
 
@@ -127,9 +127,9 @@ def createInsertSqlForImpala(tbName: str, datas: List[dict], cols: List[DbColumn
 
     # 获取 字段名
     if len(datas) > 10:
-        keys = datas[0:10].map(lambda d: d.keys()).distinct()
+        keys = datas[0:10].flatMap(lambda d: d.ks()).distinct()
     else:
-        keys = datas.map(lambda d: d.keys()).distinct()
+        keys = datas.flatMap(lambda d: d.ks()).distinct()
 
     colType: Dict[str, str] = cols.map(lambda dc: (dc.name, dc.type)).toDict()
 

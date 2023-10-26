@@ -146,7 +146,7 @@ class MongoDBAsync():
         coll = self.coll(tb)
         await coll.insert_many(datas)
 
-    async def update(self, tb, data, filter=dict, optMany: bool = False):
+    async def update(self, tb, data, filter: dict, optMany: bool = False):
         coll = self.coll(tb)
         if '_id' in data:
             del data['_id']
@@ -162,8 +162,8 @@ class MongoDBAsync():
     async def aggregate(self, tb: str, agg: List[dict]):
         return await self.coll(tb).aggregate(agg)
 
-    async def count(self, tb: str, query):
-        return await self.coll(tb).count_documents(query)
+    async def count(self, tb: str, filter: dict):
+        return await self.coll(tb).count_documents(filter)
 
     async def tables(self):
         return await self.db.list_collection_names()

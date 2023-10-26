@@ -31,9 +31,9 @@ class CommonException(Exception):
 
 
 class Page(BaseModel):
-    pageNo: int
-    pageSize: int
-    total: int
+    pageNo: int = None
+    pageSize: int = None
+    total: int = None
 
 
 class Return(BaseModel):
