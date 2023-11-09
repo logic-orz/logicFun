@@ -32,3 +32,6 @@ class EsClient():
                 '_source': doc
             })
         helpers.bulk(self.client, bulks)
+        
+    def query(self,query:dict):
+        pass
