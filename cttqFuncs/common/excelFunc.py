@@ -66,7 +66,10 @@ class XlsWriter():
             tmp = []
             for t in headers:
                 if t in data and data[t]:
-                    tmp.append(data[t])
+                    if isinstance(data[t],dict) or isinstance(data[t],list):
+                        tmp.append(json.dumps(data[t],ensure_ascii=False))
+                    else:
+                        tmp.append(data[t])
                 else:
                     tmp.append('')
             datas.append(tmp)
