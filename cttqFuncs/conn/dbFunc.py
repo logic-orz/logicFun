@@ -197,5 +197,7 @@ def transData(datas: List[Dict], columns: List[DbColumn], z2e: bool = True):
                     v = float(v) if v != '' else None
                 elif vType.startswith('date') and isinstance(v, str):
                     v = v if v != '' else None
+                elif vType.startswith('json') and isinstance(v, str):
+                    v = json.loads(v) if v != '' and v.startsIn('{', '[') and v.endsIn('}', ']') else None
                 data[tKey] = v
     return datas
