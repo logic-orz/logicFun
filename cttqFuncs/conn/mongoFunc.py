@@ -1,17 +1,21 @@
-import motor.motor_asyncio
 from typing import Dict, List
+
+import motor.motor_asyncio
 import pymongo
-from .dbFunc import DbConfig, DbFunc
-from pymongo.collection import Collection, ReturnDocument, ObjectId
+from pymongo.collection import Collection, ObjectId, ReturnDocument
 from pymongo.database import Database
-from pymongo.results import InsertManyResult, InsertOneResult, BulkWriteResult, UpdateResult, DeleteResult
+from pymongo.results import (BulkWriteResult, DeleteResult, InsertManyResult,
+                             InsertOneResult, UpdateResult)
+
 from ..basic import getDict
+from .dbFunc import DbConfig, DbFunc
 
 
 def parseObjIdWithDicts(docs: List[Dict]) -> List[Dict]:
     for doc in docs:
         if doc['_id'] and isinstance(doc['_id'], ObjectId):
-            doc['_id'] = str(doc['_id'])
+            doc['id'] = str(doc['_id'])
+            del doc['_id']
     return docs
 
 
@@ -24,8 +28,9 @@ def parseObjIds(objIds: List[ObjectId]) -> List[str]:
 
 def toObjIdWithDicts(docs: List[Dict]) -> List[Dict]:
     for doc in docs:
-        if doc['_id'] and isinstance(doc['_id'], str):
-            doc['_id'] = ObjectId(doc['_id'])
+        if doc['id'] and isinstance(doc['id'], str):
+            doc['_id'] = ObjectId(doc['id'])
+            del doc['id']
     return docs
 
 

@@ -21,9 +21,6 @@ class Message():
 
 
 class SendMsg:
-    url = "https://open.feishu.cttq.com/open-apis/im/v1/messages"
-    _params = {"receive_id_type": "user_id"}
-
     @abc.abstractmethod
     def body():
         raise Exception("子类实现方法")
@@ -83,12 +80,32 @@ class SendMsgInteractive(SendMsg):
         return re
 
 
-class TsRobot():
-    APP_ID: str = ""
-    APP_SECRET: str = ""
+class TsGroupRobot():
+    def __init__(self, address: str) -> None:
+        self.address = address
 
-    def __init__(self) -> None:
-        pass
+    def sendMsg(self, msg: SendMsg):
+
+        rsp = requests.post(
+            self.address,
+            headers={
+                'Content-Type': 'application/json'
+            },
+            json=msg.body()).text
+        print(rsp)
+        return rsp
+
+
+class TsRobot():
+    tokenUrl = "https://open.feishu.cttq.com/open-apis/auth/v3/tenant_access_token/internal"
+    chartMsgUrl = "https://open.feishu.cttq.com/open-apis/im/v1/messages"
+    chartIdUrl = "https://open.feishu.cttq.com/open-apis/im/v1/chats"
+    sendMsgUrl = "https://open.feishu.cttq.com/open-apis/im/v1/messages"
+    msgParams = {"receive_id_type": "user_id"}
+
+    def __init__(self, app_id: str, app_secret: str) -> None:
+        self.app_id: str = app_id
+        self.app_secret: str = app_secret
 
     @cacheable(ns="accessToken")
     def accessToken(self):
@@ -96,33 +113,37 @@ class TsRobot():
             'Content-Type': "application/json;charset=utf-8"
         }
         data = {
-            "app_id": self.APP_ID,
-            "app_secret": self.APP_SECRET
+            "app_id": self.app_id,
+            "app_secret": self.app_secret
         }
-        url = 'https://open.feishu.cttq.com/open-apis/auth/v3/tenant_access_token/internal'
-        rsp = requests.post(url=url, headers=headers, json=data)
+
+        rsp = requests.post(url=self.tokenUrl, headers=headers, json=data)
+
         return "Bearer " + rsp.json()['tenant_access_token']
 
-    def getChatMessage(self):
-        url = "https://open.feishu.cttq.com/open-apis/im/v1/messages"
+    def getChatMessage(self, container_id: str):
+
         headers = {
             "Authorization": self.accessToken()
         }
         query = {
             "container_id_type": "chat",
-            "container_id": "oc_d0cc9ebc1036960490c74a9747f26de5"
+            "container_id": container_id
         }
-        rsp = requests.get(url, headers=headers, params=query).json()
+
+        rsp = requests.get(url=self.chartMsgUrl, headers=headers, params=query).json()
+        return rsp
 
     def getChatId(self):
-        url = "https://open.feishu.cttq.com/open-apis/im/v1/chats"
+
         headers = {
             "Authorization": self.accessToken()
         }
         query = {
             "user_id_type": "user_id"
         }
-        rsp = requests.get(url, headers=headers, data=query).text
+        rsp = requests.get(url=self.chartIdUrl, headers=headers, data=query).text
+        print(rsp)
 
     def _upFile(self, path: str):
 
@@ -145,8 +166,8 @@ class TsRobot():
     def sendMsg(self, msg: SendMsg):
 
         rsp = requests.post(
-            SendMsg.url,
-            params=SendMsg._params,
+            self.sendMsgUrl,
+            params=self.msgParams,
             headers={
                 'Authorization': self.accessToken(),
                 'Content-Type': 'application/json'
@@ -156,16 +177,13 @@ class TsRobot():
         return rsp
 
 
-# # getMessage()
-# # upFile()
-# # SendMsgFile('8102784', 'file_v2_5c0eb9b7-3f69-4e81-ad50-0ee62fccd8hj')
-# print(accessToken())
 if __name__ == '__main__':
     ms = [
         ('8608858', '测试推送1'),
-        ('8608858', '测试推送2'),
-        ('17865914019', '测试推送3'),
-        ('17865914019', '测试推送4')
+        ('8608858', '测试推送2')
     ]
-    for userId, msg in ms:
-        SendMsgText(userId, msg).send()
+
+    groupBotUrl = "https://open.feishu.cttq.com/open-apis/bot/v2/hook/bbd42f6e-d7c4-4eb5-8596-7f29562dd9fe"
+    bot = TsRobot(app_id="cli_a3bcc7a2ccb8d0a7",app_secret="v0jgI4wfXzmhm4w5adnDFgz8YOPHToGc")
+    bot.sendMsg(SendMsgText("8608858", "测试"))
+ 
