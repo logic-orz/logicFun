@@ -1,9 +1,11 @@
-from typing import List, Dict
-from ..basic.exClass import BaseClass
-from ..basic.configFunc import getDict
 import abc
 import datetime
+from typing import Dict, List
+
 from pydantic import BaseModel
+
+from ..basic.configFunc import getDict
+from ..basic.exClass import BaseClass
 from ..exFunc import *
 
 
@@ -141,13 +143,13 @@ def createInsertSqlForImpala(tbName: str, datas: List[dict], cols: List[DbColumn
             if s not in colType:  # 数据不在列内
                 continue
 
-            if colType[s].startsIn("string", "varchar", "text") and isinstance(data[s], str):
+            if colType[s].startsIn("string", "varchar", "text") and data[s] is not None and isinstance(data[s], str):
                 vs = '"%s"' % (data[s].replace("\\", "\\\\").replace("\"", "\\\""))
             elif isinstance(data[s], datetime.datetime):
                 vs = '"%s"' % (str(data[s]).replace("\"", "\\\""))
-            elif colType[s].startsIn("string", "varchar", "text") and (isinstance(data[s], dict) or isinstance(data[s], list)):
+            elif colType[s].startsIn("string", "varchar", "text") and data[s] is not None and (isinstance(data[s], dict) or isinstance(data[s], list)):
                 vs = json.dumps(data[s], ensure_ascii=False)
-            elif colType[s].startswith('decimal'):  # impala decimal 类型需要强转
+            elif colType[s].startswith('decimal') and data[s] is not None:  # impala decimal 类型需要强转
                 vs = f"cast({data[s]} as {colType[s]} )"
             elif data[s] is None:
                 vs = "null"
