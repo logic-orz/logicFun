@@ -40,7 +40,7 @@ class Return(BaseModel):
 
     code: int = 200
     msg: str = "success"
-    data: Union[list, dict] = None
+    data: Union[Any, None] = None
     page: Page = None
 
 
