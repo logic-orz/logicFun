@@ -3,6 +3,10 @@ from elasticsearch import Elasticsearch
 from elasticsearch import helpers
 from .dbFunc import DbConfig
 
+#
+# pip install elasticsearch==5.5.3
+#
+
 
 class EsClient():
     def __init__(self, config: DbConfig) -> None:
@@ -20,6 +24,16 @@ class EsClient():
     def deleteIndex(self, indexName):
         self.client.indices.delete(index=indexName, ignore=400)
 
+    def deleteByQuery(self, indexName):
+        self.client.delete_by_query(index=indexName,
+                                    body={
+                                        "query": {
+                                            "match_all": {}
+                                        }
+                                    },
+                                    wait_for_completion=False
+                                    )
+
     def insertOne(self, doc: dict):
         self.client.index(index=self.index, doc_type='_doc', body=doc)
 
@@ -32,6 +46,6 @@ class EsClient():
                 '_source': doc
             })
         helpers.bulk(self.client, bulks)
-        
-    def query(self,query:dict):
+
+    def query(self, query: dict):
         pass

@@ -148,8 +148,11 @@ def createInsertSqlForImpala(tbName: str, datas: List[dict], cols: List[DbColumn
                 vs = '"%s"' % (str(data[s]).replace("\"", "\\\""))
             elif colType[s].startsIn("string", "varchar", "text") and (isinstance(data[s], dict) or isinstance(data[s], list)):
                 vs = json.dumps(data[s], ensure_ascii=False)
-            elif colType[s].startswith('decimal'):  # impala decimal 类型需要强转
-                vs = f"cast({data[s]} as {colType[s]} )"
+            elif colType[s].startsIn('decimal', 'int', 'float', 'double', 'long', 'bigint'):  # impala decimal 类型需要强转
+                if str(data[s]).strip() != '':
+                    vs = f"cast({data[s]} as {colType[s]} )"
+                else:
+                    vs = f"cast('0' as {colType[s]} )"
             else:  # 默认类型可以兼容
                 vs = f"{data[s]}"
 

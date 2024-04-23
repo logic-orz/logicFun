@@ -28,6 +28,35 @@ class MysqlPool(DbFunc):
     def conn(self):
         return self.__pool__.connection()
 
+    def execQuery(self, sql: str) -> List[dict]:
+        conn = self.conn()
+        cur = conn.cursor()
+        cur.raw = True
+        cur.execute(sql)
+
+        if cur.rowcount > 0:
+            res_list = cur.fetchall()
+        else:
+            res_list = []
+
+        cur.close()
+        return res_list
+
+    def execQueryIte(self, *sqls: str, batchSize: int = 1000):
+        conn = self.conn()
+        cur = conn.cursor()
+        cur.raw = True
+        for sql in sqls:
+            cur.execute(sql)
+        i = 0
+        while True:
+            i += 1
+            res_list = cur.fetchmany(batchSize)
+            if not res_list:
+                cur.close()
+                return
+            yield res_list
+
     def close(self):
         if self.__pool__ is not None:
             self.__pool__.close()
@@ -102,7 +131,7 @@ class MysqlPoolAsync:
     async def tableMeta(self, tbName: str) -> List[DbColumn]:
         sql = f"show full columns from {tbName} "
         datas: List[Dict] = await self.execQuery(sql)
-        cols: List[DbColumn] = datas.map(lambda d: DbColumn(name=d['Field'], comment=d['Comment'], type=d['Type'],isId= (d['Key']=='PRI') ))
+        cols: List[DbColumn] = datas.map(lambda d: DbColumn(name=d['Field'], comment=d['Comment'], type=d['Type'], isId=(d['Key'] == 'PRI')))
         return cols
 
     @staticmethod
@@ -121,6 +150,35 @@ class Mysql(DbFunc):
                              charset="utf8",
                              cursorclass=DictCursor)
 
+    def execQuery(self, sql: str) -> List[dict]:
+        conn = self.conn()
+        cur = conn.cursor()
+        cur.raw = True
+        cur.execute(sql)
+
+        if cur.rowcount > 0:
+            res_list = cur.fetchall()
+        else:
+            res_list = []
+
+        cur.close()
+        return res_list
+
+    def execQueryIte(self, *sqls: str, batchSize: int = 1000):
+        conn = self.conn()
+        cur = conn.cursor()
+        cur.raw = True
+        for sql in sqls:
+            cur.execute(sql)
+        i = 0
+        while True:
+            i += 1
+            res_list = cur.fetchmany(batchSize)
+            if not res_list:
+                cur.close()
+                return
+            yield res_list
+
     def conn(self):
         self._conn.ping(reconnect=True)
         return self._conn
@@ -133,5 +191,5 @@ class Mysql(DbFunc):
     def tableMeta(self, tbName: str) -> List[DbColumn]:
         sql = f"show full columns from {tbName} "
         datas: List[Dict] = self.execQuery(sql)
-        cols: List[DbColumn] = datas.map(lambda d: DbColumn(name=d['Field'], comment=d['Comment'], type=d['Type'],isId= (d['Key']=='PRI') ))
+        cols: List[DbColumn] = datas.map(lambda d: DbColumn(name=d['Field'], comment=d['Comment'], type=d['Type'], isId=(d['Key'] == 'PRI')))
         return cols
