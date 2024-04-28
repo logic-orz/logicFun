@@ -23,7 +23,7 @@ installs = [
 ]
 
 setup(name="cttqFuncs",
-      version='4.9',
+      version='5.0',
       description="能力扩展",
       author="Logic",
       author_email='saltedfishno.5@gmail.com',
