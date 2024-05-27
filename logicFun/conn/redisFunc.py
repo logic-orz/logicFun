@@ -2,11 +2,10 @@
 pip install redis,redis-py-cluster
 """
 import redis  # 导入redis 模块
-
 from rediscluster import RedisCluster
 
+from ..basic.configFunc import getDict
 from .dbFunc import DbConfig
-from cttqFuncs.basic.configFunc import getDict
 
 
 class Redis:
@@ -38,7 +37,8 @@ class RedisClu:
             arr = s.split(":", 1)
             redis_nodes.append(
                 {
-                    'host': arr[0], 'port': int(arr[1])
+                    'host': arr[0],
+                    'port': int(arr[1])
                 }
             )
 

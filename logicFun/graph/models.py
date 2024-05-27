@@ -12,9 +12,15 @@ class Node(BaseClass):
     """
     * 图节点 定义类
     """
+<<<<<<< HEAD:logicFun/graph/models.py
     
     @abc.abstractmethod
     def key(self)->str:
+=======
+
+    @abc.abstractmethod
+    def key(self) -> str:
+>>>>>>> cc557459720bb2265615b0b0d7cb7dd3eb02e129:cttqFuncs/graph/models.py
         raise CommonException("方法未定义")
 
 
@@ -23,11 +29,19 @@ class Edge(BaseClass):
     * 图关系 定义类
     """
     @abc.abstractmethod
+<<<<<<< HEAD:logicFun/graph/models.py
     def fromKey(self)->str:
         raise CommonException("方法未定义")
     
     @abc.abstractmethod
     def toKey(self)->str:
+=======
+    def fromKey(self) -> str:
+        raise CommonException("方法未定义")
+
+    @abc.abstractmethod
+    def toKey(self) -> str:
+>>>>>>> cc557459720bb2265615b0b0d7cb7dd3eb02e129:cttqFuncs/graph/models.py
         raise CommonException("方法未定义")
 
 
@@ -111,5 +125,8 @@ class Graph(GraphFunc):
     def queryEdge(self, nodeKey: str, direct: int = 0) -> List[Edge]:
         #   todo 子类实现
         pass
+<<<<<<< HEAD:logicFun/graph/models.py
 
     
+=======
+>>>>>>> cc557459720bb2265615b0b0d7cb7dd3eb02e129:cttqFuncs/graph/models.py
