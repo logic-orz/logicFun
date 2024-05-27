@@ -11,9 +11,6 @@ import shutil
 import cttqFuncs
 
 
-<<<<<<< HEAD
-from logicFun.common.fileFunc import deleteFile, listDir, listFile
-=======
 def deleteFile(path: str):
     if os.path.exists(path):
         if os.path.isfile(path):
@@ -29,7 +26,6 @@ def listDir(path: str):
     if os.path.exists(path):
         return os.listdir(path).map(lambda s: path + ("" if path.endswith("/") else "/") + s).filter(lambda p: os.path.isdir(p))
     return list()
->>>>>>> cc557459720bb2265615b0b0d7cb7dd3eb02e129
 
 
 def clear(filepath):

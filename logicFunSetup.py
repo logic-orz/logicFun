@@ -1,25 +1,29 @@
 from setuptools import setup
 
 installs = [
-    'impyla',
+  'impyla',
     'pymysql',
     'DBUtils',
-    'IPython', 
-    'prettytable',
-    'redis',
-    'redis-py-cluster',
+    # 'IPython',
+    # 'prettytable',
+    # 'redis',
+    # 'redis-py-cluster',
     'cacheout',
     'xlwt',
     'xlrd2',
-    'openpyxl',
+    'xlsxwriter',
     'sqlalchemy',
-    'python-consul',
+    # 'python-consul',
     'apscheduler',
-    'loguru'
+    'loguru',
+    'aiohttp',
+    # 'pyfiglet',
+    'aiomysql',
+    'pydantic'
 ]
 
 setup(name="logicFun",
-      version="4.1",
+      version="5.0",
       description="能力扩展",
       author="Logic",
       author_email='',

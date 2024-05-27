@@ -1,5 +1,7 @@
+import asyncio
 import json
-from typing import Callable,Any, Dict
+from concurrent.futures import Future, ProcessPoolExecutor, ThreadPoolExecutor
+from typing import Any, Callable, Dict
 
 
 class doJoin(object):
@@ -54,6 +56,7 @@ class doAfter(object):
 
         return wrapper  # 返回函数
 
+
 def toDict(cls):
     def func(self):
         dict = {}
@@ -89,3 +92,68 @@ def build(cls):
 
     cls.build = func
     return cls
+
+
+_threadPool = ThreadPoolExecutor(max_workers=10)
+
+
+class runThread(object):
+    """
+    * 转换为异步任务
+    """
+
+    def __init__(self):
+        pass
+
+    def __call__(self, _func):  # 接受函数
+        def callback(future: Future):
+            print(f'future state: {future._state}')
+
+        def wrapper(*args, **kwargs):
+            future = _threadPool.submit(_func, *args, **kwargs)
+            future.add_done_callback(callback)
+
+        return wrapper  # 返回函数
+
+
+_processPool = ProcessPoolExecutor(max_workers=10)
+
+
+class runProcess(object):
+    """
+    * 转换为异步任务
+    """
+
+    def __init__(self):
+        pass
+
+    def __call__(self, _func):  # 接受函数
+        def callback(future: Future):
+            print(f'future state: {future._state}')
+
+        def wrapper(*args, **kwargs):
+            future = _processPool.submit(_func, *args, **kwargs)
+            future.add_done_callback(callback)
+            return
+
+        return wrapper  # 返回函数
+
+
+class runLoop(object):
+    """
+    * 转换为异步任务
+    """
+
+    def __init__(self, loop=None):
+        if not loop:
+            self.loop = asyncio.get_event_loop()
+        else:
+            self.loop = loop
+
+    def __call__(self, _func):  # 接受函数
+
+        def wrapper(*args, **kwargs):
+            self.loop.run_in_executor(None, _func, *args, **kwargs)
+            return
+
+        return wrapper  # 返回函数

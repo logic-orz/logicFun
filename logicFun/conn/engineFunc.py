@@ -6,22 +6,23 @@ from .dbFunc import DbConfig
 from sqlalchemy.ext.declarative import declarative_base
 from ..exFunc import *
 
-BaseModel=declarative_base()
+DBModel = declarative_base()
 
-def mySqlEngine(ns: str = 'mysql',isAsync=False):
+
+def mySqlEngine(ns: str = 'mysql', isAsync=False):
 
     config = DbConfig.build(getDict(ns))
     if isAsync:
         from sqlalchemy.ext.asyncio import create_async_engine as create_engine
-        driver='aiomysql'
+        driver = 'aiomysql'
     else:
         from sqlalchemy import create_engine
-        driver='pymysql'
-    
+        driver = 'pymysql'
+
     db_connect_url = f'mysql+{driver}://{config.user}:{urlquote(config.pwd)}@{config.host}:{config.port}/{config.db}?charset=utf8'
 
     engine = create_engine(
-        db_connect_url, 
+        db_connect_url,
         echo=False,
         future=True,
         max_overflow=5,  # 超过连接池大小外最多创建的连接
@@ -31,10 +32,10 @@ def mySqlEngine(ns: str = 'mysql',isAsync=False):
         pool_pre_ping=True,
     )
     if isAsync:
-        Session=sessionmaker(bind=engine,class_=AsyncSession)
+        Session = sessionmaker(bind=engine, class_=AsyncSession)
     else:
-        Session=sessionmaker(bind=engine)
-    return (engine,Session)
+        Session = sessionmaker(bind=engine)
+    return (engine, Session)
 
 def addOrmInfo(cls):
     cls.tb=cls.metadata.tables[cls.__tablename__]
@@ -48,3 +49,28 @@ def addOrmInfo(cls):
     cls.buildByComment = func
     return cls
 
+
+
+
+class OrmBuilder():
+
+    @property
+    def columns(self):
+        return self.__class__.metadata.tables[self.__class__.__tablename__].columns._all_columns
+
+    def buildWithComment(self, data: Dict):
+        cn = self.columns.map(lambda c: (c.comment, c.name)).toDict()
+        for c, v in data.kvs():
+            if c in cn:
+                n = cn[c]
+                self.__dict__[n] = v
+        return self
+
+    def toDictWithComment(self):
+        data = self.__dict__
+        cn = self.columns.map(lambda c: (c.name, c.comment)).toDict()
+        for c, v in data.kvs():
+            if c in cn:
+                n = cn[c]
+                data[n] = v
+        return data
