@@ -18,7 +18,7 @@ class EsClient():
         )
         self.index = config.db
 
-    def createIndex(self, indexName,):
+    def createIndex(self, indexName):
         self.client.indices.create(index=indexName, ignore=400)
 
     def deleteIndex(self, indexName):
@@ -48,4 +48,4 @@ class EsClient():
         helpers.bulk(self.client, bulks)
 
     def query(self, query: dict):
-        pass
+        return self.client.search(index=self.index, body=query)
